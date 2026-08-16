@@ -4,6 +4,11 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 
+import {
+  formatChargeTime,
+  formatHoursAsReadable,
+} from "@/helpers/formatChargeTime";
+
 const specs = [
   ["Rated Output", "11 kW"],
   ["Connector", "Type 2"],
@@ -60,13 +65,19 @@ export default function ProductStory() {
   const chargingPower = 11;
   const chargingEfficiency = 0.9;
 
-  const chargingTime = useMemo(() => {
-    const percentageAdded = Math.max(targetCharge - startCharge, 1) / 100;
-    const energyNeeded = batteryCapacity * percentageAdded;
-    const effectivePower = chargingPower * chargingEfficiency;
+  const chargingTime = useMemo(
+    () =>
+      formatChargeTime({
+        batteryKwh: batteryCapacity,
+        powerKw: chargingPower,
+        startPercent: startCharge,
+        targetPercent: targetCharge,
+        efficiency: chargingEfficiency,
+      }),
+    [startCharge, targetCharge]
+  );
 
-    return energyNeeded / effectivePower;
-  }, [startCharge, targetCharge]);
+  const chargingTimeLabel = formatHoursAsReadable(chargingTime);
 
   useEffect(() => {
     function handleScroll() {
@@ -88,7 +99,7 @@ export default function ProductStory() {
           03 / CHARGING ESTIMATOR
       ====================================================== */}
 
-      <section className="bg-[#101010] text-white">
+      <section className="bg-inverse text-white">
         <div className="border-b border-white/15 px-5 py-5 md:px-8 lg:px-12">
           <SectionLabel
             number="03"
@@ -108,7 +119,7 @@ export default function ProductStory() {
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#f2ca30]">
+              <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-accent">
                 Example vehicle / KIA EV5
               </p>
 
@@ -140,16 +151,12 @@ export default function ProductStory() {
                   </p>
 
                   <motion.p
-                    key={chargingTime.toFixed(1)}
+                    key={chargingTimeLabel}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-3 text-[64px] font-medium leading-none tracking-[-0.07em] sm:text-[82px]"
+                    className="mt-3 text-[48px] font-medium leading-none tracking-[-0.06em] sm:text-[64px]"
                   >
-                    {chargingTime.toFixed(1)}
-
-                    <span className="ml-3 text-[20px] tracking-[-0.02em] text-white/45">
-                      HRS
-                    </span>
+                    {chargingTimeLabel}
                   </motion.p>
                 </div>
 
@@ -206,9 +213,9 @@ export default function ProductStory() {
           04 / EV + SOLAR
       ====================================================== */}
 
-      <section className="bg-[#f2f0e9]">
+      <section className="bg-paper">
         <div className="grid min-h-[720px] lg:grid-cols-2">
-          <div className="flex flex-col justify-between border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
+          <div className="flex flex-col justify-between border-b border-line px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
             <SectionLabel number="04" label="EV + Solar" />
 
             <motion.div
@@ -226,31 +233,31 @@ export default function ProductStory() {
                 Power the home.
               </h2>
 
-              <p className="mt-8 max-w-[440px] text-[16px] leading-[1.6] text-black/55">
+              <p className="mt-8 max-w-[440px] text-[16px] leading-[1.6] text-ink-soft">
                 Combine household consumption and EV charging into one solar
                 sizing journey.
               </p>
 
 <button
   type="button"
-  className="group mt-10 flex h-[64px] w-full max-w-[440px] items-center justify-between bg-[#124897] px-6 text-white transition-colors duration-300 hover:bg-[#0f3d7d]"
+  className="group mt-10 flex h-[64px] w-full max-w-[440px] items-center justify-between bg-brand px-6 text-white transition-colors duration-300 hover:brightness-110"
 >
   <span className="text-[12px] font-semibold uppercase tracking-[0.09em]">
     Calculate My Solar System
   </span>
 
-  <span className="text-[20px] text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-2">
+  <span className="text-[20px] text-accent transition-transform duration-300 group-hover:translate-x-2">
     →
   </span>
 </button>
             </motion.div>
 
-            <div className="font-mono mt-14 text-[9px] uppercase tracking-[0.1em] text-black/35">
+            <div className="font-mono mt-14 text-[9px] uppercase tracking-[0.1em] text-ink-faint">
               Home + EV / Combined Energy Planning
             </div>
           </div>
 
-          <div className="grid grid-cols-2 bg-[#124897] text-white">
+          <div className="grid grid-cols-2 bg-brand text-white">
             <SolarMetric
               value="01"
               title="Home usage"
@@ -282,8 +289,8 @@ export default function ProductStory() {
           05 / SMART CHARGING — REDUCED
       ====================================================== */}
 
-      <section className="bg-[#d7dad4]">
-        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
+      <section className="bg-image-well">
+        <div className="border-b border-line px-5 py-5 md:px-8 lg:px-12">
           <SectionLabel number="05" label="Smart Charging" />
         </div>
 
@@ -298,9 +305,9 @@ export default function ProductStory() {
               duration: 0.7,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-14"
+            className="border-b border-line px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-14"
           >
-            <p className="mb-6 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#124897]">
+            <p className="mb-6 text-[11px] font-semibold uppercase tracking-[0.08em] text-brand">
               Connected charging
             </p>
 
@@ -310,7 +317,7 @@ export default function ProductStory() {
               works around you.
             </h2>
 
-            <p className="mt-7 max-w-[440px] text-[15px] leading-[1.65] text-black/50">
+            <p className="mt-7 max-w-[440px] text-[15px] leading-[1.65] text-ink-soft">
               Connected controls help make everyday charging easier to plan,
               understand and manage.
             </p>
@@ -346,19 +353,19 @@ export default function ProductStory() {
       ====================================================== */}
 
       <section className="bg-white">
-        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
+        <div className="border-b border-line px-5 py-5 md:px-8 lg:px-12">
           <SectionLabel number="06" label="Engineering Data" />
         </div>
 
         <div className="grid lg:grid-cols-[0.7fr_1.3fr]">
-          <div className="border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
+          <div className="border-b border-line px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
             <h2 className="text-[50px] font-medium leading-[0.92] tracking-[-0.055em] sm:text-[64px]">
               Technical
               <br />
               specification.
             </h2>
 
-            <p className="mt-7 max-w-[350px] text-[14px] leading-[1.6] text-black/45">
+            <p className="mt-7 max-w-[350px] text-[14px] leading-[1.6] text-ink-soft">
               Final production specifications should be populated from the
               exact Multiline charger datasheet.
             </p>
@@ -381,15 +388,15 @@ export default function ProductStory() {
           07 / INSTALLATION — PROCESS + REAL INSTALLATIONS
       ====================================================== */}
 
-      <section className="bg-[#f2f0e9]">
-        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
+      <section className="bg-paper">
+        <div className="border-b border-line px-5 py-5 md:px-8 lg:px-12">
           <SectionLabel number="07" label="Installation" />
         </div>
 
         {/* Main installation story */}
 
         <div className="grid lg:grid-cols-[1.08fr_0.92fr]">
-          <div className="relative min-h-[560px] overflow-hidden border-b border-black/15 lg:min-h-[720px] lg:border-b-0 lg:border-r">
+          <div className="relative min-h-[560px] overflow-hidden border-b border-line lg:min-h-[720px] lg:border-b-0 lg:border-r">
             <Image
               src="/images/products/charger-installation.png"
               alt="Multiline EV charger installation"
@@ -422,13 +429,13 @@ export default function ProductStory() {
                 Multiline.
               </motion.h2>
 
-              <p className="mt-8 max-w-[460px] text-[16px] leading-[1.6] text-black/55">
+              <p className="mt-8 max-w-[460px] text-[16px] leading-[1.6] text-ink-soft">
                 From the first electrical assessment to final commissioning,
                 installation can be handled as part of the complete charging
                 solution.
               </p>
 
-              <div className="mt-12 border-t border-black/20">
+              <div className="mt-12 border-t border-line-strong">
                 <ProcessRow
                   number="01"
                   title="Site assessment"
@@ -453,13 +460,13 @@ export default function ProductStory() {
 
             <button
               type="button"
-              className="group mt-10 flex h-[64px] items-center justify-between border-y border-black/30"
+              className="group mt-10 flex h-[64px] items-center justify-between border-y border-line-strong"
             >
               <span className="text-[12px] font-medium uppercase tracking-[0.09em]">
                 Request Installation
               </span>
 
-              <span className="text-[19px] text-[#124897] transition-transform duration-300 group-hover:translate-x-2">
+              <span className="text-[19px] text-brand transition-transform duration-300 group-hover:translate-x-2">
                 →
               </span>
             </button>
@@ -468,10 +475,10 @@ export default function ProductStory() {
 
         {/* Real installations */}
 
-        <div className="border-t border-black/15 px-5 py-12 md:px-8 lg:px-12 lg:py-14">
+        <div className="border-t border-line px-5 py-12 md:px-8 lg:px-12 lg:py-14">
           <div className="flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#124897]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-brand">
                 Real Installations
               </p>
 
@@ -480,7 +487,7 @@ export default function ProductStory() {
               </h3>
             </div>
 
-            <p className="max-w-[430px] text-[14px] leading-[1.65] text-black/50">
+            <p className="max-w-[430px] text-[14px] leading-[1.65] text-ink-soft">
               See how Multiline charging systems sit within real residential
               and commercial environments.
             </p>
@@ -514,7 +521,7 @@ export default function ProductStory() {
 
       <section className="bg-white">
         <div className="grid lg:grid-cols-2">
-          <div className="border-b border-black/15 px-5 py-14 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
+          <div className="border-b border-line px-5 py-14 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
             <SectionLabel number="08" label="In The Box" />
 
             <h2 className="mt-20 text-[54px] font-medium leading-[0.92] tracking-[-0.055em] sm:text-[68px]">
@@ -523,7 +530,7 @@ export default function ProductStory() {
               you need.
             </h2>
 
-            <div className="mt-14 border-t border-black/20">
+            <div className="mt-14 border-t border-line-strong">
               <SimpleRow number="01" text="11 kW EV charger" />
               <SimpleRow number="02" text="Charging cable" />
               <SimpleRow number="03" text="Wall mounting hardware" />
@@ -531,12 +538,12 @@ export default function ProductStory() {
               <SimpleRow number="05" text="Warranty documentation" />
             </div>
 
-            <p className="font-mono mt-6 text-[9px] uppercase tracking-[0.1em] text-black/35">
+            <p className="font-mono mt-6 text-[9px] uppercase tracking-[0.1em] text-ink-faint">
               Final package contents to be confirmed
             </p>
           </div>
 
-          <div className="bg-[#124897] px-5 py-14 text-white md:px-8 lg:px-12 lg:py-16">
+          <div className="bg-brand px-5 py-14 text-white md:px-8 lg:px-12 lg:py-16">
             <SectionLabel
               number="09"
               label="Support"
@@ -582,7 +589,7 @@ export default function ProductStory() {
           10 / COMPARE CHARGERS
       ====================================================== */}
 
-      <section className="bg-[#101010] px-5 py-14 text-white md:px-8 lg:px-12 lg:py-20">
+      <section className="bg-inverse px-5 py-14 text-white md:px-8 lg:px-12 lg:py-20">
         <SectionLabel
           number="10"
           label="Compare"
@@ -662,7 +669,7 @@ export default function ProductStory() {
               <CompareAction label="View 7 kW" />
 
               <div className="border-l border-white/20 bg-white/[0.05] px-6 py-7">
-                <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#f2ca30]">
+                <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-accent">
                   Current Product
                 </span>
               </div>
@@ -679,7 +686,7 @@ export default function ProductStory() {
 
       <section className="bg-white">
         <div className="grid lg:grid-cols-[0.68fr_1.32fr]">
-          <div className="border-b border-black/15 px-5 py-14 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
+          <div className="border-b border-line px-5 py-14 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
             <SectionLabel number="11" label="Questions" />
 
             <h2 className="mt-20 text-[54px] font-medium leading-[0.92] tracking-[-0.055em] sm:text-[68px]">
@@ -688,7 +695,7 @@ export default function ProductStory() {
               you buy.
             </h2>
 
-            <p className="mt-7 max-w-[350px] text-[14px] leading-[1.6] text-black/45">
+            <p className="mt-7 max-w-[350px] text-[14px] leading-[1.6] text-ink-soft">
               Common questions around vehicle compatibility, installation and
               home charging.
             </p>
@@ -701,7 +708,7 @@ export default function ProductStory() {
               return (
                 <div
                   key={item.question}
-                  className="border-b border-black/20"
+                  className="border-b border-line-strong"
                 >
                   <button
                     type="button"
@@ -710,7 +717,7 @@ export default function ProductStory() {
                     }
                     className="grid w-full grid-cols-[42px_1fr_auto] items-center gap-4 py-7 text-left"
                   >
-                    <span className="font-mono text-[8px] text-black/35">
+                    <span className="font-mono text-[8px] text-ink-faint">
                       {String(index + 1).padStart(2, "0")}
                     </span>
 
@@ -748,7 +755,7 @@ export default function ProductStory() {
                         }}
                         className="overflow-hidden"
                       >
-                        <p className="max-w-[680px] pb-8 pl-[58px] pr-8 text-[15px] leading-[1.7] text-black/50">
+                        <p className="max-w-[680px] pb-8 pl-[58px] pr-8 text-[15px] leading-[1.7] text-ink-soft">
                           {item.answer}
                         </p>
                       </motion.div>
@@ -765,7 +772,7 @@ export default function ProductStory() {
           12 / FINAL CTA
       ====================================================== */}
 
-      <section className="bg-[#124897] text-white">
+      <section className="bg-brand text-white">
         <div className="px-5 py-16 md:px-8 lg:px-12 lg:py-24">
           <SectionLabel
             number="12"
@@ -788,7 +795,7 @@ export default function ProductStory() {
 
             <button
               type="button"
-              className="group flex h-[72px] min-w-[300px] items-center justify-between bg-[#f2ca30] px-7 text-[#101010]"
+              className="group flex h-[72px] min-w-[300px] items-center justify-between bg-accent px-7 text-ink"
             >
               <span className="text-[12px] font-semibold uppercase tracking-[0.1em]">
                 Add to Cart
@@ -816,7 +823,7 @@ export default function ProductStory() {
               duration: 0.35,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="fixed bottom-0 left-0 right-0 z-[80] border-t border-black/15 bg-[#f2f0e9]/95 backdrop-blur-md"
+            className="fixed bottom-0 left-0 right-0 z-[80] border-t border-line bg-paper/95 backdrop-blur-md"
           >
             <div className="flex h-[70px] items-center px-5 md:px-8 lg:px-12">
               <div>
@@ -824,7 +831,7 @@ export default function ProductStory() {
                   11kW Home Charger
                 </p>
 
-                <p className="font-mono mt-1 text-[8px] uppercase tracking-[0.1em] text-black/40">
+                <p className="font-mono mt-1 text-[8px] uppercase tracking-[0.1em] text-ink-faint">
                   AC / Residential
                 </p>
               </div>
@@ -835,7 +842,7 @@ export default function ProductStory() {
 
               <button
                 type="button"
-                className="group ml-7 flex h-full min-w-[190px] items-center justify-between bg-[#f2ca30] px-6 text-[#101010]"
+                className="group ml-7 flex h-full min-w-[190px] items-center justify-between bg-accent px-6 text-ink"
               >
                 <span className="text-[10px] font-semibold uppercase tracking-[0.1em]">
                   Add to Cart
@@ -871,8 +878,8 @@ function SectionLabel({
       <div
         className={`flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.1em] ${
           light
-            ? "text-[#f2ca30]"
-            : "text-[#124897]"
+            ? "text-accent"
+            : "text-brand"
         }`}
       >
         <span>{number}</span>
@@ -881,7 +888,7 @@ function SectionLabel({
           className={
             light
               ? "text-white/25"
-              : "text-black/20"
+              : "text-ink-faint/50"
           }
         >
           /
@@ -893,8 +900,8 @@ function SectionLabel({
       <span
         className={`h-[6px] w-[6px] ${
           light
-            ? "bg-[#f2ca30]"
-            : "bg-[#124897]"
+            ? "bg-accent"
+            : "bg-brand"
         }`}
       />
     </div>
@@ -935,7 +942,7 @@ function ChargeSlider({
           onChange(Number(event.target.value))
         }
         className="mt-6 w-full cursor-pointer"
-        style={{ accentColor: "#f2ca30" }}
+        style={{ accentColor: "var(--accent)" }}
       />
     </div>
   );
@@ -981,10 +988,10 @@ function SmartFeatureRow({
   return (
     <div
       className={`grid gap-5 py-8 sm:grid-cols-[54px_150px_1fr] sm:items-center ${
-        last ? "" : "border-b border-black/15"
+        last ? "" : "border-b border-line"
       }`}
     >
-      <span className="text-[10px] font-semibold tracking-[0.09em] text-black/30">
+      <span className="text-[10px] font-semibold tracking-[0.09em] text-ink-faint">
         {number}
       </span>
 
@@ -1007,8 +1014,8 @@ function ProcessRow({
   title: string;
 }) {
   return (
-    <div className="grid grid-cols-[50px_1fr_auto] items-center border-b border-black/20 py-5">
-      <span className="text-[10px] font-semibold tracking-[0.09em] text-black/30">
+    <div className="grid grid-cols-[50px_1fr_auto] items-center border-b border-line-strong py-5">
+      <span className="text-[10px] font-semibold tracking-[0.09em] text-ink-faint">
         {number}
       </span>
 
@@ -1016,7 +1023,7 @@ function ProcessRow({
         {title}
       </span>
 
-      <span className="text-[13px] text-[#124897]">
+      <span className="text-[13px] text-brand">
         ↗
       </span>
     </div>
@@ -1033,12 +1040,12 @@ function DataRow({
   value: string;
 }) {
   return (
-    <div className="grid grid-cols-[46px_1fr_auto] items-center border-b border-black/15 py-6">
-      <span className="text-[10px] font-semibold tracking-[0.09em] text-black/30">
+    <div className="grid grid-cols-[46px_1fr_auto] items-center border-b border-line py-6">
+      <span className="text-[10px] font-semibold tracking-[0.09em] text-ink-faint">
         {number}
       </span>
 
-      <span className="text-[12px] uppercase tracking-[0.07em] text-black/45">
+      <span className="text-[12px] uppercase tracking-[0.07em] text-ink-soft">
         {label}
       </span>
 
@@ -1063,12 +1070,12 @@ function SolarMetric({
   return (
     <div
       className={`flex min-h-[360px] flex-col justify-between border-b border-r border-white/20 p-7 md:p-9 ${
-        highlight ? "bg-[#f2ca30] text-[#101010]" : ""
+        highlight ? "bg-accent text-ink" : ""
       }`}
     >
       <span
         className={`text-[56px] font-medium tracking-[-0.06em] ${
-          highlight ? "text-[#124897]" : "text-[#f2ca30]"
+          highlight ? "text-brand" : "text-accent"
         }`}
       >
         {value}
@@ -1081,7 +1088,7 @@ function SolarMetric({
 
         <p
           className={`mt-3 max-w-[220px] text-[13px] leading-[1.6] ${
-            highlight ? "text-black/55" : "text-white/45"
+            highlight ? "text-ink-soft" : "text-white/45"
           }`}
         >
           {copy}
@@ -1099,8 +1106,8 @@ function SimpleRow({
   text: string;
 }) {
   return (
-    <div className="grid grid-cols-[50px_1fr] border-b border-black/20 py-5">
-      <span className="font-mono text-[8px] text-black/30">
+    <div className="grid grid-cols-[50px_1fr] border-b border-line-strong py-5">
+      <span className="font-mono text-[8px] text-ink-faint">
         {number}
       </span>
 
@@ -1158,7 +1165,7 @@ function CompareHeading({
 
       <p
         className={`font-mono mt-2 text-[8px] uppercase tracking-[0.1em] ${
-          active ? "text-[#f2ca30]" : "text-white/35"
+          active ? "text-accent" : "text-white/35"
         }`}
       >
         {label}
@@ -1210,7 +1217,7 @@ function CompareAction({
         {label}
       </span>
 
-      <span className="text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-1">
+      <span className="text-accent transition-transform duration-300 group-hover:translate-x-1">
         →
       </span>
     </button>
@@ -1227,8 +1234,8 @@ function InstallationCard({
   position: string;
 }) {
   return (
-    <div className="border border-black/15 bg-[#f2f0e9]">
-      <div className="relative aspect-[4/3] overflow-hidden bg-[#d7dad4]">
+    <div className="border border-line bg-paper">
+      <div className="relative aspect-[4/3] overflow-hidden bg-image-well">
         <Image
           src="/images/products/charger-installation.png"
           alt={`Multiline EV charger ${label}`}
@@ -1241,12 +1248,12 @@ function InstallationCard({
         />
       </div>
 
-      <div className="flex items-center justify-between border-t border-black/15 px-4 py-4">
-        <span className="text-[10px] font-semibold tracking-[0.08em] text-black/35">
+      <div className="flex items-center justify-between border-t border-line px-4 py-4">
+        <span className="text-[10px] font-semibold tracking-[0.08em] text-ink-faint">
           {number}
         </span>
 
-        <span className="text-[10px] font-semibold uppercase tracking-[0.07em] text-black/60">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.07em] text-ink-soft">
           {label}
         </span>
       </div>

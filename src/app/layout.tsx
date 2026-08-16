@@ -4,10 +4,13 @@ import {
   IBM_Plex_Mono,
   Newsreader,
 } from "next/font/google";
-import "./globals.css";
+import Script from "next/script";
 
-import Header from "@/components/Header";
 import DesignSwitcher from "@/components/DesignSwitcher";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import "./globals.css";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -29,10 +32,15 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Multiline | EV Charging",
+  title: {
+    default: "Multiline | Power Engineering",
+    template: "%s | Multiline",
+  },
   description:
     "Premium EV charging, solar and power solutions by Multiline Engineering.",
 };
+
+const themeInitScript = `(function(){try{var t=localStorage.getItem("multiline-theme");if(t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -40,15 +48,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${archivo.variable} ${plexMono.variable} ${newsreader.variable}`}
+        className={`${archivo.variable} ${plexMono.variable} ${newsreader.variable} flex min-h-dvh flex-col antialiased`}
+        suppressHydrationWarning
       >
-        <Header />
-
-        {children}
-
-
+        <Script
+          id="multiline-theme-init"
+          strategy="beforeInteractive"
+        >
+          {themeInitScript}
+        </Script>
+        <ThemeProvider>
+          <Header />
+          <div className="flex-1">{children}</div>
+          <Footer />
+          <DesignSwitcher />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -3,6 +3,8 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 
+import { formatChargeTime, formatHoursAsReadable } from "@/helpers/formatChargeTime";
+
 type Vehicle = {
   brand: string;
   model: string;
@@ -74,10 +76,14 @@ export default function CompatibilityChecker() {
     : 0;
 
   const estimatedChargeTime = selectedVehicle
-    ? (
-        (selectedVehicle.batteryCapacity * 0.6) /
-        (actualChargingPower * 0.9)
-      ).toFixed(1)
+    ? formatHoursAsReadable(
+        formatChargeTime({
+          batteryKwh: selectedVehicle.batteryCapacity,
+          powerKw: actualChargingPower,
+          startPercent: 20,
+          targetPercent: 80,
+        })
+      )
     : "—";
 
   const isOptimal =
@@ -111,12 +117,12 @@ export default function CompatibilityChecker() {
   }
 
   return (
-    <section className="bg-[#124897] text-white">
+    <section className="bg-brand text-white">
       <div className="grid min-h-[720px] lg:grid-cols-2">
         {/* LEFT */}
         <div className="flex flex-col justify-between border-b border-white/20 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-14">
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#f2ca30]">
+            <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-accent">
               02 / Compatibility
             </span>
 
@@ -199,13 +205,13 @@ export default function CompatibilityChecker() {
             <button
               type="button"
               onClick={() => setChecked(true)}
-              className="group mt-10 flex h-[70px] w-full items-center justify-between border-y border-white/30 transition-colors duration-300 hover:bg-white hover:px-5 hover:text-[#124897]"
+              className="group mt-10 flex h-[70px] w-full items-center justify-between border-y border-white/30 transition-colors duration-300 hover:bg-white hover:px-5 hover:text-brand"
             >
               <span className="text-[12px] font-medium uppercase tracking-[0.1em]">
                 Check Compatibility
               </span>
 
-              <span className="text-[20px] text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-2 group-hover:text-[#124897]">
+              <span className="text-[20px] text-accent transition-transform duration-300 group-hover:translate-x-2 group-hover:text-brand">
                 →
               </span>
             </button>
@@ -246,7 +252,7 @@ export default function CompatibilityChecker() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="h-[8px] w-[8px] bg-[#f2ca30]" />
+                      <span className="h-[8px] w-[8px] bg-accent" />
 
                       <span className="font-mono text-[10px] uppercase tracking-[0.1em]">
                         Compatible
@@ -273,13 +279,13 @@ export default function CompatibilityChecker() {
 
                     <ResultStat
                       label="20–80% Estimate"
-                      value={`~${estimatedChargeTime} hrs`}
+                      value={`~${estimatedChargeTime}`}
                     />
                   </div>
 
                   {/* Explanation */}
                   <div className="pt-7">
-                    <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#f2ca30]">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-accent">
                       {isOptimal ? "Optimized Match" : "Compatible"}
                     </p>
 
@@ -335,7 +341,7 @@ function SelectRow({
           ))}
         </select>
 
-        <span className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-[14px] text-[#f2ca30]">
+        <span className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-[14px] text-accent">
           ↓
         </span>
       </div>

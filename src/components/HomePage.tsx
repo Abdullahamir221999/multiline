@@ -15,22 +15,22 @@ export default function HomePage() {
   const [hasEV, setHasEV] = useState(true);
 
   return (
-    <main className="overflow-hidden bg-[#f2f0e9] text-[#101010]">
+    <main className="overflow-hidden bg-paper text-ink">
       {/* =====================================================
           01 / HERO
       ===================================================== */}
 
-      <section className="border-b border-black/15">
+      <section className="border-b border-line">
         <div className="grid min-h-[calc(100svh-78px)] lg:grid-cols-[0.93fr_1.07fr]">
           {/* LEFT */}
-          <div className="flex flex-col justify-between border-b border-black/15 px-5 py-10 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-12">
+          <div className="flex flex-col justify-between border-b border-line px-5 py-10 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-12">
             <div>
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#124897]">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-brand">
                   Multiline Engineering
                 </span>
 
-                <span className="hidden text-[11px] font-medium uppercase tracking-[0.08em] text-black/35 sm:block">
+                <span className="hidden text-[11px] font-medium uppercase tracking-[0.08em] text-ink-faint sm:block">
                   Lahore · Pakistan
                 </span>
               </div>
@@ -44,7 +44,7 @@ export default function HomePage() {
                 }}
                 className="mt-16 lg:mt-20"
               >
-                <p className="mb-6 text-[13px] font-semibold uppercase tracking-[0.08em] text-black/45">
+                <p className="mb-6 text-[13px] font-semibold uppercase tracking-[0.08em] text-ink-soft">
                   Engineering power since 1975
                 </p>
 
@@ -56,7 +56,7 @@ export default function HomePage() {
                   next.
                 </h1>
 
-                <p className="mt-9 max-w-[500px] text-[17px] leading-[1.65] text-black/55">
+                <p className="mt-9 max-w-[500px] text-[17px] leading-[1.65] text-ink-soft">
                   Engineering solutions across EV charging, solar, power
                   generation and energy infrastructure.
                 </p>
@@ -66,26 +66,26 @@ export default function HomePage() {
             <div className="mt-20 grid sm:grid-cols-2">
               <Link
                 href="#solutions"
-                className="group flex h-[68px] items-center justify-between border border-black/20 px-6 sm:border-r-0"
+                className="group flex h-[68px] items-center justify-between border border-line-strong px-6 sm:border-r-0"
               >
                 <span className="text-[11px] font-semibold uppercase tracking-[0.08em]">
                   Explore Solutions
                 </span>
 
-                <span className="text-[19px] text-[#124897] transition-transform duration-300 group-hover:translate-x-2">
+                <span className="text-[19px] text-brand transition-transform duration-300 group-hover:translate-x-2">
                   →
                 </span>
               </Link>
 
               <Link
                 href="#contact"
-                className="group flex h-[68px] items-center justify-between bg-[#124897] px-6 text-white"
+                className="group flex h-[68px] items-center justify-between bg-brand px-6 text-white"
               >
                 <span className="text-[11px] font-semibold uppercase tracking-[0.08em]">
                   Talk to an Engineer
                 </span>
 
-                <span className="text-[19px] text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-2">
+                <span className="text-[19px] text-accent transition-transform duration-300 group-hover:translate-x-2">
                   →
                 </span>
               </Link>
@@ -93,7 +93,7 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT */}
-          <div className="relative min-h-[650px] overflow-hidden bg-[#d5d8d2] lg:min-h-full">
+          <div className="relative min-h-[650px] overflow-hidden bg-image-well lg:min-h-full">
             <Image
               src="/images/products/charger-installation.png"
               alt="Multiline EV charging installation"
@@ -116,7 +116,7 @@ export default function HomePage() {
             </div>
 
             <div className="absolute bottom-7 left-7 max-w-[420px] md:bottom-9 md:left-9">
-              <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#f2ca30]">
+              <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-accent">
                 EV Charging / Installation
               </p>
 
@@ -147,7 +147,7 @@ export default function HomePage() {
           {/* EV */}
           <Link
             href="/ev-chargers"
-            className="group relative min-h-[600px] overflow-hidden border-b border-black/15 lg:border-r"
+            className="group relative min-h-[600px] overflow-hidden border-b border-line lg:border-r"
           >
             <Image
               src="/images/products/charger-front1.png"
@@ -166,7 +166,7 @@ export default function HomePage() {
             </div>
 
             <div className="absolute bottom-8 left-7 right-7 text-white md:bottom-10 md:left-10 md:right-10">
-              <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#f2ca30]">
+              <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-accent">
                 Home · Commercial · Fleet
               </p>
 
@@ -187,24 +187,24 @@ export default function HomePage() {
           {/* SOLAR */}
           <Link
             href="/solar"
-            className="group relative flex min-h-[600px] flex-col justify-between overflow-hidden border-b border-black/15 bg-[#f2ca30] px-7 py-7 text-[#124897] md:px-10 md:py-10"
+            className="group relative flex min-h-[600px] flex-col justify-between overflow-hidden border-b border-line bg-accent px-7 py-7 text-brand md:px-10 md:py-10"
           >
-            <div className="pointer-events-none absolute -right-[9%] top-[5%] h-[460px] w-[460px] rounded-full border border-[#124897]/15" />
-            <div className="pointer-events-none absolute -right-[2%] top-[12%] h-[350px] w-[350px] rounded-full border border-[#124897]/15" />
-            <div className="pointer-events-none absolute right-[6%] top-[20%] h-[230px] w-[230px] rounded-full border border-[#124897]/15" />
+            <div className="pointer-events-none absolute -right-[9%] top-[5%] h-[460px] w-[460px] rounded-full border border-brand/15" />
+            <div className="pointer-events-none absolute -right-[2%] top-[12%] h-[350px] w-[350px] rounded-full border border-brand/15" />
+            <div className="pointer-events-none absolute right-[6%] top-[20%] h-[230px] w-[230px] rounded-full border border-brand/15" />
 
             <div className="relative z-10 flex items-center justify-between">
               <span className="text-[10px] font-semibold uppercase tracking-[0.09em]">
                 02 / Solar
               </span>
 
-              <span className="text-[11px] text-[#124897]/55">
+              <span className="text-[11px] text-brand/55">
                 Residential → Industrial
               </span>
             </div>
 
             <div className="relative z-10">
-              <p className="max-w-[390px] text-[14px] leading-[1.6] text-[#124897]/65">
+              <p className="max-w-[390px] text-[14px] leading-[1.6] text-brand/65">
                 Solar systems designed around actual energy requirements,
                 property conditions and long-term consumption.
               </p>
@@ -226,10 +226,10 @@ export default function HomePage() {
           {/* GENERATORS */}
           <Link
             href="/generators"
-            className="group flex min-h-[500px] flex-col justify-between border-b border-black/15 bg-[#151515] px-7 py-7 text-white md:px-10 md:py-10 lg:border-b-0 lg:border-r"
+            className="group flex min-h-[500px] flex-col justify-between border-b border-line bg-inverse px-7 py-7 text-white md:px-10 md:py-10 lg:border-b-0 lg:border-r"
           >
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.09em] text-[#f2ca30]">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.09em] text-accent">
                 03 / Power Generation
               </span>
 
@@ -257,7 +257,7 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <span className="text-[27px] text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-3">
+                <span className="text-[27px] text-accent transition-transform duration-300 group-hover:translate-x-3">
                   →
                 </span>
               </div>
@@ -267,20 +267,20 @@ export default function HomePage() {
           {/* ENGINEERING */}
           <Link
             href="/company"
-            className="group flex min-h-[500px] flex-col justify-between bg-[#d8dbd5] px-7 py-7 md:px-10 md:py-10"
+            className="group flex min-h-[500px] flex-col justify-between bg-image-well px-7 py-7 md:px-10 md:py-10"
           >
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.09em] text-[#124897]">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.09em] text-brand">
                 04 / Engineering & Services
               </span>
 
-              <span className="text-[11px] text-black/35">
+              <span className="text-[11px] text-ink-faint">
                 Design → Support
               </span>
             </div>
 
             <div>
-              <div className="space-y-0 border-t border-black/15">
+              <div className="space-y-0 border-t border-line">
                 <ServiceRow number="01" label="Site Assessment" />
                 <ServiceRow number="02" label="Installation" />
                 <ServiceRow number="03" label="Commissioning" />
@@ -294,7 +294,7 @@ export default function HomePage() {
                   beyond the product.
                 </h2>
 
-                <span className="text-[27px] text-[#124897] transition-transform duration-300 group-hover:translate-x-3">
+                <span className="text-[27px] text-brand transition-transform duration-300 group-hover:translate-x-3">
                   →
                 </span>
               </div>
@@ -347,7 +347,7 @@ export default function HomePage() {
           04 / EV FEATURE
       ===================================================== */}
 
-      <section className="bg-[#f2f0e9]">
+      <section className="bg-paper">
         <SectionHeader
           number="04"
           label="EV Charging"
@@ -355,9 +355,9 @@ export default function HomePage() {
         />
 
         <div className="grid lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="flex flex-col justify-between border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
+          <div className="flex flex-col justify-between border-b border-line px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
             <div>
-              <span className="inline-flex border border-[#124897]/20 bg-[#124897]/[0.035] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#124897]">
+              <span className="inline-flex border border-brand/20 bg-brand/[0.035] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-brand">
                 Multiline EV Charging
               </span>
 
@@ -367,7 +367,7 @@ export default function HomePage() {
                 to the road.
               </h2>
 
-              <p className="mt-8 max-w-[440px] text-[16px] leading-[1.65] text-black/55">
+              <p className="mt-8 max-w-[440px] text-[16px] leading-[1.65] text-ink-soft">
                 Chargers for homes, workplaces, fleets and public
                 infrastructure — supported by compatibility guidance and
                 professional installation.
@@ -392,7 +392,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative min-h-[680px] overflow-hidden bg-[#d4d8d2] lg:min-h-[820px]">
+          <div className="relative min-h-[680px] overflow-hidden bg-image-well lg:min-h-[820px]">
             <Image
               src="/images/products/charger-front1.png"
               alt="Multiline home EV charger"
@@ -403,7 +403,7 @@ export default function HomePage() {
 
             <div className="absolute inset-0 bg-black/[0.035]" />
 
-            <div className="absolute bottom-7 left-7 right-7 grid grid-cols-3 bg-[#f2f0e9]/95 backdrop-blur-sm md:bottom-9 md:left-9 md:right-9">
+            <div className="absolute bottom-7 left-7 right-7 grid grid-cols-3 bg-paper/95 backdrop-blur-sm md:bottom-9 md:left-9 md:right-9">
               <EVMetric value="7–22 kW" label="AC Charging" />
               <EVMetric value="30–120+" label="DC Charging" />
               <EVMetric value="Type 2 / CCS2" label="Connectors" last />
@@ -416,7 +416,7 @@ export default function HomePage() {
           05 / SOLAR CALCULATOR
       ===================================================== */}
 
-      <section className="bg-[#f2ca30] text-[#124897]">
+      <section className="bg-accent text-brand">
         <SectionHeader
           number="05"
           label="Solar"
@@ -425,7 +425,7 @@ export default function HomePage() {
         />
 
         <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="border-b border-[#124897]/20 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
+          <div className="border-b border-brand/20 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
             <h2 className="max-w-[720px] text-[58px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[74px] lg:text-[86px]">
               How much solar
               <br />
@@ -434,14 +434,14 @@ export default function HomePage() {
               actually need?
             </h2>
 
-            <p className="mt-8 max-w-[470px] text-[16px] leading-[1.65] text-[#124897]/65">
+            <p className="mt-8 max-w-[470px] text-[16px] leading-[1.65] text-brand/65">
               Start with your electricity consumption, property type and EV
               usage. We&apos;ll turn that into a practical system estimate.
             </p>
           </div>
 
           <div className="px-5 py-12 md:px-8 lg:px-12 lg:py-16">
-            <div className="border-t border-[#124897]/30">
+            <div className="border-t border-brand/30">
               <CalculatorRow
                 label="Monthly units"
                 value={`${units} units`}
@@ -456,7 +456,7 @@ export default function HomePage() {
                     setUnits(Number(event.target.value))
                   }
                   className="mt-5 w-full cursor-pointer"
-                  style={{ accentColor: "#124897" }}
+                  style={{ accentColor: "var(--brand)" }}
                 />
               </CalculatorRow>
 
@@ -469,8 +469,8 @@ export default function HomePage() {
                       onClick={() => setProperty(item)}
                       className={`border px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.07em] ${
                         property === item
-                          ? "border-[#124897] bg-[#124897] text-white"
-                          : "border-[#124897]/25"
+                          ? "border-brand bg-brand text-white"
+                          : "border-brand/25"
                       }`}
                     >
                       {item}
@@ -486,10 +486,10 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setHasEV((current) => !current)}
-                  className="mt-5 flex h-[42px] w-[90px] items-center border border-[#124897]/30 p-1"
+                  className="mt-5 flex h-[42px] w-[90px] items-center border border-brand/30 p-1"
                 >
                   <span
-                    className={`h-full w-1/2 bg-[#124897] transition-transform duration-300 ${
+                    className={`h-full w-1/2 bg-brand transition-transform duration-300 ${
                       hasEV ? "translate-x-full" : ""
                     }`}
                   />
@@ -499,18 +499,18 @@ export default function HomePage() {
 
             <button
               type="button"
-              className="group mt-10 flex h-[68px] w-full items-center justify-between bg-[#124897] px-7 text-white"
+              className="group mt-10 flex h-[68px] w-full items-center justify-between bg-brand px-7 text-white"
             >
               <span className="text-[11px] font-semibold uppercase tracking-[0.09em]">
                 Calculate My Solar System
               </span>
 
-              <span className="text-[20px] text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-2">
+              <span className="text-[20px] text-accent transition-transform duration-300 group-hover:translate-x-2">
                 →
               </span>
             </button>
 
-            <p className="mt-4 text-[11px] leading-[1.5] text-[#124897]/50">
+            <p className="mt-4 text-[11px] leading-[1.5] text-brand/50">
               Preliminary calculator preview. Final system recommendation will
               use verified Multiline sizing logic.
             </p>
@@ -522,7 +522,7 @@ export default function HomePage() {
           06 / PROJECTS
       ===================================================== */}
 
-      <section className="bg-[#f2f0e9]">
+      <section className="bg-paper">
         <SectionHeader
           number="06"
           label="Selected Work"
@@ -538,7 +538,7 @@ export default function HomePage() {
                 in the real world.
               </h2>
 
-              <p className="max-w-[430px] text-[15px] leading-[1.65] text-black/50">
+              <p className="max-w-[430px] text-[15px] leading-[1.65] text-ink-soft">
                 Products matter. What matters more is how they perform once
                 they become part of a real home, business or infrastructure
                 project.
@@ -578,7 +578,7 @@ export default function HomePage() {
           07 / HERITAGE
       ===================================================== */}
 
-      <section className="bg-[#101010] text-white">
+      <section className="bg-inverse text-white">
         <SectionHeader
           number="07"
           label="1975 — Today"
@@ -588,7 +588,7 @@ export default function HomePage() {
 
         <div className="grid lg:grid-cols-[0.78fr_1.22fr]">
           <div className="border-b border-white/15 px-5 py-14 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-18">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.09em] text-[#f2ca30]">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.09em] text-accent">
               Our Story
             </p>
 
@@ -610,7 +610,7 @@ export default function HomePage() {
                 Read Our Story
               </span>
 
-              <span className="text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-2">
+              <span className="text-accent transition-transform duration-300 group-hover:translate-x-2">
                 →
               </span>
             </Link>
@@ -664,11 +664,11 @@ export default function HomePage() {
 
         <div className="px-5 py-16 md:px-8 lg:px-12 lg:py-20">
           <div className="mx-auto max-w-[1600px]">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.09em] text-black/40">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.09em] text-ink-faint">
               Technology Partners
             </p>
 
-            <div className="mt-8 grid grid-cols-2 border-l border-t border-black/15 md:grid-cols-3 lg:grid-cols-6">
+            <div className="mt-8 grid grid-cols-2 border-l border-t border-line md:grid-cols-3 lg:grid-cols-6">
               {[
                 "PERKINS",
                 "CUMMINS",
@@ -679,16 +679,16 @@ export default function HomePage() {
               ].map((partner) => (
                 <div
                   key={partner}
-                  className="flex min-h-[130px] items-center justify-center border-b border-r border-black/15 px-5"
+                  className="flex min-h-[130px] items-center justify-center border-b border-r border-line px-5"
                 >
-                  <span className="text-[16px] font-semibold tracking-[0.04em] text-black/35">
+                  <span className="text-[16px] font-semibold tracking-[0.04em] text-ink-faint">
                     {partner}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="mt-16 flex flex-col justify-between gap-8 border-t border-black/15 pt-10 lg:flex-row lg:items-end">
+            <div className="mt-16 flex flex-col justify-between gap-8 border-t border-line pt-10 lg:flex-row lg:items-end">
               <h2 className="max-w-[700px] text-[48px] font-medium leading-[0.95] tracking-[-0.05em] sm:text-[60px]">
                 Trusted across
                 <br />
@@ -696,14 +696,14 @@ export default function HomePage() {
               </h2>
 
               <Link
-                href="/clients"
-                className="group flex min-w-[250px] items-center justify-between border-y border-black/25 py-5"
+                href="/company"
+                className="group flex min-w-[250px] items-center justify-between border-y border-line-strong py-5"
               >
                 <span className="text-[11px] font-semibold uppercase tracking-[0.08em]">
-                  View Clients
+                  View Company
                 </span>
 
-                <span className="text-[#124897] transition-transform duration-300 group-hover:translate-x-2">
+                <span className="text-brand transition-transform duration-300 group-hover:translate-x-2">
                   →
                 </span>
               </Link>
@@ -716,7 +716,7 @@ export default function HomePage() {
           09 / FINAL ROUTING
       ===================================================== */}
 
-      <section id="contact" className="bg-[#124897] text-white">
+      <section id="contact" className="bg-brand text-white">
         <SectionHeader
           number="09"
           label="Start Here"
@@ -785,18 +785,18 @@ function SectionHeader({
         dark
           ? "border-white/15"
           : yellow
-            ? "border-[#124897]/20"
-            : "border-black/15"
+            ? "border-brand/20"
+            : "border-line"
       }`}
     >
       <div className="flex items-center justify-between">
         <div
           className={`flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.09em] ${
             dark
-              ? "text-[#f2ca30]"
+              ? "text-accent"
               : yellow
-                ? "text-[#124897]"
-                : "text-[#124897]"
+                ? "text-brand"
+                : "text-brand"
           }`}
         >
           <span>{number}</span>
@@ -806,8 +806,8 @@ function SectionHeader({
               dark
                 ? "text-white/25"
                 : yellow
-                  ? "text-[#124897]/30"
-                  : "text-black/20"
+                  ? "text-brand/30"
+                  : "text-ink-faint/50"
             }
           >
             /
@@ -821,8 +821,8 @@ function SectionHeader({
             dark
               ? "text-white/30"
               : yellow
-                ? "text-[#124897]/45"
-                : "text-black/30"
+                ? "text-brand/45"
+                : "text-ink-faint"
           }`}
         >
           {right}
@@ -847,7 +847,7 @@ function SolutionMetric({
         last ? "" : "border-r border-white/15"
       }`}
     >
-      <p className="text-[18px] font-medium text-[#f2ca30]">
+      <p className="text-[18px] font-medium text-accent">
         {value}
       </p>
 
@@ -866,8 +866,8 @@ function ServiceRow({
   label: string;
 }) {
   return (
-    <div className="grid grid-cols-[45px_1fr_auto] items-center border-b border-black/15 py-5">
-      <span className="text-[10px] font-semibold tracking-[0.08em] text-black/30">
+    <div className="grid grid-cols-[45px_1fr_auto] items-center border-b border-line py-5">
+      <span className="text-[10px] font-semibold tracking-[0.08em] text-ink-faint">
         {number}
       </span>
 
@@ -875,7 +875,7 @@ function ServiceRow({
         {label}
       </span>
 
-      <span className="text-[#124897]">↗</span>
+      <span className="text-brand">↗</span>
     </div>
   );
 }
@@ -895,11 +895,11 @@ function ProofStat({
 }) {
   return (
     <div
-      className={`flex min-h-[330px] flex-col justify-between border-b border-black/15 px-5 py-9 md:px-8 xl:border-b-0 xl:px-10 ${
+      className={`flex min-h-[330px] flex-col justify-between border-b border-line px-5 py-9 md:px-8 xl:border-b-0 xl:px-10 ${
         last ? "" : "xl:border-r"
       }`}
     >
-      <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-black/40">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-faint">
         {eyebrow}
       </span>
 
@@ -907,13 +907,13 @@ function ProofStat({
         <p className="text-[55px] font-medium leading-none tracking-[-0.06em] sm:text-[66px]">
           {value}
           {suffix && (
-            <span className="text-[20px] tracking-[-0.02em] text-[#124897]">
+            <span className="text-[20px] tracking-[-0.02em] text-brand">
               {suffix}
             </span>
           )}
         </p>
 
-        <p className="mt-6 max-w-[280px] text-[13px] leading-[1.6] text-black/45">
+        <p className="mt-6 max-w-[280px] text-[13px] leading-[1.6] text-ink-soft">
           {description}
         </p>
       </div>
@@ -931,11 +931,11 @@ function FeatureLink({
   return (
     <Link
       href={href}
-      className="group flex items-center justify-between border-b border-black/20 py-5"
+      className="group flex items-center justify-between border-b border-line-strong py-5"
     >
       <span className="text-[13px] font-medium">{label}</span>
 
-      <span className="text-[18px] text-[#124897] transition-transform duration-300 group-hover:translate-x-2">
+      <span className="text-[18px] text-brand transition-transform duration-300 group-hover:translate-x-2">
         →
       </span>
     </Link>
@@ -954,14 +954,14 @@ function EVMetric({
   return (
     <div
       className={`px-5 py-5 ${
-        last ? "" : "border-r border-black/15"
+        last ? "" : "border-r border-line"
       }`}
     >
       <p className="text-[16px] font-semibold tracking-[-0.02em]">
         {value}
       </p>
 
-      <p className="mt-1 text-[9px] font-medium uppercase tracking-[0.07em] text-black/40">
+      <p className="mt-1 text-[9px] font-medium uppercase tracking-[0.07em] text-ink-faint">
         {label}
       </p>
     </div>
@@ -978,7 +978,7 @@ function CalculatorRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border-b border-[#124897]/30 py-7">
+    <div className="border-b border-brand/30 py-7">
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-semibold uppercase tracking-[0.08em]">
           {label}
@@ -1013,7 +1013,7 @@ function ProjectCard({
       className={`group ${large ? "md:row-span-2" : ""}`}
     >
       <div
-        className={`relative overflow-hidden bg-[#d8dad5] ${
+        className={`relative overflow-hidden bg-image-well ${
           large ? "aspect-[4/5]" : "aspect-[16/10]"
         }`}
       >
@@ -1030,18 +1030,18 @@ function ProjectCard({
         </div>
       </div>
 
-      <div className="flex items-start justify-between border-x border-b border-black/15 px-5 py-5">
+      <div className="flex items-start justify-between border-x border-b border-line px-5 py-5">
         <div>
           <h3 className="font-display text-[24px] font-medium tracking-[-0.025em]">
             {title}
           </h3>
 
-          <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.07em] text-black/35">
+          <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.07em] text-ink-faint">
             {location}
           </p>
         </div>
 
-        <span className="text-[#124897] transition-transform duration-300 group-hover:translate-x-2">
+        <span className="text-brand transition-transform duration-300 group-hover:translate-x-2">
           →
         </span>
       </div>
@@ -1053,10 +1053,10 @@ function ProjectGraphic() {
   return (
     <Link
       href="/projects"
-      className="group flex min-h-[360px] flex-col justify-between bg-[#124897] p-7 text-white md:p-9"
+      className="group flex min-h-[360px] flex-col justify-between bg-brand p-7 text-white md:p-9"
     >
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#f2ca30]">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-accent">
           04 / More Work
         </span>
 
@@ -1073,7 +1073,7 @@ function ProjectGraphic() {
             View All Projects
           </span>
 
-          <span className="text-[20px] text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-2">
+          <span className="text-[20px] text-accent transition-transform duration-300 group-hover:translate-x-2">
             →
           </span>
         </div>
@@ -1099,7 +1099,7 @@ function TimelineRow({
         last ? "" : "border-b border-white/15"
       }`}
     >
-      <span className="text-[18px] font-semibold text-[#f2ca30]">
+      <span className="text-[18px] font-semibold text-accent">
         {year}
       </span>
 
@@ -1136,7 +1136,7 @@ function FinalRoute({
           : "border-b border-white/25 lg:border-b-0 lg:border-r"
       }`}
     >
-      <span className="text-[10px] font-semibold tracking-[0.09em] text-[#f2ca30]">
+      <span className="text-[10px] font-semibold tracking-[0.09em] text-accent">
         {number}
       </span>
 
@@ -1149,7 +1149,7 @@ function FinalRoute({
           {description}
         </p>
 
-        <span className="text-[21px] text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-2">
+        <span className="text-[21px] text-accent transition-transform duration-300 group-hover:translate-x-2">
           →
         </span>
       </div>
