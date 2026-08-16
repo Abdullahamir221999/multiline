@@ -72,12 +72,11 @@ export default function ProductHero() {
                 ML / EV / 001
               </span>
 
-              {/* Actual tag */}
-              <span className="inline-flex items-center gap-2 border border-[#124897]/25 bg-[#124897]/[0.035] px-3 py-[9px] text-[11px] font-semibold uppercase tracking-[0.09em] text-[#124897]">
-                <span className="h-[6px] w-[6px] bg-[#f2ca30]" />
+<span className="inline-flex items-center gap-2 rounded-full bg-[#124897]/[0.07] px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#124897]">
+  <span className="h-[6px] w-[6px] rounded-full bg-[#f2ca30]" />
 
-                Residential Charging
-              </span>
+  Residential Charging
+</span>
             </motion.div>
 
             {/* Product title */}
@@ -158,11 +157,30 @@ export default function ProductHero() {
                   </p>
                 </div>
 
-                <p className="text-right text-[10px] font-medium uppercase leading-[1.7] tracking-[0.07em] text-black/40">
-                  Tax inclusive
-                  <br />
-                  Installation optional
-                </p>
+<div className="flex flex-col items-end gap-2">
+  <span className="text-[10px] font-medium uppercase tracking-[0.07em] text-black/40">
+    Tax inclusive
+  </span>
+
+  <div className="flex items-center gap-3">
+    <div className="text-right">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.07em] text-black/55">
+        Installation
+      </p>
+
+      <p className="mt-1 text-[11px] text-black/40">
+        Price varies by city
+      </p>
+    </div>
+
+    <button
+      type="button"
+      className="border border-black/15 px-3.5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.07em] text-black/60 transition-colors hover:border-[#124897]/50 hover:text-[#124897]"
+    >
+      Select City →
+    </button>
+  </div>
+</div>
               </div>
 
               <div className="grid grid-cols-[145px_1fr]">
@@ -224,14 +242,14 @@ export default function ProductHero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            className="relative min-h-[650px] overflow-hidden bg-[#d4d8d2] lg:min-h-full"
+            className="relative min-h-[650px] overflow-hidden bg-[#dedfd9] lg:min-h-full"
           >
             {/* Metadata */}
 
             <div className="absolute left-6 top-6 z-20 md:left-8 md:top-8">
-              <span className="inline-flex border border-black/15 bg-[#f2f0e9]/60 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-black/55 backdrop-blur-sm">
-                Multiline Engineering
-              </span>
+<span className="inline-flex rounded-full bg-[#f2f0e9]/75 px-3.5 py-2 text-[9px] font-semibold uppercase tracking-[0.09em] text-black/55 backdrop-blur-sm">
+  Multiline Engineering
+</span>
 
               <p className="mt-3 text-[12px] font-semibold uppercase tracking-[0.06em] text-black/75">
                 EV Charging / AC Series
@@ -268,7 +286,7 @@ export default function ProductHero() {
                 delay: 0.12,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="absolute inset-0 flex items-center justify-center px-10 pb-24 pt-20 md:px-16"
+              className="absolute inset-0 flex items-center justify-center px-4 pb-24 pt-16 md:px-8"
             >
               <div className="relative flex h-full w-full items-center justify-center">
                 <Image
@@ -277,7 +295,7 @@ export default function ProductHero() {
                   width={800}
                   height={1100}
                   priority
-                  className="h-[78%] w-auto object-contain drop-shadow-[0_28px_40px_rgba(0,0,0,0.18)] xl:h-[84%]"
+                  className="h-[86%] w-auto object-contain drop-shadow-[0_28px_40px_rgba(0,0,0,0.16)] xl:h-[91%]"
                 />
               </div>
             </motion.div>
@@ -287,7 +305,7 @@ export default function ProductHero() {
                 SO IT CAN LOOK INTERACTIVE
             ================================================= */}
 
-            <div className="absolute bottom-0 left-0 right-0 z-20 grid grid-cols-4 border-t border-black/15 bg-[#d4d8d2]/95 backdrop-blur-sm">
+            <div className="absolute bottom-0 left-0 right-0 z-20 grid grid-cols-4 border-t border-black/20 bg-[#f2f0e9]">
               {[
                 "Front",
                 "Side",
@@ -297,17 +315,17 @@ export default function ProductHero() {
                 <button
                   type="button"
                   key={item}
-                  className={`h-[66px] border-r border-black/15 px-4 text-left transition-colors last:border-r-0 ${
-                    index === 0
-                      ? "bg-[#f2f0e9]"
-                      : "hover:bg-black/[0.035]"
-                  }`}
+className={`h-[78px] border-r border-black/15 px-5 text-left transition-colors last:border-r-0 ${
+  index === 0
+    ? "bg-white shadow-[inset_0_3px_0_#124897]"
+    : "bg-[#f2f0e9] hover:bg-white/60"
+}`}
                 >
-                  <span className="block text-[9px] font-semibold tracking-[0.09em] text-black/35">
+                  <span className="block text-[10px] font-semibold tracking-[0.09em] text-black/35">
                     0{index + 1}
                   </span>
 
-                  <span className="mt-1 block text-[11px] font-semibold uppercase tracking-[0.065em]">
+                  <span className="mt-1 block text-[12px] font-semibold uppercase tracking-[0.065em]">
                     {item}
                   </span>
                 </button>

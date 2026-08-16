@@ -1,11 +1,5 @@
-import Header from "@/components/Header";
-import ProductHero from "@/components/ProductHero";
+import HomePage from "@/components/HomePage";
 
 export default function Home() {
-  return (
-    <>
-      <Header />
-      <ProductHero />
-    </>
-  );
+  return <HomePage />;
 }

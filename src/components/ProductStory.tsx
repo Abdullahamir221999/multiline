@@ -93,86 +93,16 @@ export default function ProductStory() {
 
   return (
     <>
-      {/* ======================================================
-          03 / PERFORMANCE
-      ====================================================== */}
-
-      <section className="bg-[#f2f0e9]">
-        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
-          <SectionLabel number="03" label="Performance" />
-        </div>
-
-        <div className="grid lg:grid-cols-[0.92fr_1.08fr]">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{
-              duration: 0.8,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="flex min-h-[720px] flex-col justify-between border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16"
-          >
-            <div>
-              <p className="mb-6 text-[12px] font-medium uppercase tracking-[0.08em] text-[#124897]">
-                Everyday performance
-              </p>
-
-              <h2 className="max-w-[670px] text-[58px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[74px] lg:text-[88px]">
-                Power,
-                <br />
-                precisely
-                <br />
-                delivered.
-              </h2>
-            </div>
-
-            <p className="max-w-[440px] text-[16px] leading-[1.6] text-black/55">
-              Designed to make home charging a predictable part of everyday
-              EV ownership — without unnecessary complexity.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2">
-            <PerformanceStat
-              number="01"
-              value="11"
-              unit="kW"
-              label="Maximum AC output"
-            />
-
-            <PerformanceStat
-              number="02"
-              value="TYPE"
-              unit="2"
-              label="Vehicle connector"
-            />
-
-            <PerformanceStat
-              number="03"
-              value="3"
-              unit="PH"
-              label="Electrical supply"
-            />
-
-            <PerformanceStat
-              number="04"
-              value="IP"
-              unit="65"
-              label="Ingress protection"
-            />
-          </div>
-        </div>
-      </section>
+      
 
       {/* ======================================================
-          04 / CHARGING ESTIMATOR
+          03 / CHARGING ESTIMATOR
       ====================================================== */}
 
       <section className="bg-[#101010] text-white">
         <div className="border-b border-white/15 px-5 py-5 md:px-8 lg:px-12">
           <SectionLabel
-            number="04"
+            number="03"
             label="Charging Estimate"
             light
           />
@@ -281,14 +211,190 @@ export default function ProductStory() {
           </div>
         </div>
       </section>
+            
+            
+            {/* ======================================================
+          04 / EV + SOLAR
+      ====================================================== */}
+
+      <section className="bg-[#f2f0e9]">
+        <div className="grid min-h-[720px] lg:grid-cols-2">
+          <div className="flex flex-col justify-between border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
+            <SectionLabel number="04" label="EV + Solar" />
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{
+                duration: 0.8,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <h2 className="max-w-[680px] text-[58px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[74px] lg:text-[84px]">
+                Power the car.
+                <br />
+                Power the home.
+              </h2>
+
+              <p className="mt-8 max-w-[440px] text-[16px] leading-[1.6] text-black/55">
+                Combine household consumption and EV charging into one solar
+                sizing journey.
+              </p>
+
+              <button
+                type="button"
+                className="group mt-10 flex w-full max-w-[440px] items-center justify-between border-y border-black/30 py-5"
+              >
+                <span className="text-[12px] font-medium uppercase tracking-[0.09em]">
+                  Calculate My Solar System
+                </span>
+
+                <span className="text-[#124897] transition-transform duration-300 group-hover:translate-x-2">
+                  →
+                </span>
+              </button>
+            </motion.div>
+
+            <div className="font-mono mt-14 text-[9px] uppercase tracking-[0.1em] text-black/35">
+              Home + EV / Combined Energy Planning
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 bg-[#124897] text-white">
+            <SolarMetric
+              value="01"
+              title="Home usage"
+              copy="Monthly household electricity consumption."
+            />
+
+            <SolarMetric
+              value="+"
+              title="EV usage"
+              copy="Daily driving and expected charging requirement."
+            />
+
+            <SolarMetric
+              value="="
+              title="System size"
+              copy="Solar sizing based around the complete energy profile."
+            />
+
+            <SolarMetric
+              value="→"
+              title="Quote"
+              copy="Pass the recommendation directly to Multiline sales."
+              highlight
+            />
+          </div>
+        </div>
+      </section>
+      {/* ======================================================
+          05 / SMART CHARGING
+      ====================================================== */}
+
+      <section className="bg-[#d7dad4]">
+        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
+          <SectionLabel number="05" label="Smart Charging" />
+        </div>
+
+        <div className="px-5 py-14 md:px-8 lg:px-12 lg:py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{
+              duration: 0.8,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="grid gap-10 border-b border-black/20 pb-16 lg:grid-cols-2"
+          >
+            <h2 className="max-w-[720px] text-[58px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[76px] lg:text-[88px]">
+              Charging that
+              <br />
+              works around you.
+            </h2>
+
+            <div className="flex items-end">
+              <p className="max-w-[440px] text-[16px] leading-[1.6] text-black/55">
+                The product story can explain the charger&apos;s connected
+                capabilities without turning them into a grid of generic
+                feature cards.
+              </p>
+            </div>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4">
+            <EditorialFeature
+              number="01"
+              title="Schedule"
+              copy="Plan charging around your daily routine."
+            />
+
+            <EditorialFeature
+              number="02"
+              title="Monitor"
+              copy="Understand charging activity and energy usage."
+            />
+
+            <EditorialFeature
+              number="03"
+              title="Control"
+              copy="Manage access to the charger when needed."
+            />
+
+            <EditorialFeature
+              number="04"
+              title="Optimize"
+              copy="Build charging around the wider home energy system."
+              noBorder
+            />
+          </div>
+        </div>
+      </section>      
+      {/* ======================================================
+          06 / ENGINEERING DATA
+      ====================================================== */}
+
+      <section className="bg-white">
+        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
+          <SectionLabel number="06" label="Engineering Data" />
+        </div>
+
+        <div className="grid lg:grid-cols-[0.7fr_1.3fr]">
+          <div className="border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
+            <h2 className="text-[50px] font-medium leading-[0.92] tracking-[-0.055em] sm:text-[64px]">
+              Technical
+              <br />
+              specification.
+            </h2>
+
+            <p className="mt-7 max-w-[350px] text-[14px] leading-[1.6] text-black/45">
+              Final production specifications should be populated from the
+              exact Multiline charger datasheet.
+            </p>
+          </div>
+
+          <div className="px-5 md:px-8 lg:px-12">
+            {specs.map(([label, value], index) => (
+              <DataRow
+                key={label}
+                number={String(index + 1).padStart(2, "0")}
+                label={label}
+                value={value}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ======================================================
-          05 / INSTALLATION
+          07 / INSTALLATION
       ====================================================== */}
 
       <section className="bg-[#f2f0e9]">
         <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
-          <SectionLabel number="05" label="Installation" />
+          <SectionLabel number="07" label="Installation" />
         </div>
 
         <div className="grid lg:grid-cols-[1.08fr_0.92fr]">
@@ -364,192 +470,64 @@ export default function ProductStory() {
           </div>
         </div>
       </section>
-
+                    
       {/* ======================================================
-          06 / ENGINEERING DATA
-      ====================================================== */}
-
-      <section className="bg-white">
-        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
-          <SectionLabel number="06" label="Engineering Data" />
-        </div>
-
-        <div className="grid lg:grid-cols-[0.7fr_1.3fr]">
-          <div className="border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
-            <h2 className="text-[50px] font-medium leading-[0.92] tracking-[-0.055em] sm:text-[64px]">
-              Technical
-              <br />
-              specification.
-            </h2>
-
-            <p className="mt-7 max-w-[350px] text-[14px] leading-[1.6] text-black/45">
-              Final production specifications should be populated from the
-              exact Multiline charger datasheet.
-            </p>
-          </div>
-
-          <div className="px-5 md:px-8 lg:px-12">
-            {specs.map(([label, value], index) => (
-              <DataRow
-                key={label}
-                number={String(index + 1).padStart(2, "0")}
-                label={label}
-                value={value}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ======================================================
-          07 / SMART CHARGING
-      ====================================================== */}
-
-      <section className="bg-[#d7dad4]">
-        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
-          <SectionLabel number="07" label="Smart Charging" />
-        </div>
-
-        <div className="px-5 py-14 md:px-8 lg:px-12 lg:py-20">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{
-              duration: 0.8,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="grid gap-10 border-b border-black/20 pb-16 lg:grid-cols-2"
-          >
-            <h2 className="max-w-[720px] text-[58px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[76px] lg:text-[88px]">
-              Charging that
-              <br />
-              works around you.
-            </h2>
-
-            <div className="flex items-end">
-              <p className="max-w-[440px] text-[16px] leading-[1.6] text-black/55">
-                The product story can explain the charger&apos;s connected
-                capabilities without turning them into a grid of generic
-                feature cards.
-              </p>
-            </div>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4">
-            <EditorialFeature
-              number="01"
-              title="Schedule"
-              copy="Plan charging around your daily routine."
-            />
-
-            <EditorialFeature
-              number="02"
-              title="Monitor"
-              copy="Understand charging activity and energy usage."
-            />
-
-            <EditorialFeature
-              number="03"
-              title="Control"
-              copy="Manage access to the charger when needed."
-            />
-
-            <EditorialFeature
-              number="04"
-              title="Optimize"
-              copy="Build charging around the wider home energy system."
-              noBorder
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ======================================================
-          08 / EV + SOLAR
+          07 / REAL INSTALLATIONS
       ====================================================== */}
 
       <section className="bg-[#f2f0e9]">
-        <div className="grid min-h-[720px] lg:grid-cols-2">
-          <div className="flex flex-col justify-between border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
-            <SectionLabel number="08" label="EV + Solar" />
+        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
+          <SectionLabel number="07" label="Installations" />
+        </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              <h2 className="max-w-[680px] text-[58px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[74px] lg:text-[84px]">
-                Power the car.
-                <br />
-                Power the home.
-              </h2>
+        <div className="px-5 py-14 md:px-8 lg:px-12 lg:py-18">
+          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+            <h2 className="text-[56px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[72px]">
+              In the
+              <br />
+              real world.
+            </h2>
 
-              <p className="mt-8 max-w-[440px] text-[16px] leading-[1.6] text-black/55">
-                Combine household consumption and EV charging into one solar
-                sizing journey.
-              </p>
-
-              <button
-                type="button"
-                className="group mt-10 flex w-full max-w-[440px] items-center justify-between border-y border-black/30 py-5"
-              >
-                <span className="text-[12px] font-medium uppercase tracking-[0.09em]">
-                  Calculate My Solar System
-                </span>
-
-                <span className="text-[#124897] transition-transform duration-300 group-hover:translate-x-2">
-                  →
-                </span>
-              </button>
-            </motion.div>
-
-            <div className="font-mono mt-14 text-[9px] uppercase tracking-[0.1em] text-black/35">
-              Home + EV / Combined Energy Planning
-            </div>
+            <p className="max-w-[420px] text-[15px] leading-[1.6] text-black/50">
+              Eventually this section should use only real Multiline
+              installations from homes, offices and commercial projects.
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 bg-[#124897] text-white">
-            <SolarMetric
-              value="01"
-              title="Home usage"
-              copy="Monthly household electricity consumption."
+          <div className="mt-14 grid gap-px bg-black/15 lg:grid-cols-3">
+            <InstallationCard
+              number="01"
+              label="Residential"
+              position="center"
             />
 
-            <SolarMetric
-              value="+"
-              title="EV usage"
-              copy="Daily driving and expected charging requirement."
+            <InstallationCard
+              number="02"
+              label="Home Charging"
+              position="35% center"
             />
 
-            <SolarMetric
-              value="="
-              title="System size"
-              copy="Solar sizing based around the complete energy profile."
-            />
-
-            <SolarMetric
-              value="→"
-              title="Quote"
-              copy="Pass the recommendation directly to Multiline sales."
-              highlight
+            <InstallationCard
+              number="03"
+              label="Installed System"
+              position="65% center"
             />
           </div>
         </div>
       </section>
 
+
+
+     
+
       {/* ======================================================
-          09 / INCLUDED + SUPPORT
+          08 + 09 / INCLUDED + SUPPORT
       ====================================================== */}
 
       <section className="bg-white">
         <div className="grid lg:grid-cols-2">
           <div className="border-b border-black/15 px-5 py-14 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
-            <SectionLabel number="09" label="In The Box" />
+            <SectionLabel number="08" label="In The Box" />
 
             <h2 className="mt-20 text-[54px] font-medium leading-[0.92] tracking-[-0.055em] sm:text-[68px]">
               Everything
@@ -572,7 +550,7 @@ export default function ProductStory() {
 
           <div className="bg-[#124897] px-5 py-14 text-white md:px-8 lg:px-12 lg:py-16">
             <SectionLabel
-              number="10"
+              number="09"
               label="Support"
               light
             />
@@ -613,12 +591,12 @@ export default function ProductStory() {
       </section>
 
       {/* ======================================================
-          11 / COMPARE CHARGERS
+          10 / COMPARE CHARGERS
       ====================================================== */}
 
       <section className="bg-[#101010] px-5 py-14 text-white md:px-8 lg:px-12 lg:py-20">
         <SectionLabel
-          number="11"
+          number="10"
           label="Compare"
           light
         />
@@ -707,59 +685,16 @@ export default function ProductStory() {
         </div>
       </section>
 
-      {/* ======================================================
-          12 / REAL INSTALLATIONS
-      ====================================================== */}
 
-      <section className="bg-[#f2f0e9]">
-        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
-          <SectionLabel number="12" label="Installations" />
-        </div>
-
-        <div className="px-5 py-14 md:px-8 lg:px-12 lg:py-18">
-          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-            <h2 className="text-[56px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[72px]">
-              In the
-              <br />
-              real world.
-            </h2>
-
-            <p className="max-w-[420px] text-[15px] leading-[1.6] text-black/50">
-              Eventually this section should use only real Multiline
-              installations from homes, offices and commercial projects.
-            </p>
-          </div>
-
-          <div className="mt-14 grid gap-px bg-black/15 lg:grid-cols-3">
-            <InstallationCard
-              number="01"
-              label="Residential"
-              position="center"
-            />
-
-            <InstallationCard
-              number="02"
-              label="Home Charging"
-              position="35% center"
-            />
-
-            <InstallationCard
-              number="03"
-              label="Installed System"
-              position="65% center"
-            />
-          </div>
-        </div>
-      </section>
 
       {/* ======================================================
-          13 / FAQ
+          11 / FAQ
       ====================================================== */}
 
       <section className="bg-white">
         <div className="grid lg:grid-cols-[0.68fr_1.32fr]">
           <div className="border-b border-black/15 px-5 py-14 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
-            <SectionLabel number="13" label="Questions" />
+            <SectionLabel number="11" label="Questions" />
 
             <h2 className="mt-20 text-[54px] font-medium leading-[0.92] tracking-[-0.055em] sm:text-[68px]">
               Before
@@ -841,13 +776,13 @@ export default function ProductStory() {
       </section>
 
       {/* ======================================================
-          14 / FINAL CTA
+          12 / FINAL CTA
       ====================================================== */}
 
       <section className="bg-[#124897] text-white">
         <div className="px-5 py-16 md:px-8 lg:px-12 lg:py-24">
           <SectionLabel
-            number="14"
+            number="12"
             label="11 kW Home Charger"
             light
           />
@@ -978,47 +913,7 @@ function SectionLabel({
   );
 }
 
-function PerformanceStat({
-  number,
-  value,
-  unit,
-  label,
-}: {
-  number: string;
-  value: string;
-  unit: string;
-  label: string;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7 }}
-      className="flex min-h-[360px] flex-col justify-between border-b border-r border-black/15 p-6 last:border-r-0 md:p-9"
-    >
-      <span className="text-[10px] font-semibold tracking-[0.1em] text-black/30">
-        {number}
-      </span>
 
-      <div>
-        <div className="flex items-end gap-2">
-          <span className="text-[62px] font-medium leading-none tracking-[-0.07em] sm:text-[76px]">
-            {value}
-          </span>
-
-          <span className="mb-2 text-[22px] font-medium text-[#124897]">
-            {unit}
-          </span>
-        </div>
-
-        <p className="mt-5 max-w-[180px] text-[11px] uppercase leading-[1.5] tracking-[0.08em] text-black/45">
-          {label}
-        </p>
-      </div>
-    </motion.div>
-  );
-}
 
 function ChargeSlider({
   label,

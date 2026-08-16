@@ -1,5 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useMemo, useState } from "react";
+
+type CategoryFilter = "ALL" | "AC" | "DC";
 
 type Product = {
   name: string;
@@ -11,10 +16,11 @@ type Product = {
   connector: string;
   price: string;
   image: string;
+  imagePosition?: string;
   tag?: string;
 };
 
-const acChargers: Product[] = [
+const products: Product[] = [
   {
     name: "11kW Home Charger",
     slug: "11kw-home-charger",
@@ -26,6 +32,7 @@ const acChargers: Product[] = [
     connector: "Type 2",
     price: "PKR 185,000",
     image: "/images/products/charger-front1.png",
+    imagePosition: "center",
     tag: "Recommended",
   },
   {
@@ -35,10 +42,11 @@ const acChargers: Product[] = [
     power: "7 kW",
     application: "Residential",
     description:
-      "Practical home charging for everyday overnight use.",
+      "Practical AC charging designed for everyday overnight use.",
     connector: "Type 2",
     price: "PKR 135,000",
     image: "/images/products/7kw-jensonn-ac.png",
+    imagePosition: "center",
   },
   {
     name: "22kW Smart Charger",
@@ -51,22 +59,7 @@ const acChargers: Product[] = [
     connector: "Type 2",
     price: "PKR 265,000",
     image: "/images/products/22kw-jensonn-ac.png",
-  },
-];
-
-const dcChargers: Product[] = [
-  {
-    name: "60kW DC Fast Charger",
-    slug: "60kw-dc-fast-charger",
-    category: "DC",
-    power: "60 kW",
-    application: "Commercial",
-    description:
-      "Fast charging infrastructure for commercial and public locations.",
-    connector: "CCS2",
-    price: "Request Quote",
-    image: "/images/products/60kw-dc.png",
-    tag: "Commercial",
+    imagePosition: "center",
   },
   {
     name: "30kW DC Fast Charger",
@@ -75,10 +68,25 @@ const dcChargers: Product[] = [
     power: "30 kW",
     application: "Commercial",
     description:
-      "Compact DC charging for workplaces and lower-demand commercial sites.",
+      "Compact DC charging for workplaces and commercial locations.",
     connector: "CCS2",
     price: "Request Quote",
     image: "/images/products/22kw-smapee-ac.png",
+    imagePosition: "center",
+  },
+  {
+    name: "60kW DC Fast Charger",
+    slug: "60kw-dc-fast-charger",
+    category: "DC",
+    power: "60 kW",
+    application: "Commercial",
+    description:
+      "Fast-charging infrastructure for commercial and public locations.",
+    connector: "CCS2",
+    price: "Request Quote",
+    image: "/images/products/60kw-dc.png",
+    imagePosition: "center",
+    tag: "Commercial",
   },
   {
     name: "120kW DC Fast Charger",
@@ -87,239 +95,366 @@ const dcChargers: Product[] = [
     power: "120 kW",
     application: "Fleet / Public",
     description:
-      "High-output infrastructure for fleets and public fast-charging networks.",
+      "High-output charging infrastructure for fleets and public networks.",
     connector: "CCS2",
     price: "Request Quote",
     image: "/images/products/20kw-dc.png",
+    imagePosition: "center",
   },
 ];
 
 export default function EVChargersPage() {
+  const [filter, setFilter] = useState<CategoryFilter>("ALL");
+
+  const visibleProducts = useMemo(() => {
+    if (filter === "ALL") {
+      return products;
+    }
+
+    return products.filter((product) => product.category === filter);
+  }, [filter]);
+
   return (
-    <main className="bg-[#f2f0e9] text-[#101010]">
+    <main className="bg-[#f5f3ed] text-[#101010]">
       {/* =====================================================
-          HERO
+          BREADCRUMB
       ===================================================== */}
 
-      <section className="border-b border-black/15">
-        {/* Breadcrumb */}
-        <div className="border-b border-black/15 px-5 py-4 md:px-8 lg:px-12">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-black/40">
-              Multiline / Products / EV Charging
-            </span>
+      <div className="border-b border-black/15 px-5 py-[18px] md:px-8 lg:px-12">
+        <div className="flex items-center gap-3 text-[12px] font-medium uppercase tracking-[0.065em] text-black/45">
+          <Link href="/">Home</Link>
 
-            <span className="hidden font-mono text-[9px] uppercase tracking-[0.1em] text-black/30 md:block">
-              Charging Systems
-            </span>
-          </div>
+          <span className="text-black/20">/</span>
+
+          <span>Products</span>
+
+          <span className="text-black/20">/</span>
+
+          <span className="text-black">EV Charging</span>
         </div>
+      </div>
 
-        <div className="grid min-h-[500px] lg:grid-cols-[1.25fr_0.75fr]">
-          {/* Left */}
-          <div className="flex flex-col justify-between border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-16">
+      {/* =====================================================
+          CATEGORY HEADER
+      ===================================================== */}
+
+      <section className="px-5 pb-16 pt-16 md:px-8 lg:px-12 lg:pb-20 lg:pt-20">
+        <div className="mx-auto max-w-[1600px]">
+          <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
             <div>
-              <div className="flex items-center gap-3">
-                <span className="h-[7px] w-[7px] bg-[#f2ca30]" />
-
-                <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-[#124897]">
-                  EV Charging Systems
-                </span>
-              </div>
-
-              <h1 className="mt-8 max-w-[950px] text-[68px] font-medium leading-[0.9] tracking-[-0.065em] sm:text-[88px] lg:text-[104px] xl:text-[112px]">
-                Charging,
-                <br />
-                engineered
-                <br />
-                for the site.
-              </h1>
-            </div>
-          </div>
-
-          {/* Right */}
-          <div className="flex flex-col justify-end px-5 py-12 md:px-8 lg:px-12 lg:py-16">
-            <p className="max-w-[430px] text-[18px] font-medium leading-[1.45] tracking-[-0.025em]">
-              Charging systems for homes, workplaces, commercial sites and
-              fleet infrastructure.
-            </p>
-
-            <div className="mt-12 border-t border-black/20">
-              <ApplicationRow number="01" label="Residential" />
-              <ApplicationRow number="02" label="Commercial" />
-              <ApplicationRow number="03" label="Fleet & Public" />
-            </div>
-
-            <Link
-              href="#choose-type"
-              className="group mt-9 flex items-center justify-between border-b border-black/25 pb-5"
-            >
-              <span className="text-[10px] font-semibold uppercase tracking-[0.11em]">
-                Explore Chargers
-              </span>
-
-              <span className="text-[#124897] transition-transform duration-300 group-hover:translate-y-1">
-                ↓
-              </span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          AC / DC SELECTOR
-      ===================================================== */}
-
-      <section id="choose-type" className="scroll-mt-10">
-        <div className="grid lg:grid-cols-2">
-          {/* AC */}
-          <Link
-            href="#ac-chargers"
-            className="group bg-[#f2ca30] px-5 py-9 text-[#124897] md:px-8 lg:border-r lg:border-[#124897]/20 lg:px-12 lg:py-10"
-          >
-            <div className="flex min-h-[155px] flex-col justify-between">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="h-[7px] w-[7px] bg-[#124897]" />
-
-                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#124897]/60">
-                    01
-                  </span>
-                </div>
-
-                <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#124897]/60">
-                  7 — 22 kW
-                </span>
-              </div>
-
-              <div className="flex items-end justify-between gap-8">
-                <div>
-                  <h2 className="text-[44px] font-medium leading-none tracking-[-0.055em]">
-                    AC Charging
-                  </h2>
-
-                  <p className="mt-4 text-[12px] text-[#124897]/65">
-                    Home · Workplace · Destination
-                  </p>
-                </div>
-
-                <span className="text-[25px] transition-transform duration-300 group-hover:translate-x-2">
-                  →
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          {/* DC */}
-          <Link
-            href="#dc-chargers"
-            className="group bg-[#124897] px-5 py-9 text-[#f2ca30] md:px-8 lg:px-12 lg:py-10"
-          >
-            <div className="flex min-h-[155px] flex-col justify-between">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="h-[7px] w-[7px] bg-[#f2ca30]" />
-
-                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#f2ca30]/65">
-                    02
-                  </span>
-                </div>
-
-                <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[#f2ca30]/65">
-                  30 — 120+ kW
-                </span>
-              </div>
-
-              <div className="flex items-end justify-between gap-8">
-                <div>
-                  <h2 className="text-[44px] font-medium leading-none tracking-[-0.055em]">
-                    DC Fast Charging
-                  </h2>
-
-                  <p className="mt-4 text-[12px] text-[#f2ca30]/65">
-                    Commercial · Fleet · Public
-                  </p>
-                </div>
-
-                <span className="text-[25px] transition-transform duration-300 group-hover:translate-x-2">
-                  →
-                </span>
-              </div>
-            </div>
-          </Link>
-        </div>
-      </section>
-
-      {/* =====================================================
-          AC PRODUCTS
-      ===================================================== */}
-
-      <ProductSection
-        id="ac-chargers"
-        number="01"
-        label="AC Charging"
-        title="Everyday charging."
-        description="Residential and destination charging systems for everyday EV use."
-        range="7 — 22 kW"
-        products={acChargers}
-      />
-
-      {/* =====================================================
-          DC PRODUCTS
-      ===================================================== */}
-
-      <ProductSection
-        id="dc-chargers"
-        number="02"
-        label="DC Fast Charging"
-        title="Commercial fast charging."
-        description="Higher-output systems for commercial sites, fleets and public charging infrastructure."
-        range="30 — 120+ kW"
-        products={dcChargers}
-      />
-
-      {/* =====================================================
-          FIND MY CHARGER
-      ===================================================== */}
-
-      <section className="bg-[#124897] px-5 py-16 text-white md:px-8 lg:px-12 lg:py-20">
-        <div className="mx-auto max-w-[1500px]">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#f2ca30]">
-              Charger Selection
-            </span>
-
-            <span className="hidden font-mono text-[9px] uppercase tracking-[0.1em] text-white/30 md:block">
-              Multiline EV Assistant
-            </span>
-          </div>
-
-          <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_0.65fr] lg:items-end">
-            <h2 className="max-w-[760px] text-[54px] font-medium leading-[0.92] tracking-[-0.055em] sm:text-[68px] lg:text-[78px]">
-              Not sure which charger fits your EV?
-            </h2>
-
-            <div>
-              <p className="max-w-[450px] text-[15px] leading-[1.65] text-white/55">
-                Select your vehicle or ask Multiline. We&apos;ll compare its
-                charging capability with the available systems and recommend
-                the right option.
+              <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#124897]">
+                Multiline EV Charging
               </p>
 
-              <Link
-                href="/products/11kw-home-charger#compatibility"
-                className="group mt-8 flex items-center justify-between border-y border-white/30 py-5"
-              >
-                <span className="text-[10px] font-semibold uppercase tracking-[0.11em]">
-                  Find My Charger
-                </span>
+              <h1 className="mt-5 text-[68px] font-medium leading-[0.92] tracking-[-0.06em] sm:text-[84px] lg:text-[98px]">
+                EV Chargers
+              </h1>
+            </div>
 
-                <span className="text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-2">
-                  →
-                </span>
-              </Link>
+            <p className="max-w-[470px] text-[16px] leading-[1.65] text-black/50">
+              AC and DC charging systems for homes, workplaces, commercial
+              locations, fleets and public charging infrastructure.
+            </p>
+          </div>
+        </div>
+      </section>
+
+{/* =====================================================
+    CATEGORY NAVIGATION
+===================================================== */}
+
+<section className="border-y border-black/15 bg-[#f2f0e9]">
+  <div className="px-5 py-4 md:px-8 lg:px-12">
+    <div className="mx-auto flex max-w-[1600px] items-center justify-between">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.09em] text-black/55">
+        Categories
+      </span>
+
+      <span className="hidden text-[11px] text-black/35 sm:block">
+        Browse charging systems
+      </span>
+    </div>
+  </div>
+
+  <div className="border-t border-black/15">
+    <div className="mx-auto grid max-w-[1600px] lg:grid-cols-3">
+      {/* ALL */}
+      <button
+        type="button"
+        onClick={() => setFilter("ALL")}
+        className={`group min-h-[160px] border-b border-black/15 px-5 py-7 text-left md:px-8 lg:border-b-0 lg:border-r lg:px-10 ${
+          filter === "ALL"
+            ? "bg-[#101010] text-white"
+            : "bg-[#f2f0e9] text-[#101010]"
+        }`}
+      >
+        <div className="flex h-full flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span
+              className={`text-[11px] font-semibold uppercase tracking-[0.09em] ${
+                filter === "ALL"
+                  ? "text-white/45"
+                  : "text-black/35"
+              }`}
+            >
+              01
+            </span>
+
+            <span
+              className={`text-[11px] ${
+                filter === "ALL"
+                  ? "text-white/40"
+                  : "text-black/35"
+              }`}
+            >
+              {products.length} products
+            </span>
+          </div>
+
+          <div className="flex items-end justify-between">
+            <div>
+              <h3 className="text-[30px] font-medium tracking-[-0.045em]">
+                All Chargers
+              </h3>
+
+              <p
+                className={`mt-2 text-[12px] ${
+                  filter === "ALL"
+                    ? "text-white/45"
+                    : "text-black/45"
+                }`}
+              >
+                Browse the full EV charging range
+              </p>
+            </div>
+
+            <span className="text-[20px] transition-transform duration-300 group-hover:translate-x-2">
+              →
+            </span>
+          </div>
+        </div>
+      </button>
+
+      {/* AC */}
+      <button
+        type="button"
+        onClick={() => setFilter("AC")}
+        className={`group min-h-[160px] border-b border-black/15 px-5 py-7 text-left md:px-8 lg:border-b-0 lg:border-r lg:px-10 ${
+          filter === "AC"
+            ? "bg-[#f2ca30] text-[#124897]"
+            : "bg-[#f2f0e9] text-[#101010]"
+        }`}
+      >
+        <div className="flex h-full flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span
+              className={`text-[11px] font-semibold uppercase tracking-[0.09em] ${
+                filter === "AC"
+                  ? "text-[#124897]/55"
+                  : "text-black/35"
+              }`}
+            >
+              02
+            </span>
+
+            <span
+              className={`text-[11px] ${
+                filter === "AC"
+                  ? "text-[#124897]/55"
+                  : "text-black/35"
+              }`}
+            >
+              7 — 22 kW
+            </span>
+          </div>
+
+          <div className="flex items-end justify-between">
+            <div>
+              <h3 className="text-[30px] font-medium tracking-[-0.045em]">
+                AC Charging
+              </h3>
+
+              <p
+                className={`mt-2 text-[12px] ${
+                  filter === "AC"
+                    ? "text-[#124897]/65"
+                    : "text-black/45"
+                }`}
+              >
+                Home · Workplace · Destination
+              </p>
+            </div>
+
+            <span className="text-[20px] transition-transform duration-300 group-hover:translate-x-2">
+              →
+            </span>
+          </div>
+        </div>
+      </button>
+
+      {/* DC */}
+      <button
+        type="button"
+        onClick={() => setFilter("DC")}
+        className={`group min-h-[160px] px-5 py-7 text-left md:px-8 lg:px-10 ${
+          filter === "DC"
+            ? "bg-[#124897] text-[#f2ca30]"
+            : "bg-[#f2f0e9] text-[#101010]"
+        }`}
+      >
+        <div className="flex h-full flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span
+              className={`text-[11px] font-semibold uppercase tracking-[0.09em] ${
+                filter === "DC"
+                  ? "text-[#f2ca30]/60"
+                  : "text-black/35"
+              }`}
+            >
+              03
+            </span>
+
+            <span
+              className={`text-[11px] ${
+                filter === "DC"
+                  ? "text-[#f2ca30]/60"
+                  : "text-black/35"
+              }`}
+            >
+              30 — 120+ kW
+            </span>
+          </div>
+
+          <div className="flex items-end justify-between">
+            <div>
+              <h3 className="text-[30px] font-medium tracking-[-0.045em]">
+                DC Fast Charging
+              </h3>
+
+              <p
+                className={`mt-2 text-[12px] ${
+                  filter === "DC"
+                    ? "text-[#f2ca30]/65"
+                    : "text-black/45"
+                }`}
+              >
+                Commercial · Fleet · Public
+              </p>
+            </div>
+
+            <span className="text-[20px] transition-transform duration-300 group-hover:translate-x-2">
+              →
+            </span>
+          </div>
+        </div>
+      </button>
+    </div>
+  </div>
+</section>
+
+      {/* =====================================================
+          PRODUCT TOOLBAR
+      ===================================================== */}
+
+      <section
+        id="products"
+        className="border-b border-black/15 px-5 py-8 md:px-8 lg:px-12"
+      >
+        <div className="mx-auto flex max-w-[1600px] flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.09em] text-[#124897]">
+              {filter === "ALL"
+                ? "All Products"
+                : filter === "AC"
+                  ? "AC Charging"
+                  : "DC Fast Charging"}
+            </p>
+
+            <h2 className="mt-3 text-[40px] font-medium tracking-[-0.045em] md:text-[48px]">
+              {filter === "ALL"
+                ? "All chargers."
+                : filter === "AC"
+                  ? "AC chargers."
+                  : "DC fast chargers."}
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-8">
+            <span className="text-[12px] text-black/40">
+              {visibleProducts.length}{" "}
+              {visibleProducts.length === 1 ? "product" : "products"}
+            </span>
+
+            <div className="flex items-center gap-2">
+              <FilterButton
+                active={filter === "ALL"}
+                onClick={() => setFilter("ALL")}
+              >
+                All
+              </FilterButton>
+
+              <FilterButton
+                active={filter === "AC"}
+                onClick={() => setFilter("AC")}
+              >
+                AC
+              </FilterButton>
+
+              <FilterButton
+                active={filter === "DC"}
+                onClick={() => setFilter("DC")}
+              >
+                DC
+              </FilterButton>
             </div>
           </div>
+        </div>
+      </section>
+
+{/* =====================================================
+    PRODUCTS
+===================================================== */}
+
+<section className="px-5 pb-24 pt-10 md:px-8 lg:px-12 lg:pb-32 lg:pt-12">
+  <div className="mx-auto grid max-w-[1600px] gap-x-6 gap-y-12 md:grid-cols-2 xl:grid-cols-3">
+    {visibleProducts.map((product) => (
+      <ProductCard
+        key={product.slug}
+        product={product}
+      />
+    ))}
+  </div>
+</section>
+      
+
+      {/* =====================================================
+          SIMPLE ASSISTANCE CTA
+      ===================================================== */}
+
+      <section className="border-t border-black/15 bg-[#f2f0e9] px-5 py-14 md:px-8 lg:px-12 lg:py-16">
+        <div className="mx-auto flex max-w-[1600px] flex-col justify-between gap-10 lg:flex-row lg:items-center">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.09em] text-[#124897]">
+              Charger Compatibility
+            </p>
+
+            <h2 className="mt-3 text-[34px] font-medium tracking-[-0.04em] md:text-[42px]">
+              Not sure which charger fits your EV?
+            </h2>
+          </div>
+
+          <Link
+            href="/products/11kw-home-charger#compatibility"
+            className="group flex min-w-[280px] items-center justify-between border-y border-black/25 py-5"
+          >
+            <span className="text-[11px] font-semibold uppercase tracking-[0.08em]">
+              Check My Vehicle
+            </span>
+
+            <span className="text-[18px] text-[#124897] transition-transform duration-300 group-hover:translate-x-2">
+              →
+            </span>
+          </Link>
         </div>
       </section>
     </main>
@@ -327,213 +462,246 @@ export default function EVChargersPage() {
 }
 
 /* =========================================================
-   PRODUCT SECTION
+   CATEGORY CARD
 ========================================================= */
 
-function ProductSection({
-  id,
-  number,
+function CategoryCard({
+  active,
   label,
-  title,
-  description,
-  range,
-  products,
+  subtitle,
+  image,
+  onClick,
+  accent,
+  last = false,
 }: {
-  id: string;
-  number: string;
+  active: boolean;
   label: string;
-  title: string;
-  description: string;
-  range: string;
-  products: Product[];
+  subtitle: string;
+  image: string;
+  onClick: () => void;
+  accent?: "yellow" | "blue";
+  last?: boolean;
 }) {
   return (
-    <section
-      id={id}
-      className="scroll-mt-10 border-t border-black/15 bg-[#f2f0e9]"
+    <button
+      type="button"
+      onClick={onClick}
+      className={`group text-left md:border-r ${
+        last ? "md:border-r-0" : "border-black/15"
+      }`}
     >
-      {/* Section intro */}
-      <div className="grid border-b border-black/15 lg:grid-cols-[0.85fr_1.15fr]">
-        <div className="border-b border-black/15 px-5 py-10 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-12">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#124897]">
-              {number} / {label}
-            </span>
+      <div className="relative aspect-[16/7] overflow-hidden bg-[#d9d9d4]">
+        <Image
+          src={image}
+          alt={label}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+        />
 
-            <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-black/30 lg:hidden">
-              {range}
-            </span>
-          </div>
+        <div className="absolute inset-0 bg-black/[0.04]" />
 
-          <h2 className="mt-8 text-[50px] font-medium leading-[0.92] tracking-[-0.055em] sm:text-[62px]">
-            {title}
-          </h2>
-        </div>
+        {active && (
+          <div
+            className={`absolute bottom-0 left-0 h-[5px] w-full ${
+              accent === "yellow"
+                ? "bg-[#f2ca30]"
+                : accent === "blue"
+                  ? "bg-[#124897]"
+                  : "bg-[#101010]"
+            }`}
+          />
+        )}
+      </div>
 
-        <div className="flex items-end justify-between gap-10 px-5 py-10 md:px-8 lg:px-12 lg:py-12">
-          <p className="max-w-[530px] text-[15px] leading-[1.65] text-black/50">
-            {description}
+      <div
+        className={`flex items-center justify-between border-b border-black/15 px-5 py-5 transition-colors md:border-b-0 lg:px-7 ${
+          active ? "bg-white" : "bg-[#f2f0e9] group-hover:bg-white/60"
+        }`}
+      >
+        <div>
+          <p className="text-[15px] font-semibold tracking-[-0.02em]">
+            {label}
           </p>
 
-          <span className="hidden whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.1em] text-black/30 lg:block">
-            {products.length} Systems / {range}
-          </span>
+          <p className="mt-1 text-[11px] text-black/40">
+            {subtitle}
+          </p>
         </div>
-      </div>
 
-      {/* Equal product grid */}
-      <div className="grid md:grid-cols-2 xl:grid-cols-3">
-        {products.map((product, index) => (
-          <ProductCard
-            key={product.slug}
-            product={product}
-            number={String(index + 1).padStart(2, "0")}
-          />
-        ))}
+        <span
+          className={`text-[17px] transition-transform duration-300 group-hover:translate-x-1 ${
+            active ? "text-[#124897]" : "text-black/35"
+          }`}
+        >
+          →
+        </span>
       </div>
-    </section>
+    </button>
   );
 }
 
 /* =========================================================
-   PRODUCT CARD
+   FILTER BUTTON
 ========================================================= */
+
+function FilterButton({
+  active,
+  children,
+  onClick,
+}: {
+  active: boolean;
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.07em] transition-colors ${
+        active
+          ? "border-[#124897] bg-[#124897] text-white"
+          : "border-black/15 bg-transparent text-black/50 hover:border-black/30 hover:text-black"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
 
 function ProductCard({
   product,
-  number,
 }: {
   product: Product;
-  number: string;
 }) {
   const isQuote = product.price === "Request Quote";
 
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group flex flex-col border-b border-black/15 xl:border-r xl:last:border-r-0"
+      className="group flex h-full flex-col border border-black/15 bg-[#f8f7f2] transition-colors duration-300 hover:border-black/30"
     >
-      {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-[#d8dbd5]">
+      {/* ================================================
+          IMAGE
+      ================================================= */}
+
+      <div className="relative m-3 mb-0 aspect-[4/3] overflow-hidden bg-[#deded8]">
         <Image
           src={product.image}
           alt={product.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.015]"
+          style={{
+            objectPosition: product.imagePosition ?? "center",
+          }}
         />
 
-        {/* Meta */}
-        <div className="absolute left-5 top-5 flex items-center gap-3">
-          <span className="bg-[#f2f0e9]/90 px-3 py-2 font-mono text-[8px] uppercase tracking-[0.12em] text-black/55 backdrop-blur-sm">
-            {number} / {product.category}
+        {/* Category */}
+        <div className="absolute left-4 top-4">
+          <span
+            className={`inline-flex border px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.075em] backdrop-blur-sm ${
+              product.category === "AC"
+                ? "border-[#124897]/20 bg-[#f2ca30]/95 text-[#124897]"
+                : "border-[#124897] bg-[#124897]/95 text-[#f2ca30]"
+            }`}
+          >
+            {product.category === "AC"
+              ? "AC Charging"
+              : "DC Fast Charging"}
           </span>
         </div>
 
-        {/* Optional recommendation */}
+        {/* Optional tag */}
         {product.tag && (
-          <div className="absolute right-5 top-5 bg-[#f2ca30] px-3 py-2">
-            <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-[#101010]">
+          <div className="absolute right-4 top-4">
+            <span className="inline-flex border border-black/10 bg-[#f8f7f2]/95 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.075em] text-black/65 backdrop-blur-sm">
               {product.tag}
             </span>
           </div>
         )}
 
-        <div className="absolute bottom-5 right-5 flex h-[42px] w-[42px] items-center justify-center bg-[#124897] text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-2">
+        {/* Arrow */}
+        <div className="absolute bottom-4 right-4 flex h-[42px] w-[42px] items-center justify-center bg-[#f8f7f2] text-[18px] text-[#124897] transition-transform duration-300 group-hover:translate-x-1">
           →
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col px-5 py-7 md:px-7 lg:px-8 lg:py-8">
-        {/* Power / use */}
-        <div className="flex items-start justify-between gap-6">
-          <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#124897]">
+      {/* ================================================
+          CONTENT
+      ================================================= */}
+
+      <div className="flex flex-1 flex-col px-6 pb-7 pt-6 lg:px-7">
+        {/* Power + application */}
+
+        <div className="flex items-center justify-between gap-6">
+          <span className="text-[12px] font-semibold uppercase tracking-[0.065em] text-[#124897]">
             {product.power}
           </span>
 
-          <span className="text-right text-[9px] uppercase tracking-[0.08em] text-black/35">
+          <span className="text-right text-[11px] font-medium uppercase tracking-[0.055em] text-black/40">
             {product.application}
           </span>
         </div>
 
-        {/* Name */}
-        <h3 className="mt-5 text-[29px] font-medium leading-[1] tracking-[-0.045em]">
+        {/* Product name */}
+
+        <h3 className="font-display mt-5 text-[29px] font-medium leading-[1.05] tracking-[-0.025em] lg:text-[32px]">
           {product.name}
         </h3>
 
         {/* Description */}
-        <p className="mt-4 max-w-[390px] text-[13px] leading-[1.6] text-black/45">
+
+        <p className="mt-3 max-w-[390px] text-[13px] leading-[1.65] text-black/50">
           {product.description}
         </p>
 
-        {/* Specs */}
-        <div className="mt-8 border-t border-black/15">
-          <CardSpec label="Connector" value={product.connector} />
-          <CardSpec label="Output" value={product.power} />
-        </div>
+        {/* Product specifications */}
 
-        {/* Price / CTA */}
-        <div className="mt-auto flex items-end justify-between border-t border-black/15 pt-6">
+        <div className="mt-8 flex items-center gap-7 border-t border-black/12 pt-5">
           <div>
-            <p className="font-mono text-[8px] uppercase tracking-[0.1em] text-black/30">
-              {isQuote ? "Commercial Enquiry" : "Price"}
+            <p className="text-[10px] font-medium uppercase tracking-[0.06em] text-black/35">
+              Connector
             </p>
 
-            <p className="mt-2 text-[16px] font-medium">
-              {product.price}
+            <p className="mt-1.5 text-[13px] font-medium">
+              {product.connector}
             </p>
           </div>
 
-          <span className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[#124897]">
-            {isQuote ? "View System →" : "View Product →"}
-          </span>
+          <div className="h-8 w-px bg-black/12" />
+
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.06em] text-black/35">
+              Output
+            </p>
+
+            <p className="mt-1.5 text-[13px] font-medium">
+              {product.power}
+            </p>
+          </div>
+        </div>
+
+        {/* Price */}
+
+        <div className="mt-auto pt-8">
+          <div className="flex items-end justify-between border-t border-black/12 pt-5">
+            <div>
+              <p className="text-[10px] font-medium uppercase tracking-[0.06em] text-black/35">
+                {isQuote ? "Commercial enquiry" : "Price"}
+              </p>
+
+              <p className="mt-2 text-[16px] font-semibold tracking-[-0.02em]">
+                {product.price}
+              </p>
+            </div>
+
+            <span className="text-[10px] font-semibold uppercase tracking-[0.07em] text-[#124897]">
+              {isQuote ? "View System →" : "View Product →"}
+            </span>
+          </div>
         </div>
       </div>
     </Link>
-  );
-}
-
-/* =========================================================
-   SMALL COMPONENTS
-========================================================= */
-
-function ApplicationRow({
-  number,
-  label,
-}: {
-  number: string;
-  label: string;
-}) {
-  return (
-    <div className="flex items-center justify-between border-b border-black/20 py-4">
-      <span className="font-mono text-[8px] text-black/30">
-        {number}
-      </span>
-
-      <span className="text-[12px] uppercase tracking-[0.08em] text-black/50">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-function CardSpec({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="flex items-center justify-between border-b border-black/15 py-4">
-      <span className="text-[9px] uppercase tracking-[0.08em] text-black/35">
-        {label}
-      </span>
-
-      <span className="text-[11px] font-medium">
-        {value}
-      </span>
-    </div>
   );
 }
