@@ -1,17 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import {
-  AnimatePresence,
-  motion,
-} from "motion/react";
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-
-const PRODUCT_IMAGE = "/images/products/charger-front.png";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useMemo, useState } from "react";
 
 const specs = [
   ["Rated Output", "11 kW"],
@@ -93,8 +84,6 @@ export default function ProductStory() {
 
   return (
     <>
-      
-
       {/* ======================================================
           03 / CHARGING ESTIMATOR
       ====================================================== */}
@@ -157,6 +146,7 @@ export default function ProductStory() {
                     className="mt-3 text-[64px] font-medium leading-none tracking-[-0.07em] sm:text-[82px]"
                   >
                     {chargingTime.toFixed(1)}
+
                     <span className="ml-3 text-[20px] tracking-[-0.02em] text-white/45">
                       HRS
                     </span>
@@ -211,9 +201,8 @@ export default function ProductStory() {
           </div>
         </div>
       </section>
-            
-            
-            {/* ======================================================
+
+      {/* ======================================================
           04 / EV + SOLAR
       ====================================================== */}
 
@@ -242,18 +231,18 @@ export default function ProductStory() {
                 sizing journey.
               </p>
 
-              <button
-                type="button"
-                className="group mt-10 flex w-full max-w-[440px] items-center justify-between border-y border-black/30 py-5"
-              >
-                <span className="text-[12px] font-medium uppercase tracking-[0.09em]">
-                  Calculate My Solar System
-                </span>
+<button
+  type="button"
+  className="group mt-10 flex h-[64px] w-full max-w-[440px] items-center justify-between bg-[#124897] px-6 text-white transition-colors duration-300 hover:bg-[#0f3d7d]"
+>
+  <span className="text-[12px] font-semibold uppercase tracking-[0.09em]">
+    Calculate My Solar System
+  </span>
 
-                <span className="text-[#124897] transition-transform duration-300 group-hover:translate-x-2">
-                  →
-                </span>
-              </button>
+  <span className="text-[20px] text-[#f2ca30] transition-transform duration-300 group-hover:translate-x-2">
+    →
+  </span>
+</button>
             </motion.div>
 
             <div className="font-mono mt-14 text-[9px] uppercase tracking-[0.1em] text-black/35">
@@ -280,17 +269,17 @@ export default function ProductStory() {
               copy="Solar sizing based around the complete energy profile."
             />
 
-            <SolarMetric
-              value="→"
-              title="Quote"
-              copy="Pass the recommendation directly to Multiline sales."
-              highlight
-            />
+<SolarMetric
+  value="→"
+  title="Quote"
+  copy="Pass the recommendation directly to Multiline sales."
+/>
           </div>
         </div>
       </section>
+
       {/* ======================================================
-          05 / SMART CHARGING
+          05 / SMART CHARGING — REDUCED
       ====================================================== */}
 
       <section className="bg-[#d7dad4]">
@@ -298,60 +287,60 @@ export default function ProductStory() {
           <SectionLabel number="05" label="Smart Charging" />
         </div>
 
-        <div className="px-5 py-14 md:px-8 lg:px-12 lg:py-20">
+        <div className="grid lg:grid-cols-[0.92fr_1.08fr]">
+          {/* Intro */}
+
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{
-              duration: 0.8,
+              duration: 0.7,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="grid gap-10 border-b border-black/20 pb-16 lg:grid-cols-2"
+            className="border-b border-black/15 px-5 py-12 md:px-8 lg:border-b-0 lg:border-r lg:px-12 lg:py-14"
           >
-            <h2 className="max-w-[720px] text-[58px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[76px] lg:text-[88px]">
+            <p className="mb-6 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#124897]">
+              Connected charging
+            </p>
+
+            <h2 className="max-w-[620px] text-[52px] font-medium leading-[0.92] tracking-[-0.055em] sm:text-[64px] lg:text-[68px]">
               Charging that
               <br />
               works around you.
             </h2>
 
-            <div className="flex items-end">
-              <p className="max-w-[440px] text-[16px] leading-[1.6] text-black/55">
-                The product story can explain the charger&apos;s connected
-                capabilities without turning them into a grid of generic
-                feature cards.
-              </p>
-            </div>
+            <p className="mt-7 max-w-[440px] text-[15px] leading-[1.65] text-black/50">
+              Connected controls help make everyday charging easier to plan,
+              understand and manage.
+            </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4">
-            <EditorialFeature
+          {/* Features */}
+
+          <div className="px-5 md:px-8 lg:px-12">
+            <SmartFeatureRow
               number="01"
               title="Schedule"
-              copy="Plan charging around your daily routine."
+              copy="Plan charging around your daily routine and preferred charging times."
             />
 
-            <EditorialFeature
+            <SmartFeatureRow
               number="02"
               title="Monitor"
-              copy="Understand charging activity and energy usage."
+              copy="Understand charging activity and keep track of energy usage."
             />
 
-            <EditorialFeature
+            <SmartFeatureRow
               number="03"
               title="Control"
-              copy="Manage access to the charger when needed."
-            />
-
-            <EditorialFeature
-              number="04"
-              title="Optimize"
-              copy="Build charging around the wider home energy system."
-              noBorder
+              copy="Manage charger access and connected charging when needed."
+              last
             />
           </div>
         </div>
-      </section>      
+      </section>
+
       {/* ======================================================
           06 / ENGINEERING DATA
       ====================================================== */}
@@ -389,7 +378,7 @@ export default function ProductStory() {
       </section>
 
       {/* ======================================================
-          07 / INSTALLATION
+          07 / INSTALLATION — PROCESS + REAL INSTALLATIONS
       ====================================================== */}
 
       <section className="bg-[#f2f0e9]">
@@ -397,8 +386,10 @@ export default function ProductStory() {
           <SectionLabel number="07" label="Installation" />
         </div>
 
+        {/* Main installation story */}
+
         <div className="grid lg:grid-cols-[1.08fr_0.92fr]">
-          <div className="relative min-h-[620px] overflow-hidden border-b border-black/15 lg:min-h-[780px] lg:border-b-0 lg:border-r">
+          <div className="relative min-h-[560px] overflow-hidden border-b border-black/15 lg:min-h-[720px] lg:border-b-0 lg:border-r">
             <Image
               src="/images/products/charger-installation.png"
               alt="Multiline EV charger installation"
@@ -409,55 +400,60 @@ export default function ProductStory() {
 
             <div className="absolute inset-0 bg-black/[0.05]" />
 
-            <div className="absolute bottom-7 left-7 font-mono text-[9px] uppercase tracking-[0.12em] text-white drop-shadow">
-              Residential installation / Reference
+            <div className="absolute bottom-7 left-7 text-[10px] font-semibold uppercase tracking-[0.08em] text-white drop-shadow">
+              Residential Installation / Reference
             </div>
           </div>
 
-          <div className="flex flex-col px-5 py-12 md:px-8 lg:px-12 lg:py-16">
-            <motion.h2
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="max-w-[560px] text-[58px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[70px]"
-            >
-              Installed by
-              <br />
-              Multiline.
-            </motion.h2>
+          <div className="flex flex-col justify-between px-5 py-12 md:px-8 lg:px-12 lg:py-16">
+            <div>
+              <motion.h2
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{
+                  duration: 0.8,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="max-w-[560px] text-[58px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[70px]"
+              >
+                Installed by
+                <br />
+                Multiline.
+              </motion.h2>
 
-            <p className="mt-8 max-w-[460px] text-[16px] leading-[1.6] text-black/55">
-              From the first electrical assessment to final commissioning,
-              installation can be handled as part of the complete charging
-              solution.
-            </p>
+              <p className="mt-8 max-w-[460px] text-[16px] leading-[1.6] text-black/55">
+                From the first electrical assessment to final commissioning,
+                installation can be handled as part of the complete charging
+                solution.
+              </p>
 
-            <div className="mt-14 border-t border-black/20">
-              <ProcessRow
-                number="01"
-                title="Site assessment"
-              />
-              <ProcessRow
-                number="02"
-                title="Electrical inspection"
-              />
-              <ProcessRow
-                number="03"
-                title="Charger installation"
-              />
-              <ProcessRow
-                number="04"
-                title="Testing & commissioning"
-              />
+              <div className="mt-12 border-t border-black/20">
+                <ProcessRow
+                  number="01"
+                  title="Site assessment"
+                />
+
+                <ProcessRow
+                  number="02"
+                  title="Electrical inspection"
+                />
+
+                <ProcessRow
+                  number="03"
+                  title="Charger installation"
+                />
+
+                <ProcessRow
+                  number="04"
+                  title="Testing & commissioning"
+                />
+              </div>
             </div>
 
             <button
               type="button"
-              className="group mt-12 flex h-[64px] items-center justify-between border-y border-black/30"
+              className="group mt-10 flex h-[64px] items-center justify-between border-y border-black/30"
             >
               <span className="text-[12px] font-medium uppercase tracking-[0.09em]">
                 Request Installation
@@ -469,32 +465,28 @@ export default function ProductStory() {
             </button>
           </div>
         </div>
-      </section>
-                    
-      {/* ======================================================
-          07 / REAL INSTALLATIONS
-      ====================================================== */}
 
-      <section className="bg-[#f2f0e9]">
-        <div className="border-b border-black/15 px-5 py-5 md:px-8 lg:px-12">
-          <SectionLabel number="07" label="Installations" />
-        </div>
+        {/* Real installations */}
 
-        <div className="px-5 py-14 md:px-8 lg:px-12 lg:py-18">
-          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-            <h2 className="text-[56px] font-medium leading-[0.9] tracking-[-0.06em] sm:text-[72px]">
-              In the
-              <br />
-              real world.
-            </h2>
+        <div className="border-t border-black/15 px-5 py-12 md:px-8 lg:px-12 lg:py-14">
+          <div className="flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#124897]">
+                Real Installations
+              </p>
 
-            <p className="max-w-[420px] text-[15px] leading-[1.6] text-black/50">
-              Eventually this section should use only real Multiline
-              installations from homes, offices and commercial projects.
+              <h3 className="mt-4 text-[42px] font-medium leading-[0.95] tracking-[-0.05em] sm:text-[52px]">
+                In the real world.
+              </h3>
+            </div>
+
+            <p className="max-w-[430px] text-[14px] leading-[1.65] text-black/50">
+              See how Multiline charging systems sit within real residential
+              and commercial environments.
             </p>
           </div>
 
-          <div className="mt-14 grid gap-px bg-black/15 lg:grid-cols-3">
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
             <InstallationCard
               number="01"
               label="Residential"
@@ -515,10 +507,6 @@ export default function ProductStory() {
           </div>
         </div>
       </section>
-
-
-
-     
 
       {/* ======================================================
           08 + 09 / INCLUDED + SUPPORT
@@ -685,8 +673,6 @@ export default function ProductStory() {
         </div>
       </section>
 
-
-
       {/* ======================================================
           11 / FAQ
       ====================================================== */}
@@ -800,17 +786,18 @@ export default function ProductStory() {
               </p>
             </div>
 
-<button
-  type="button"
-  className="group flex h-[72px] min-w-[300px] items-center justify-between bg-[#f2ca30] px-7 text-[#101010]"
->
-  <span className="text-[12px] font-semibold uppercase tracking-[0.1em]">
-    Add to Cart
-  </span>
-  <span className="text-[20px] transition-transform duration-300 group-hover:translate-x-2">
-    →
-  </span>
-</button>
+            <button
+              type="button"
+              className="group flex h-[72px] min-w-[300px] items-center justify-between bg-[#f2ca30] px-7 text-[#101010]"
+            >
+              <span className="text-[12px] font-semibold uppercase tracking-[0.1em]">
+                Add to Cart
+              </span>
+
+              <span className="text-[20px] transition-transform duration-300 group-hover:translate-x-2">
+                →
+              </span>
+            </button>
           </div>
         </div>
       </section>
@@ -846,17 +833,18 @@ export default function ProductStory() {
                 PKR 185,000
               </p>
 
-<button
-  type="button"
-  className="group ml-7 flex h-full min-w-[190px] items-center justify-between bg-[#f2ca30] px-6 text-[#101010]"
->
-  <span className="text-[10px] font-semibold uppercase tracking-[0.1em]">
-    Add to Cart
-  </span>
-  <span className="transition-transform duration-300 group-hover:translate-x-1">
-    →
-  </span>
-</button>
+              <button
+                type="button"
+                className="group ml-7 flex h-full min-w-[190px] items-center justify-between bg-[#f2ca30] px-6 text-[#101010]"
+              >
+                <span className="text-[10px] font-semibold uppercase tracking-[0.1em]">
+                  Add to Cart
+                </span>
+
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
+              </button>
             </div>
           </motion.div>
         )}
@@ -912,8 +900,6 @@ function SectionLabel({
     </div>
   );
 }
-
-
 
 function ChargeSlider({
   label,
@@ -981,6 +967,38 @@ function MiniStat({
   );
 }
 
+function SmartFeatureRow({
+  number,
+  title,
+  copy,
+  last = false,
+}: {
+  number: string;
+  title: string;
+  copy: string;
+  last?: boolean;
+}) {
+  return (
+    <div
+      className={`grid gap-5 py-8 sm:grid-cols-[54px_150px_1fr] sm:items-center ${
+        last ? "" : "border-b border-black/15"
+      }`}
+    >
+      <span className="text-[10px] font-semibold tracking-[0.09em] text-black/30">
+        {number}
+      </span>
+
+      <h3 className="text-[22px] font-medium tracking-[-0.035em]">
+        {title}
+      </h3>
+
+      <p className="max-w-[430px] text-[13px] leading-[1.65] text-black/48">
+        {copy}
+      </p>
+    </div>
+  );
+}
+
 function ProcessRow({
   number,
   title,
@@ -1027,38 +1045,6 @@ function DataRow({
       <span className="text-right text-[14px] font-medium">
         {value}
       </span>
-    </div>
-  );
-}
-
-function EditorialFeature({
-  number,
-  title,
-  copy,
-  noBorder = false,
-}: {
-  number: string;
-  title: string;
-  copy: string;
-  noBorder?: boolean;
-}) {
-  return (
-    <div
-      className={`min-h-[290px] py-9 md:px-7 ${
-        noBorder ? "" : "border-b border-black/15 md:border-r"
-      }`}
-    >
-      <span className="font-mono text-[8px] text-black/35">
-        {number}
-      </span>
-
-      <h3 className="mt-20 text-[30px] font-medium tracking-[-0.045em]">
-        {title}
-      </h3>
-
-      <p className="mt-4 max-w-[230px] text-[13px] leading-[1.6] text-black/45">
-        {copy}
-      </p>
     </div>
   );
 }
@@ -1241,24 +1227,26 @@ function InstallationCard({
   position: string;
 }) {
   return (
-    <div className="bg-[#f2f0e9]">
-      <div className="relative aspect-[4/5] overflow-hidden">
+    <div className="border border-black/15 bg-[#f2f0e9]">
+      <div className="relative aspect-[4/3] overflow-hidden bg-[#d7dad4]">
         <Image
           src="/images/products/charger-installation.png"
           alt={`Multiline EV charger ${label}`}
           fill
-          sizes="(max-width: 1024px) 100vw, 33vw"
-          className="object-cover transition-transform duration-700 hover:scale-[1.02]"
-          style={{ objectPosition: position }}
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover transition-transform duration-700 hover:scale-[1.015]"
+          style={{
+            objectPosition: position,
+          }}
         />
       </div>
 
       <div className="flex items-center justify-between border-t border-black/15 px-4 py-4">
-        <span className="font-mono text-[8px] text-black/35">
+        <span className="text-[10px] font-semibold tracking-[0.08em] text-black/35">
           {number}
         </span>
 
-        <span className="text-[10px] uppercase tracking-[0.08em]">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.07em] text-black/60">
           {label}
         </span>
       </div>
