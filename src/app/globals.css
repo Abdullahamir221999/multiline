@@ -41,25 +41,26 @@ html.dark {
   --brand: #3d7bc8;
   --brand-foreground: #ffffff;
   --accent: #f2ca30;
-  --accent-hover: #f5d45a;
-  --accent-foreground: #111111;
+  --accent-hover: #f6d45c;
+  --accent-foreground: #000000;
 
-  --ink: #f0eee6;
-  --ink-soft: rgba(240, 238, 230, 0.65);
-  --ink-faint: rgba(240, 238, 230, 0.4);
-  --paper: #12141a;
-  --surface: #1a1d24;
-  --surface-elevated: #22262f;
-  --image-well: #2a2e36;
-  --muted: #9a9b97;
+  --ink: #f5f5f5;
+  --ink-soft: rgba(245, 245, 245, 0.7);
+  --ink-faint: rgba(245, 245, 245, 0.45);
+  --paper: #000000;
+  --surface: #0a0a0a;
+  --surface-elevated: #141414;
+  --image-well: #1a1a1a;
+  --muted: #a3a3a3;
 
-  --line: rgba(240, 238, 230, 0.12);
-  --line-strong: rgba(240, 238, 230, 0.22);
+  --line: rgba(255, 255, 255, 0.14);
+  --line-strong: rgba(255, 255, 255, 0.28);
 
-  --inverse: #0a0b0e;
-  --inverse-foreground: #f0eee6;
+  /* Near-black contrast blocks (not pure white — keeps text-white CTAs readable) */
+  --inverse: #111111;
+  --inverse-foreground: #f5f5f5;
 
-  --focus-ring: #5b8fd4;
+  --focus-ring: #f2ca30;
 }
 
 @theme inline {
@@ -168,4 +169,20 @@ a {
 .page-shell {
   margin-inline: auto;
   max-width: var(--page-max);
+}
+
+/*
+  White panels in dark mode keep dark type.
+  Remap ink tokens so text-ink / borders stay readable on bg-white.
+  Explicit text-white (e.g. photo overlays) is left alone.
+*/
+html.dark .bg-white {
+  --ink: #0a0a0a;
+  --ink-soft: rgba(10, 10, 10, 0.65);
+  --ink-faint: rgba(10, 10, 10, 0.42);
+  --line: rgba(10, 10, 10, 0.14);
+  --line-strong: rgba(10, 10, 10, 0.24);
+  --brand: #124897;
+  --muted: #5c5c5c;
+  color: #0a0a0a;
 }
