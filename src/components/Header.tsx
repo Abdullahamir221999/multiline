@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import Image from "next/image";
+import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { cn } from "@/helpers/cn";
 import { CONTACT_HREF, PRIMARY_NAV } from "@/lib/navigation";
@@ -92,12 +93,14 @@ export default function Header() {
         <div className="ml-auto flex items-center justify-end gap-3 sm:gap-5 sm:min-w-[180px]">
           <ThemeToggle className="hidden sm:inline-flex" />
 
-          <Link
+          <Button
             href={CONTACT_HREF}
-            className="hidden text-[12px] font-medium uppercase tracking-[0.08em] text-ink transition-colors hover:text-brand md:block"
+            variant="accent"
+            size="md"
+            className="hidden md:inline-flex"
           >
-            Contact
-          </Link>
+            Get a Quote
+          </Button>
 
           <button
             type="button"
@@ -156,20 +159,22 @@ export default function Header() {
             );
           })}
 
-          <Link
-            href={CONTACT_HREF}
-            onClick={closeMenu}
-            className="border-b border-line py-4 text-[15px] font-medium"
-          >
-            Contact
-          </Link>
-
-          <div className="flex items-center justify-between py-4">
+          <div className="flex items-center justify-between border-b border-line py-4">
             <span className="text-[12px] font-medium uppercase tracking-[0.08em] text-ink-faint">
               Appearance
             </span>
             <ThemeToggle />
           </div>
+
+          <Button
+            href={CONTACT_HREF}
+            onClick={closeMenu}
+            variant="accent"
+            size="lg"
+            className="mt-4 w-full justify-center"
+          >
+            Get a Quote
+          </Button>
         </nav>
       </div>
     </header>
