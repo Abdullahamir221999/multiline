@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
-
+import Image from "next/image";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { cn } from "@/helpers/cn";
 import { CONTACT_HREF, PRIMARY_NAV } from "@/lib/navigation";
@@ -38,14 +38,21 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-paper/95 backdrop-blur-md">
       <div className="page-pad flex h-[var(--header-height)] items-center">
-        <Link
-          href="/"
-          onClick={closeMenu}
-          className="flex min-w-0 items-center text-[20px] font-semibold tracking-[-0.04em] text-brand sm:min-w-[180px] sm:text-[21px]"
-        >
-          MULTILINE
-          <span aria-hidden className="ml-1 inline-block h-[6px] w-[6px] bg-accent" />
-        </Link>
+<Link
+  href="/"
+  onClick={closeMenu}
+  className="flex min-w-0 items-center sm:min-w-[180px]"
+  aria-label="Multiline Home"
+>
+  <Image
+    src="/images/multiline-logo.png"
+    alt="Multiline"
+    width={180}
+    height={48}
+    priority
+    className="h-[38px] w-auto object-contain"
+  />
+</Link>
 
         <nav
           aria-label="Primary"
