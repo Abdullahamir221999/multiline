@@ -63,23 +63,28 @@ export default function Header() {
               pathname === item.href || pathname.startsWith(`${item.href}/`);
 
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "group relative text-[14px] font-medium transition-colors",
-                  isActive ? "text-brand" : "text-ink hover:text-brand"
-                )}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {item.label}
-                <span
-                  className={cn(
-                    "absolute -bottom-2 left-0 h-px bg-brand transition-all duration-300",
-                    isActive ? "w-full" : "w-0 group-hover:w-full"
-                  )}
-                />
-              </Link>
+<Link
+  key={item.href}
+  href={item.href}
+  className={cn(
+    "group relative text-[14px] font-medium transition-colors duration-200",
+    isActive
+      ? "text-brand"
+      : "text-ink hover:text-brand"
+  )}
+  aria-current={isActive ? "page" : undefined}
+>
+  {item.label}
+
+  <span
+    className={cn(
+      "absolute -bottom-2 left-0 h-[2px] bg-accent transition-all duration-300",
+      isActive
+        ? "w-full"
+        : "w-0 group-hover:w-full"
+    )}
+  />
+</Link>
             );
           })}
         </nav>
