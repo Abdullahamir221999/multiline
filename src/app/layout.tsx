@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     "Premium EV charging, solar and power solutions by Multiline Engineering.",
 };
 
-const themeInitScript = `(function(){try{var t=localStorage.getItem("multiline-theme");if(t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){}})();`;
+const themeInitScript = `(function(){try{var t=localStorage.getItem("multiline-theme");if(t==="dark"){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){document.documentElement.classList.remove("dark");}})();`;
 
 export default function RootLayout({
   children,
