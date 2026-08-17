@@ -289,7 +289,7 @@ export default function ProductStory() {
           05 / SMART CHARGING — REDUCED
       ====================================================== */}
 
-      <section className="bg-image-well">
+      <section className="bg-[#C5D4FC]">
         <div className="border-b border-line px-5 py-5 md:px-8 lg:px-12">
           <SectionLabel number="05" label="Smart Charging" />
         </div>

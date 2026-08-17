@@ -80,96 +80,107 @@ export default function EVChargersPage() {
         <div className="page-shell flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <div>
             <SectionEyebrow>Multiline EV Charging</SectionEyebrow>
-            <h1 className="mt-5 text-[56px] font-medium leading-[0.92] tracking-[-0.06em] sm:text-[76px] lg:text-[92px]">
-              EV Chargers
-            </h1>
+<h1 className="-ml-[5px] mt-5 text-[56px] font-medium leading-[0.92] tracking-[-0.06em] sm:text-[76px] lg:-ml-[7px] lg:text-[92px]">
+  EV Chargers
+</h1>
           </div>
 
-          <p className="max-w-[470px] text-[16px] leading-[1.65] text-ink-soft">
-            AC and DC charging systems for homes, workplaces, commercial
-            locations, fleets and public charging infrastructure.
-          </p>
+<p className="max-w-[470px] text-[16px] leading-[1.65] text-ink-soft lg:text-right">
+  AC and DC charging systems for homes, workplaces, commercial
+  locations, fleets and public charging infrastructure.
+</p>
         </div>
       </section>
 
-      <section className="border-y border-line bg-surface" aria-label="Categories">
-        <div className="page-pad py-4">
-          <div className="page-shell flex items-center justify-between">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink-soft">
-              Categories
-            </span>
-            <span className="hidden text-[11px] text-ink-faint sm:block">
-              Select a charging type
-            </span>
-          </div>
-        </div>
+      <section
+  className="border-y border-line bg-surface"
+  aria-label="Categories"
+>
+  {/* CATEGORY LABEL */}
+  <div className="page-pad py-4">
+    <div className="page-shell flex items-center justify-between">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink-soft">
+        Categories
+      </span>
 
-        <div className="border-t border-line">
-          <div className="page-shell grid lg:grid-cols-3">
-            {CATEGORY_PANELS.map((panel, index) => {
-              const isActive = filter === panel.id;
-              const isLast = index === CATEGORY_PANELS.length - 1;
+      <span className="hidden text-[11px] text-ink-faint sm:block">
+        Select a charging type
+      </span>
+    </div>
+  </div>
 
-              return (
-                <button
-                  key={panel.id}
-                  type="button"
-                  onClick={() => setFilter(panel.id)}
-                  aria-pressed={isActive}
+  {/* CATEGORY CARDS */}
+  <div className="border-t border-line">
+    <div className="page-shell grid lg:grid-cols-3">
+      {CATEGORY_PANELS.map((panel, index) => {
+        const isActive = filter === panel.id;
+        const isLast = index === CATEGORY_PANELS.length - 1;
+
+        return (
+          <button
+            key={panel.id}
+            type="button"
+            onClick={() => setFilter(panel.id)}
+            aria-pressed={isActive}
+            className={cn(
+              "group min-h-[148px] border-b border-line px-5 py-7 text-left transition-colors md:px-8 lg:border-b-0 lg:px-12",
+              !isLast && "lg:border-r lg:border-line",
+              isActive
+                ? panel.activeClass
+                : "bg-surface text-ink hover:bg-paper"
+            )}
+          >
+            <div className="flex h-full flex-col justify-between gap-8">
+              <div className="flex items-center justify-between">
+                <span
                   className={cn(
-                    "group min-h-[148px] border-b border-line px-5 py-7 text-left transition-colors md:px-8 lg:border-b-0 lg:px-10",
-                    !isLast && "lg:border-r lg:border-line",
-                    isActive ? panel.activeClass : "bg-surface text-ink hover:bg-paper"
+                    "text-[11px] font-semibold uppercase tracking-[0.09em]",
+                    isActive ? "opacity-55" : "text-ink-faint"
                   )}
                 >
-                  <div className="flex h-full flex-col justify-between gap-8">
-                    <div className="flex items-center justify-between">
-                      <span
-                        className={cn(
-                          "text-[11px] font-semibold uppercase tracking-[0.09em]",
-                          isActive ? "opacity-55" : "text-ink-faint"
-                        )}
-                      >
-                        {panel.number}
-                      </span>
-                      <span
-                        className={cn(
-                          "text-[11px]",
-                          isActive ? "opacity-55" : "text-ink-faint"
-                        )}
-                      >
-                        {panel.meta}
-                      </span>
-                    </div>
+                  {panel.number}
+                </span>
 
-                    <div className="flex items-end justify-between gap-4">
-                      <div>
-                        <h2 className="text-[28px] font-medium tracking-[-0.045em]">
-                          {panel.title}
-                        </h2>
-                        <p
-                          className={cn(
-                            "mt-2 text-[12px]",
-                            isActive ? "opacity-70" : "text-ink-soft"
-                          )}
-                        >
-                          {panel.subtitle}
-                        </p>
-                      </div>
-                      <span
-                        aria-hidden
-                        className="text-[20px] transition-transform duration-300 group-hover:translate-x-2"
-                      >
-                        →
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+                <span
+                  className={cn(
+                    "text-[11px]",
+                    isActive ? "opacity-55" : "text-ink-faint"
+                  )}
+                >
+                  {panel.meta}
+                </span>
+              </div>
+
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <h2 className="text-[28px] font-medium tracking-[-0.045em]">
+                    {panel.title}
+                  </h2>
+
+                  <p
+                    className={cn(
+                      "mt-2 text-[12px]",
+                      isActive ? "opacity-70" : "text-ink-soft"
+                    )}
+                  >
+                    {panel.subtitle}
+                  </p>
+                </div>
+
+                <span
+                  aria-hidden
+                  className="text-[20px] transition-transform duration-300 group-hover:translate-x-2"
+                >
+                  →
+                </span>
+              </div>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  </div>
+</section>
 
       <section id="products" className="page-pad border-b border-line py-8">
         <div className="page-shell flex flex-col justify-between gap-4 sm:flex-row sm:items-end">

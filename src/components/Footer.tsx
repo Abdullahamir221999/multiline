@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import Image from "next/image";
 import { CONTACT_HREF, PRIMARY_NAV } from "@/lib/navigation";
 
 const FOOTER_LINKS = [
@@ -15,13 +15,19 @@ export default function Footer() {
       <div className="page-pad page-shell py-14 lg:py-16">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr]">
           <div>
-            <Link
-              href="/"
-              className="inline-flex items-center text-[20px] font-semibold tracking-[-0.04em] text-brand"
-            >
-              MULTILINE
-              <span aria-hidden className="ml-1 inline-block h-[6px] w-[6px] bg-accent" />
-            </Link>
+<Link
+  href="/"
+  className="inline-flex items-center"
+  aria-label="Multiline Home"
+>
+  <Image
+    src="/images/multiline-logo.png"
+    alt="Multiline"
+    width={190}
+    height={52}
+    className="h-[42px] w-auto object-contain"
+  />
+</Link>
 
             <p className="mt-5 max-w-md text-[15px] leading-[1.65] text-ink-soft">
               Engineering EV charging, solar and power infrastructure —
@@ -63,12 +69,16 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
-                  <Link
-                    href={CONTACT_HREF}
-                    className="font-medium text-ink transition-colors hover:text-brand"
-                  >
-                    Talk to an engineer →
-                  </Link>
+<Link
+  href={CONTACT_HREF}
+  className="group inline-flex items-center gap-2 font-semibold text-[#124897] transition-opacity duration-300 hover:opacity-70"
+>
+  <span>Talk to an engineer</span>
+
+  <span className="transition-transform duration-300 group-hover:translate-x-1.5">
+    →
+  </span>
+</Link>
                 </li>
               </ul>
             </div>

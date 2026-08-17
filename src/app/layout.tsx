@@ -63,7 +63,7 @@ export default function RootLayout({
           <Header />
           <div className="flex-1">{children}</div>
           <Footer />
-          <DesignSwitcher />
+          {/* <DesignSwitcher /> */}
         </ThemeProvider>
       </body>
     </html>
