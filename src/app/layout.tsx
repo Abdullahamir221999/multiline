@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import {
   Archivo,
+  Host_Grotesk,
   IBM_Plex_Mono,
   Newsreader,
 } from "next/font/google";
 import Script from "next/script";
 
-import DesignSwitcher from "@/components/DesignSwitcher";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -15,6 +15,12 @@ import "./globals.css";
 const archivo = Archivo({
   subsets: ["latin"],
   variable: "--font-archivo",
+  display: "swap",
+});
+
+const hostGrotesk = Host_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-host-grotesk",
   display: "swap",
 });
 
@@ -50,7 +56,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${archivo.variable} ${plexMono.variable} ${newsreader.variable} flex min-h-dvh flex-col antialiased`}
+        className={`${archivo.variable} ${hostGrotesk.variable} ${plexMono.variable} ${newsreader.variable} flex min-h-dvh flex-col antialiased`}
         suppressHydrationWarning
       >
         <Script
@@ -59,11 +65,11 @@ export default function RootLayout({
         >
           {themeInitScript}
         </Script>
+
         <ThemeProvider>
           <Header />
           <div className="flex-1">{children}</div>
           <Footer />
-          {/* <DesignSwitcher /> */}
         </ThemeProvider>
       </body>
     </html>

@@ -86,6 +86,7 @@ html.dark {
   --color-inverse-foreground: var(--inverse-foreground);
 
   --font-sans: var(--font-archivo), Arial, sans-serif;
+  --font-host: var(--font-host-grotesk), Arial, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, monospace;
   --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
 }
