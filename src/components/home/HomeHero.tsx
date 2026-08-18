@@ -21,7 +21,7 @@ export const HomeHero = () => {
     <section className="relative isolate overflow-hidden border-b border-line lg:grid lg:min-h-[calc(100svh-var(--header-height))] lg:grid-cols-[1.15fr_0.85fr]">
       <div className="relative min-h-[320px] sm:min-h-[420px] lg:min-h-full">
         <Image
-          src="/images/solar-house.jpg"
+          src="/images/solar-house.png"
           alt="Modern home with solar panels"
           fill
           priority
