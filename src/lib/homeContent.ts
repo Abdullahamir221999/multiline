@@ -43,7 +43,7 @@ export const HOME_PRODUCTS: HomeProduct[] = [
     description:
       "Licensed net-metered solar installations with engineering-led sizing and after-sales support.",
     href: "/solar",
-    image: "/images/solar-plates.png",
+    image: "/images/solar-plates.jpg",
     imageAlt: "Solar panel array",
   },
   {
