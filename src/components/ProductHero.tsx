@@ -151,18 +151,20 @@ export default function ProductHero() {
                       className="peer sr-only"
                     />
 
-                    <span className="relative flex h-5 w-5 shrink-0 items-center justify- border border-line-strong bg-white transition-colors duration-200 peer-checked:border-brand peer-checked:bg-brand">
+                    <span className="relative flex h-5 w-5 shrink-0 items-center justify-center border border-line-strong bg-white transition-colors duration-200 peer-checked:border-brand peer-checked:bg-brand">
                       <svg
                         viewBox="0 0 12 12"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        className="hidden h-3 w-3 text-white peer-checked:block"
+                        className={`h-3 w-3 text-white ${powerIntakeBox ? "block" : "hidden"}`}
                         aria-hidden="true"
                       >
                         <path
                           d="M2.5 6.25L4.75 8.5L9.5 3.75"
                           stroke="currentColor"
                           strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                       </svg>
                     </span>
