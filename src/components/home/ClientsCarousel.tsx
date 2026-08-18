@@ -83,7 +83,7 @@ export const ClientsCarousel = () => {
           }
         }}
       >
-        <div className="relative mx-auto max-w-[1100px]">
+        <div className="relative mx-auto max-w-[1400px]">
           <button
             type="button"
             onClick={goPrev}

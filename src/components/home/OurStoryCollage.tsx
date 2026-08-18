@@ -9,11 +9,11 @@ export const OurStoryCollage = () => (
     <SectionHeaderBar title="Our Story" />
 
     <div className="page-pad page-shell py-14 lg:py-20">
-      <p className="mx-auto max-w-[640px] text-center text-[16px] leading-[1.65] text-ink-soft">
+      <p className="mx-auto max-w-[640px] text-center text-[18px] leading-[1.65] ">
         Multiline&apos;s history, told through the archives.
       </p>
 
-      <div className="mx-auto mt-12 grid max-w-[1100px] gap-8 lg:grid-cols-2 lg:gap-0">
+      <div className="mx-auto mt-12 grid max-w-[1400px] gap-8 lg:grid-cols-2 lg:gap-0">
         {HOME_STORY_IMAGES.map((image, index) => (
           <div
             key={image.src}

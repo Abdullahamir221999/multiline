@@ -51,7 +51,7 @@ export const CorporateIdentity = () => {
         id="corporate-identity-heading"
       />
 
-      <div className="page-shell grid lg:grid-cols-[0.62fr_1.38fr]">
+      <div className="page-shell grid lg:grid-cols-[0.4fr_1.6fr]">
         {/* LEFT */}
 
         <motion.div
@@ -150,13 +150,13 @@ export const CorporateIdentity = () => {
                   delay: index * 0.06,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="grid gap-4 border-b border-line py-5 sm:grid-cols-[44px_1fr] sm:gap-5 lg:py-6"
+                className="grid gap-4 border-b border-line py-5 sm:grid-cols-[44px_1fr] sm:gap-5 lg:py-2"
               >
-                <span className="pt-[2px] text-[9px] font-semibold tracking-[0.05em] text-brand/55">
+                <span className="pt-[2px] text-[9px] font-semibold tracking-[0.05em] text-brand/75">
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
-                <p className="max-w-[760px] text-[15px] leading-[1.6] text-ink-soft">
+                <p className="max-w-[1050px] text-[15px] leading-[1.6]">
                   {paragraph}
                 </p>
               </motion.div>

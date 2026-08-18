@@ -5,6 +5,8 @@ export type NavItem = {
 
 /** Primary site navigation — keep labels consistent everywhere. */
 export const PRIMARY_NAV: NavItem[] = [
+  { label: "Home 2", href: "/home-page2" },
+  // { label: "Home", href: "/" },
   { label: "EV Charging", href: "/ev-chargers" },
   { label: "Solar", href: "/solar" },
   { label: "Generators", href: "/generators" },
