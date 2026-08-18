@@ -43,7 +43,7 @@ const CATEGORY_PANELS: CategoryPanel[] = [
     number: "03",
     title: "DC Fast Charging",
     subtitle: "Commercial · Fleet · Public",
-    meta: "30 — 120+ kW",
+    meta: "20 — 120+ kW",
     activeClass: "bg-brand text-accent",
   },
 ];
