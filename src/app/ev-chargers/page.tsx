@@ -123,14 +123,14 @@ export default function EVChargersPage() {
             onClick={() => setFilter(panel.id)}
             aria-pressed={isActive}
             className={cn(
-              "group min-h-[148px] border-b border-line px-5 py-7 text-left transition-colors md:px-8 lg:border-b-0 lg:px-12",
+              "group min-h-[100px] border-b border-line px-5 py-2 text-left transition-colors md:px-8 lg:border-b-0 lg:px-12",
               !isLast && "lg:border-r lg:border-line",
               isActive
                 ? panel.activeClass
                 : "bg-surface text-ink hover:bg-paper"
             )}
           >
-            <div className="flex h-full flex-col justify-between gap-8">
+            <div className="flex h-full flex-col justify-between">
               <div className="flex items-center justify-between">
                 <span
                   className={cn(
@@ -151,7 +151,7 @@ export default function EVChargersPage() {
                 </span>
               </div>
 
-              <div className="flex items-end justify-between gap-4">
+              <div className="flex items-end justify-between">
                 <div>
                   <h2 className="text-[28px] font-medium tracking-[-0.045em]">
                     {panel.title}
@@ -159,7 +159,7 @@ export default function EVChargersPage() {
 
                   <p
                     className={cn(
-                      "mt-2 text-[12px]",
+                      "text-[12px]",
                       isActive ? "opacity-70" : "text-ink-soft"
                     )}
                   >
@@ -181,28 +181,6 @@ export default function EVChargersPage() {
     </div>
   </div>
 </section>
-
-      <section id="products" className="page-pad border-b border-line py-8">
-        <div className="page-shell flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <SectionEyebrow>
-              {filter === "ALL"
-                ? "All products"
-                : filter === "AC"
-                  ? "AC charging"
-                  : "DC fast charging"}
-            </SectionEyebrow>
-            <h2 className="mt-3 text-[36px] font-medium tracking-[-0.045em] md:text-[44px]">
-              {filterLabel}.
-            </h2>
-          </div>
-
-          <p className="text-[12px] text-ink-faint" aria-live="polite">
-            {visibleProducts.length}{" "}
-            {visibleProducts.length === 1 ? "product" : "products"}
-          </p>
-        </div>
-      </section>
 
       <section className="page-pad pb-20 pt-10 lg:pb-28 lg:pt-12">
         {visibleProducts.length === 0 ? (
