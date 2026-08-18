@@ -19,6 +19,18 @@ const heroSpecs = [
 
 export default function ProductHero() {
   const [quantity, setQuantity] = useState(1);
+  const [powerIntakeBox, setPowerIntakeBox] = useState(false);
+
+  const basePrice = 185000;
+  const powerIntakeBoxPrice = 10500;
+  const totalPrice = basePrice * quantity + (powerIntakeBox ? powerIntakeBoxPrice : 0);
+
+  const formatPrice = (value: number) =>
+    new Intl.NumberFormat("en-PK", {
+      style: "currency",
+      currency: "PKR",
+      maximumFractionDigits: 0,
+    }).format(value);
 
   return (
     <>
@@ -89,15 +101,21 @@ export default function ProductHero() {
             ===================================================== */}
 
             <div className="mt-10">
-              <div className="flex flex-col gap-5 border-b border-line-strong pb-5 sm:flex-row sm:items-end sm:justify-between">
+              <div className="flex flex-col gap-5 border-b border-line-strong pb-5 sm:flex-row sm:items-end sm:justify-between min-h-30">
                 <div>
                   <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.09em] text-ink-faint">
-                    Price
+                    Total
                   </p>
 
                   <p className="text-[28px] font-medium tracking-[-0.04em]">
-                    PKR 185,000
+                    {formatPrice(totalPrice)}
                   </p>
+
+                  {powerIntakeBox ? (
+                    <p className="mt-1 text-[10px] text-ink-faint">
+                      Includes power intake box: +{formatPrice(powerIntakeBoxPrice)}
+                    </p>
+                  ) : null}
                 </div>
 
                 <div className="flex flex-col items-start gap-2 sm:items-end">
@@ -123,11 +141,58 @@ export default function ProductHero() {
                 </div>
               </div>
 
+              <div className="mt-5 p-3">
+                <label className="flex cursor-pointer items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={powerIntakeBox}
+                      onChange={(event) => setPowerIntakeBox(event.target.checked)}
+                      className="peer sr-only"
+                    />
+
+                    <span className="relative flex h-5 w-5 shrink-0 items-center justify- border border-line-strong bg-white transition-colors duration-200 peer-checked:border-brand peer-checked:bg-brand">
+                      <svg
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="hidden h-3 w-3 text-white peer-checked:block"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M2.5 6.25L4.75 8.5L9.5 3.75"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        />
+                      </svg>
+                    </span>
+
+                    <span className="flex flex-col">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink">
+                        Power intake box
+                      </span>
+
+                      <span className="text-[12px] text-ink-soft">
+                        Add +{formatPrice(powerIntakeBoxPrice)}
+                      </span>
+                    </span>
+                  </div>
+
+                  <span
+                    className={`text-[9px] font-semibold uppercase tracking-[0.1em] ${
+                      powerIntakeBox ? "text-brand" : "text-ink-faint"
+                    }`}
+                  >
+                    {powerIntakeBox ? "Added" : "Optional"}
+                  </span>
+                </label>
+              </div>
+
               {/* =====================================================
                   CART
               ===================================================== */}
 
-              <div className="grid grid-cols-1 sm:grid-cols-[145px_1fr]">
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-[145px_1fr]">
                 <QuantityStepper
                   value={quantity}
                   onChange={setQuantity}
