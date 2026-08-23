@@ -58,7 +58,8 @@ export const EVVehicleCoverage = () => {
 
         <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
           {/* VEHICLE LIST */}
-          <div className="border-b border-line px-5 py-6 md:px-8 lg:border-b-0 lg:border-r lg:px-10 lg:py-6">
+          
+          <div className="flex flex-col justify-center border-b border-line px-5 py-6 md:px-8 lg:border-b-0 lg:border-r lg:px-10 lg:py-6">
             <div className="flex items-center justify-between">
               <p className="text-[10px] font-semibold uppercase tracking-[0.07em] text-ink-faint">
                 Experience across
