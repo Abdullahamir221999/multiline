@@ -36,7 +36,7 @@ export const EV_BRANDS = [
   },
   {
     name: "Mercedes-Benz",
-    logo: "/images/ev-charging/brands/mercedes.png",
+    logo: "/images/ev-charging/brands/mercedes1.png",
   },
   {
     name: "BMW",

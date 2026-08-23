@@ -11,6 +11,15 @@ export type EVProduct = {
   image: string;
   description: string;
 
+  /** Plain-language line for non-technical buyers. Shown on cards. */
+  summary?: string;
+
+  /** Who the unit suits, in words. Shown under the summary. */
+  bestFor?: string;
+
+  /** Display price range, e.g. "From PKR 165,000". Omit to show "Request price". */
+  priceFrom?: string;
+
   output?: string;
   outputKw?: number;
   connector?: string;
@@ -30,6 +39,11 @@ export const EV_PRODUCTS: EVProduct[] = [
     image: "/images/products/7kw-jensonn-ac3.png",
     description:
       "Compact home charging solution for everyday residential use.",
+    summary:
+      "Charges a typical EV overnight — plug in at night, full by morning.",
+    bestFor: "Homes on a standard single-phase connection.",
+    // TODO: confirm range with Multiline
+    // priceFrom: "From PKR 000,000",
     output: "7 kW",
     outputKw: 7,
     connector: "Type 2",
@@ -44,6 +58,11 @@ export const EV_PRODUCTS: EVProduct[] = [
     image: "/images/products/11kw-jensonn.png",
     description:
       "Fast and practical three-phase home charging for compatible EVs.",
+    summary:
+      "Roughly half the charging time of a 7kW unit, on a heavier supply.",
+    bestFor:
+      "Homes and offices with a three-phase (400V) connection.",
+    // priceFrom: "From PKR 000,000",
     output: "11 kW",
     outputKw: 11,
     connector: "Type 2",
@@ -60,6 +79,11 @@ export const EV_PRODUCTS: EVProduct[] = [
     image: "/images/products/22kw-jensonn-ac3.png",
     description:
       "Higher-output AC charging for homes, offices and destination charging.",
+    summary:
+      "The fastest AC option — though most cars can't draw the full 22kW.",
+    bestFor:
+      "Offices, showrooms and hotels with three-phase power.",
+    // priceFrom: "From PKR 000,000",
     output: "22 kW",
     outputKw: 22,
     connector: "Type 2",
@@ -74,6 +98,11 @@ export const EV_PRODUCTS: EVProduct[] = [
     image: "/images/products/30kw-dc.png",
     description:
       "Compact DC fast charging for commercial and fleet environments.",
+    summary:
+      "Tops up a car in about an hour and a half instead of overnight.",
+    bestFor:
+      "Shops, restaurants and small fleet yards where cars stop briefly.",
+    // priceFrom: "From PKR 000,000",
     output: "30 kW",
     outputKw: 30,
     connector: "CCS2",
@@ -88,6 +117,11 @@ export const EV_PRODUCTS: EVProduct[] = [
     image: "/images/products/60kw-dc.png",
     description:
       "Commercial fast charging designed for higher-utilisation locations.",
+    summary:
+      "The fastest unit in the range — a useful charge inside a short stop.",
+    bestFor:
+      "Fuel stations, highways and busy commercial charging points.",
+    // priceFrom: "From PKR 000,000",
     output: "60 kW",
     outputKw: 60,
     connector: "CCS2",
