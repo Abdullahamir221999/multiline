@@ -36,7 +36,7 @@ export const EV_PRODUCTS: EVProduct[] = [
     id: "7kw-ac",
     title: "7kW Home EV Charger",
     category: "AC Chargers",
-    image: "/images/products/7kw-jensonn-ac3.png",
+    image: "/images/products/7kw-jenson-ac6.png",
     description:
       "Compact home charging solution for everyday residential use.",
     summary:
@@ -55,7 +55,7 @@ export const EV_PRODUCTS: EVProduct[] = [
     id: "11kw-ac",
     title: "11kW Home EV Charger",
     category: "AC Chargers",
-    image: "/images/products/11kw-jensonn.png",
+    image: "/images/products/7kw-jenson-ac6.png",
     description:
       "Fast and practical three-phase home charging for compatible EVs.",
     summary:
@@ -76,7 +76,7 @@ export const EV_PRODUCTS: EVProduct[] = [
     id: "22kw-ac",
     title: "22kW AC EV Charger",
     category: "AC Chargers",
-    image: "/images/products/22kw-jensonn-ac3.png",
+    image: "/images/products/22kw-jensonn-ac4.png",
     description:
       "Higher-output AC charging for homes, offices and destination charging.",
     summary:
@@ -92,10 +92,10 @@ export const EV_PRODUCTS: EVProduct[] = [
   },
 
   {
-    id: "30kw-dc",
-    title: "30kW DC Fast Charger",
+    id: "20kw-dc",
+    title: "20kW DC Fast Charger",
     category: "DC Chargers",
-    image: "/images/products/30kw-dc.png",
+    image: "/images/products/20kw-dc2.png",
     description:
       "Compact DC fast charging for commercial and fleet environments.",
     summary:
@@ -103,8 +103,8 @@ export const EV_PRODUCTS: EVProduct[] = [
     bestFor:
       "Shops, restaurants and small fleet yards where cars stop briefly.",
     // priceFrom: "From PKR 000,000",
-    output: "30 kW",
-    outputKw: 30,
+    output: "20 kW",
+    outputKw: 20,
     connector: "CCS2",
     supply: "3 Phase",
     phase: 3,
@@ -114,7 +114,7 @@ export const EV_PRODUCTS: EVProduct[] = [
     id: "60kw-dc",
     title: "60kW DC Fast Charger",
     category: "DC Chargers",
-    image: "/images/products/60kw-dc.png",
+    image: "/images/products/60kw-dc2.png",
     description:
       "Commercial fast charging designed for higher-utilisation locations.",
     summary:

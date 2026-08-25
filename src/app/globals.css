@@ -33,6 +33,10 @@
   --focus-ring: #124897;
   --header-height: 78px;
   --page-max: 1600px;
+  --brand-dark: #0f3d7d;
+  --brand-tint: #eef4ff;
+  --canvas: #f4f2ef;
+  --canvas-deep: #ebe8e3;
 }
 
 html.dark {
@@ -43,6 +47,11 @@ html.dark {
   --accent: #f2ca30;
   --accent-hover: #f6d45c;
   --accent-foreground: #000000;
+
+  --brand-dark: #0f3d7d;
+  --brand-tint: #eef4ff;
+  --canvas: #f4f2ef;
+  --canvas-deep: #ebe8e3;
 
   --ink: #f5f5f5;
   --ink-soft: rgba(245, 245, 245, 0.7);
@@ -69,6 +78,11 @@ html.dark {
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-foreground: var(--accent-foreground);
+
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-tint: var(--brand-tint);
+  --color-canvas: var(--canvas);
+  --color-canvas-deep: var(--canvas-deep);
 
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
