@@ -1,242 +1,3 @@
-// "use client";
-
-// import Image from "next/image";
-// import { useRef } from "react";
-// import { motion, useInView, useReducedMotion } from "motion/react";
-// import {
-//   FileText,
-//   Home,
-//   PencilLine,
-//   Wrench,
-//   type LucideIcon,
-// } from "lucide-react";
-
-// /* =========================================================
-//     SECTION 02 — HOW INSTALLATION WORKS
-
-//     Four steps, revealed in sequence on scroll. Copy rewritten
-//     from the Smappee reference for a first-party installer —
-//     Multiline fits with its own engineers, so "we" not
-//     "your installer".
-// ========================================================= */
-
-// type Step = {
-//   icon: LucideIcon;
-//   title: string;
-//   body: string;
-// };
-
-// const STEPS: Step[] = [
-//   {
-//     icon: PencilLine,
-//     title: "Enter your details",
-//     body: "Fill in your contact info and EV charging needs. It only takes a minute.",
-//   },
-//   {
-//     icon: Home,
-//     title: "Site visit and quote",
-//     body: "Our team contacts you for a quick site visit, or talks through your setup over the phone.",
-//   },
-//   {
-//     icon: FileText,
-//     title: "You get your quote and plan",
-//     body: "A personalised offer with a proposed installation date. No pressure, just clarity.",
-//   },
-//   {
-//     icon: Wrench,
-//     title: "Day of install: we've got you",
-//     body: "Our engineers handle everything, start to finish. No stress, no mess.",
-//   },
-// ];
-
-// /* The LED sits at these coordinates on the charger photo.
-//    Nudge once the final product shot lands. */
-// const LED_POSITION = {
-//   top: "31%",
-//   left: "46%",
-// };
-
-// export const EVInstallSteps = () => {
-//   const sectionRef = useRef<HTMLElement>(null);
-//   const chargerRef = useRef<HTMLDivElement>(null);
-
-//   const reduceMotion = useReducedMotion();
-
-//   const stepsInView = useInView(sectionRef, {
-//     once: true,
-//     margin: "-15% 0px -15% 0px",
-//   });
-
-//   const chargerInView = useInView(chargerRef, {
-//     once: true,
-//     margin: "-20% 0px",
-//   });
-
-//   return (
-//     <section
-//       ref={sectionRef}
-//       id="how-it-works"
-//       className="bg-canvas py-20 lg:py-28"
-//     >
-//       <div className="page-pad page-shell">
-//         {/* =====================================================
-//             HEADER + CHARGER
-//         ===================================================== */}
-
-//         <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.8fr] lg:gap-16">
-//           <div>
-//             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand">
-//               Installation
-//             </p>
-
-//             <h2 className="mt-5 max-w-[620px] text-[38px] font-semibold leading-[1.04] tracking-[-0.035em] text-ink sm:text-[46px] lg:text-[52px]">
-//               How your charger
-//               <br />
-//               gets installed.
-//             </h2>
-
-//             <p className="mt-6 max-w-[480px] text-[16px] leading-[1.65] text-ink-soft">
-//               From the first message to the day it&apos;s live on
-//               your wall — handled by our own engineers, not a
-//               third-party contractor.
-//             </p>
-//           </div>
-
-//           {/* =====================================================
-//               CHARGER — LED lights up when the section arrives
-//           ===================================================== */}
-
-//           <div
-//             ref={chargerRef}
-//             className="relative mx-auto aspect-[4/5] w-full max-w-[300px] lg:max-w-[340px]"
-//           >
-//             <Image
-//               src="/images/ev-charging/charger-hero.png"
-//               alt="Multiline AC home charger"
-//               fill
-//               sizes="(min-width: 1024px) 340px, 300px"
-//               className="object-contain"
-//             />
-
-//             {/* LED GLOW */}
-//             <motion.span
-//               aria-hidden="true"
-//               initial={{ opacity: 0 }}
-//               animate={
-//                 chargerInView && !reduceMotion
-//                   ? { opacity: [0, 1, 0.55, 1] }
-//                   : { opacity: chargerInView ? 1 : 0 }
-//               }
-//               transition={{
-//                 duration: 1.6,
-//                 times: [0, 0.35, 0.6, 1],
-//                 ease: "easeOut",
-//               }}
-//               style={LED_POSITION}
-//               className="absolute h-[10px] w-[10px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_12px_4px_rgba(242,202,48,0.65)]"
-//             />
-
-//             {/* AMBIENT HALO — slower, wider, sits under the LED */}
-//             <motion.span
-//               aria-hidden="true"
-//               initial={{ opacity: 0, scale: 0.7 }}
-//               animate={
-//                 chargerInView && !reduceMotion
-//                   ? { opacity: 0.45, scale: 1 }
-//                   : { opacity: 0, scale: 0.7 }
-//               }
-//               transition={{ duration: 1.4, delay: 0.3, ease: "easeOut" }}
-//               style={LED_POSITION}
-//               className="absolute h-[70px] w-[70px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/30 blur-2xl"
-//             />
-//           </div>
-//         </div>
-
-//         {/* =====================================================
-//             STEPS
-//         ===================================================== */}
-
-//         <div className="relative mt-16 lg:mt-20">
-//           {/* Connector — the line the icons sit on */}
-//           <div
-//             aria-hidden="true"
-//             className="absolute left-0 right-0 top-[26px] hidden h-px bg-line lg:block"
-//           />
-
-//           <ol className="grid gap-10 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-4 lg:gap-x-10">
-//             {STEPS.map((step, index) => (
-//               <StepItem
-//                 key={step.title}
-//                 step={step}
-//                 index={index}
-//                 inView={stepsInView}
-//                 reduceMotion={Boolean(reduceMotion)}
-//               />
-//             ))}
-//           </ol>
-//         </div>
-//       </div>
-//     </section>
-//   );
-// };
-
-// /* =========================================================
-//     STEP ITEM
-// ========================================================= */
-
-// function StepItem({
-//   step,
-//   index,
-//   inView,
-//   reduceMotion,
-// }: {
-//   step: Step;
-//   index: number;
-//   inView: boolean;
-//   reduceMotion: boolean;
-// }) {
-//   const Icon = step.icon;
-
-//   return (
-//     <motion.li
-//       initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-//       animate={
-//         inView || reduceMotion
-//           ? { opacity: 1, y: 0 }
-//           : { opacity: 0, y: 24 }
-//       }
-//       transition={{
-//         duration: 0.6,
-//         delay: reduceMotion ? 0 : index * 0.14,
-//         ease: [0.22, 1, 0.36, 1],
-//       }}
-//       className="relative"
-//     >
-//       {/* ICON + NUMBER */}
-
-//       <div className="inline-flex items-center gap-3 rounded-2xl border border-line bg-canvas-deep/60 py-2.5 pl-3 pr-4">
-//         <span className="flex h-[26px] w-[26px] items-center justify-center rounded-lg bg-white">
-//           <Icon
-//             className="h-[15px] w-[15px] text-ink"
-//             strokeWidth={1.9}
-//           />
-//         </span>
-
-//         <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-soft">
-//           Step {index + 1}
-//         </span>
-//       </div>
-
-//       <h3 className="mt-5 text-[21px] font-semibold leading-[1.2] tracking-[-0.02em] text-ink">
-//         {step.title}
-//       </h3>
-
-//       <p className="mt-3 text-[14px] leading-[1.6] text-ink-soft">
-//         {step.body}
-//       </p>
-//     </motion.li>
-//   );
-// }
 "use client";
 
 import Image from "next/image";
@@ -439,13 +200,13 @@ export const EVInstallSteps = () => {
         className="relative hidden h-[410svh] lg:block"
       >
         <div className="sticky top-0 h-[100svh] overflow-hidden">
-          <div className="page-pad page-shell grid h-full grid-cols-[0.9fr_1.1fr] items-center gap-16 xl:gap-24">
+            <div className="page-pad mx-auto grid h-full max-w-[1340px] grid-cols-[1fr_1fr] items-center gap-14 xl:gap-20">
 
             {/* =================================================
                 LEFT — COPY
             ================================================= */}
 
-            <div className="max-w-[560px]">
+            <div className="max-w-[600px]">
               <p className="text-[14px] font-semibold text-brand">
                 Installation
               </p>
@@ -456,76 +217,28 @@ export const EVInstallSteps = () => {
                 gets installed.
               </h2>
 
-              <p className="mt-5 max-w-[470px] text-[16px] leading-[1.65] text-ink-soft">
+              <p className="mt-5 max-w-[540px] text-[16px] leading-[1.65] text-ink-soft">
                 From your first enquiry to installation,
                 everything is handled by Multiline&apos;s own
                 engineering team.
               </p>
 
-              {/* ACTIVE STEP */}
+              {/* =================================================
+    STACKED STEPS
+================================================= */}
 
-              <div className="mt-16 min-h-[245px]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeStep.number}
-                    initial={
-                      reduceMotion
-                        ? false
-                        : {
-                            opacity: 0,
-                            y: 26,
-                          }
-                    }
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    exit={
-                      reduceMotion
-                        ? undefined
-                        : {
-                            opacity: 0,
-                            y: -18,
-                          }
-                    }
-                    transition={{
-                      duration: 0.5,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <activeStep.icon className="h-[21px] w-[21px] text-brand" />
-
-                      <span className="text-[14px] font-medium text-ink-soft">
-                        Step {activeStep.number}
-                      </span>
-                    </div>
-
-                    <h3 className="mt-5 max-w-[470px] text-[30px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink">
-                      {activeStep.title}
-                    </h3>
-
-                    <p className="mt-4 max-w-[460px] text-[16px] leading-[1.65] text-ink-soft">
-                      {activeStep.body}
-                    </p>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* SMALL PROGRESS INDICATOR */}
-
-              <div className="mt-3 flex items-center gap-2">
-                {STEPS.map((step, index) => (
-                  <span
-                    key={step.number}
-                    className={`h-[6px] rounded-full transition-all duration-500 ${
-                      activeIndex === index
-                        ? "w-8 bg-brand"
-                        : "w-[6px] bg-ink/15"
-                    }`}
-                  />
-                ))}
-              </div>
+<div className="mt-10 max-w-[560px]">
+  {STEPS.map((step, index) => (
+    <DesktopStep
+      key={step.number}
+      step={step}
+      index={index}
+      activeIndex={activeIndex}
+      desktopRef={desktopRef}
+      reduceMotion={Boolean(reduceMotion)}
+    />
+  ))}
+</div>
             </div>
 
             {/* =================================================
@@ -643,7 +356,164 @@ export const EVInstallSteps = () => {
     </section>
   );
 };
+/* =========================================================
+   DESKTOP STACKED STEP
+========================================================= */
 
+function DesktopStep({
+  step,
+  index,
+  activeIndex,
+  desktopRef,
+  reduceMotion,
+}: {
+  step: Step;
+  index: number;
+  activeIndex: number;
+  desktopRef: React.RefObject<HTMLDivElement | null>;
+  reduceMotion: boolean;
+}) {
+  const Icon = step.icon;
+
+  const isActive = index === activeIndex;
+  const isPast = index < activeIndex;
+
+  const opacity = isActive
+    ? 1
+    : isPast
+      ? 0.42
+      : 0.24;
+
+  const handleClick = () => {
+    const el = desktopRef.current;
+
+    if (!el) return;
+
+    const band = el.offsetHeight / STEPS.length;
+
+    window.scrollTo({
+      top: el.offsetTop + band * (index + 0.45),
+      behavior: reduceMotion ? "auto" : "smooth",
+    });
+  };
+
+  return (
+    <motion.button
+      type="button"
+      onClick={handleClick}
+      animate={{
+        opacity,
+        y: isActive ? 0 : 2,
+        scale: isActive ? 1 : 0.985,
+      }}
+      transition={{
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className="
+        block
+        w-full
+        origin-left
+        py-3
+        text-left
+        outline-none
+        first:pt-0
+      "
+    >
+      {/* STEP LABEL */}
+
+      <div className="flex items-center gap-3">
+        <motion.div
+          animate={{
+            scale: isActive ? 1 : 0.92,
+          }}
+          transition={{
+            duration: 0.4,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          <Icon
+            className="h-[19px] w-[19px] text-brand"
+            strokeWidth={1.9}
+          />
+        </motion.div>
+
+        <span className="text-[13px] font-medium text-ink-soft">
+          Step {step.number}
+        </span>
+      </div>
+
+      {/* TITLE */}
+
+      <motion.h3
+        animate={{
+          x: isActive ? 0 : 2,
+        }}
+        transition={{
+          duration: 0.45,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className={`
+          mt-2
+          font-semibold
+          leading-[1.15]
+          tracking-[-0.025em]
+          text-ink
+          transition-[font-size]
+          duration-500
+          ${
+            isActive
+              ? "text-[27px]"
+              : "text-[21px]"
+          }
+        `}
+      >
+        {step.title}
+      </motion.h3>
+
+      {/* ACTIVE DESCRIPTION */}
+
+      <AnimatePresence initial={false}>
+        {isActive && (
+          <motion.div
+            initial={
+              reduceMotion
+                ? false
+                : {
+                    opacity: 0,
+                    height: 0,
+                    y: 8,
+                  }
+            }
+            animate={{
+              opacity: 1,
+              height: "auto",
+              y: 0,
+            }}
+            exit={
+              reduceMotion
+                ? undefined
+                : {
+                    opacity: 0,
+                    height: 0,
+                    y: -5,
+                  }
+            }
+            transition={{
+              duration: 0.45,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="overflow-hidden"
+          >
+            <p className="max-w-[510px] pt-3 text-[15px] leading-[1.65] text-ink-soft">
+              {step.body}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  );
+}
 /* =========================================================
    MOBILE STEP
 ========================================================= */

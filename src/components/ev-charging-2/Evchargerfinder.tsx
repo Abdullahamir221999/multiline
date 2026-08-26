@@ -216,7 +216,7 @@ export const EVChargerFinder = () => {
     <section
       ref={sectionRef}
       id="compatibility"
-      className="scroll-mt-24 bg-canvas py-20 lg:py-28"
+      className="scroll-mt-24 bg-canvas pt-8 pb-20 lg:pt-10 lg:pb-28"
     >
       <div className="page-pad page-shell">
         {/* =====================================================

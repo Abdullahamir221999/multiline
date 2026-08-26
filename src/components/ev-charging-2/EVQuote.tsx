@@ -40,7 +40,7 @@ export const EVQuoteBanner = () => {
       >
         <h2 className="mx-auto max-w-[760px] text-[34px] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-[42px] lg:text-[48px]">
           Not sure which charger is right for you?
-          <br className="hidden sm:block" /> Let&apos;s help you
+          <br className="hidden sm:block" /> Let us help you
           choose.
         </h2>
 

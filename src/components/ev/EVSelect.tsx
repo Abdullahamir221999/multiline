@@ -59,7 +59,7 @@ export function EVSelect({
             text-left
             text-[15px]
             text-ink
-            outline-none
+            [&:focus-visible]:outline-none
             transition
             hover:border-line-strong
             focus:border-brand
@@ -112,37 +112,57 @@ export function EVSelect({
 
             <Select.Viewport>
               {options.map((option) => (
-                <Select.Item
-                  key={option.value}
-                  value={option.value}
-                  className="
-                    relative
-                    flex
-                    h-[46px]
-                    cursor-pointer
-                    select-none
-                    items-center
-                    rounded-xl
-                    px-4
-                    pr-10
-                    text-[15px]
-                    text-ink
-                    outline-none
-                    transition-colors
-                    data-[highlighted]:bg-canvas
-                    data-[state=checked]:font-semibold
-                    data-[state=checked]:text-brand
-                  "
-                >
-                  <Select.ItemText>{option.label}</Select.ItemText>
+<Select.Item
+  key={option.value}
+  value={option.value}
+  className="
+    relative
+    flex
+    h-[46px]
+    cursor-pointer
+    select-none
+    items-center
+    rounded-xl
+    px-4
+    pr-10
+    text-[15px]
+    text-ink
+    transition-colors
 
-                  <Select.ItemIndicator className="absolute right-4 flex items-center">
-                    <Check
-                      className="h-[16px] w-[16px] text-brand"
-                      strokeWidth={2.2}
-                    />
-                  </Select.ItemIndicator>
-                </Select.Item>
+    !outline-none
+    !ring-0
+    !shadow-none
+
+    focus:!outline-none
+    focus:!ring-0
+    focus:!shadow-none
+
+    focus-visible:!outline-none
+    focus-visible:!ring-0
+    focus-visible:!ring-offset-0
+    focus-visible:!shadow-none
+
+    data-[highlighted]:!outline-none
+    data-[highlighted]:!ring-0
+    data-[highlighted]:!shadow-none
+    data-[highlighted]:bg-black/[0.035]
+
+    data-[state=checked]:bg-brand/[0.06]
+    data-[state=checked]:font-semibold
+    data-[state=checked]:text-ink
+  "
+>
+  <Select.ItemText>
+    {option.label}
+  </Select.ItemText>
+
+  <Select.ItemIndicator className="absolute right-4 flex items-center">
+    <Check
+      className="h-[16px] w-[16px] text-brand"
+      strokeWidth={2.2}
+    />
+  </Select.ItemIndicator>
+</Select.Item>
               ))}
             </Select.Viewport>
 

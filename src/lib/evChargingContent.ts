@@ -68,7 +68,7 @@ export const EV_BRANDS = [
   },
   {
     name: "BYD",
-    logo: "/images/ev-charging/brands/byd.png",
+    logo: "/images/ev-charging/brands/byd3.png",
   },
     {
     name: "GWM",
