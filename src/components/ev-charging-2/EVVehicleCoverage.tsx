@@ -404,31 +404,58 @@ export const EVVehicleCoverage = ({
             VEHICLE BRANDS
         ===================================================== */}
 
-        <motion.div
-          {...reveal(0.2)}
-          className="mt-16 lg:mt-20"
-        >
-          <p className="text-center text-[14px] font-medium text-ink-soft">
-            Charging experience across leading EV brands
-          </p>
+<motion.div
+  {...reveal(0.2)}
+  className="mt-14 overflow-hidden lg:mt-16"
+>
+  <p className="text-center text-[15px] font-medium text-ink-soft">
+    Compatible with leading EV brands
+  </p>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-8 sm:gap-x-14 lg:gap-x-16 xl:gap-x-20">
-            {EV_BRANDS.map((brand) => (
-              <div
-                key={brand.name}
-                className="flex h-[48px] min-w-[90px] items-center justify-center"
-              >
-                <Image
-                  src={brand.logo}
-                  alt={brand.name}
-                  width={180}
-                  height={60}
-                  className="max-h-[42px] w-auto max-w-[125px] object-contain opacity-65 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 sm:max-w-[140px]"
-                />
-              </div>
-            ))}
+  <div className="relative mt-9 overflow-hidden">
+    {/* soft edge fades */}
+    <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-canvas to-transparent sm:w-28" />
+    <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-canvas to-transparent sm:w-28" />
+
+    <motion.div
+      className="flex w-max items-center"
+      animate={
+        reduceMotion
+          ? undefined
+          : {
+              x: ["0%", "-50%"],
+            }
+      }
+      transition={
+        reduceMotion
+          ? undefined
+          : {
+              duration: 100,
+              ease: "linear",
+              repeat: Infinity,
+            }
+      }
+    >
+      {/* duplicate array for seamless infinite loop */}
+      {[...EV_BRANDS, ...EV_BRANDS].map((brand, index) => (
+        <div
+          key={`${brand.name}-${index}`}
+          className="mx-7 flex h-[86px] w-[165px] shrink-0 items-center justify-center sm:mx-9 sm:w-[180px] lg:mx-11"
+        >
+          <div className="relative h-[64px] w-full">
+            <Image
+              src={brand.logo}
+              alt={brand.name}
+              fill
+              sizes="180px"
+              className="object-contain opacity-85 transition-all duration-300 hover:scale-[1.05] hover:opacity-100"
+            />
           </div>
-        </motion.div>
+        </div>
+      ))}
+    </motion.div>
+  </div>
+</motion.div>
       </div>
     </section>
   );

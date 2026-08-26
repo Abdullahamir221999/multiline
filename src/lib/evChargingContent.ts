@@ -23,6 +23,22 @@ export const EV_VEHICLE_GROUPS = [
     brand: "HAVAL · MG · OMODA · JAECOO",
     models: "Selected EV & PHEV models",
   },
+  {
+    brand: "GWM",
+    models: "H6 PHEV · Tank 300 PHEV · Tank 500 PHEV",
+  },
+  {
+    brand: "Omada Jaecoo",
+    models: "OMODA 5 · OMODA 7",
+  },
+  {
+    brand: "KIA",
+    models: "Sorento, EV5, EV9",
+  },
+  {
+    brand: "GAC",
+    models: "AION S · AION V Plus · AION Y Plus",
+  },
 ] as const;
 
 export const EV_BRANDS = [
@@ -53,5 +69,21 @@ export const EV_BRANDS = [
   {
     name: "BYD",
     logo: "/images/ev-charging/brands/byd.png",
+  },
+    {
+    name: "GWM",
+    logo: "/images/ev-charging/brands/gwm.png",
+  },
+  // {
+  //   name: "OMODA & JAECOO",
+  //   logo: "/images/ev-brands/omoda-jaecoo.png",
+  // },
+  {
+    name: "KIA",
+    logo: "/images/ev-charging/brands/kia.png",
+  },
+  {
+    name: "GAC",
+    logo: "/images/ev-charging/brands/gac.png",
   },
 ] as const;
