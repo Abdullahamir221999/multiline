@@ -83,13 +83,13 @@ async function processPayload(body: any) {
             inbound.replyId =
               m.interactive?.button_reply?.id ?? m.interactive?.list_reply?.id;
             break;
-          case 'image':
-            inbound.media = { id: m.image.id, mime: m.image.mime_type };
-            inbound.text = m.image.caption;
-            break;
-          case 'video':
-            inbound.media = { id: m.video.id, mime: m.video.mime_type };
-            inbound.text = m.video.caption;
+          case 'location':
+            inbound.location = {
+              latitude: m.location.latitude,
+              longitude: m.location.longitude,
+              name: m.location.name,
+              address: m.location.address,
+            };
             break;
           default:
             inbound.text = '';
