@@ -17,11 +17,7 @@ export const leads = pgTable('leads', {
   leadNumber: text('lead_number').notNull(),
   customerId: integer('customer_id').notNull().references(() => customers.id),
   vehicle: text('vehicle'),
-  vehicleMatched: text('vehicle_matched'),   // normalised against EV_VEHICLES
-  sitePhase: text('site_phase'),
-  installationType: text('installation_type'),
-  chargerInterest: text('charger_interest'),
-  notes: text('notes'),
+  address: text('address'),
   source: text('source').notNull().default('whatsapp'),
   status: text('status').notNull().default('New'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -34,10 +30,9 @@ export const complaints = pgTable('complaints', {
   id: serial('id').primaryKey(),
   ticketNumber: text('ticket_number').notNull(),
   customerId: integer('customer_id').notNull().references(() => customers.id),
+  address: text('address'),
   chargerModel: text('charger_model'),
   issueType: text('issue_type'),
-  description: text('description'),
-  attachmentUrl: text('attachment_url'),     // OUR storage URL, never Meta's
   status: text('status').notNull().default('Open'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 }, (t) => ({

@@ -1,10 +1,8 @@
 import { eq, sql } from 'drizzle-orm';
 import { db } from '@/db';
 import { customers, leads, complaints, conversations } from '@/db/schema';
-import { sendText, sendButtons, sendList, downloadMedia } from './whatsapp';
-import { storeAttachment } from './storage';
+import { sendText, sendButtons, sendList, sendFlow } from './whatsapp';
 import { appendLead, appendComplaint } from './sheets';
-import { matchVehicle } from './vehicles';
 import {
   GREETING, GREETING_BUTTONS, SALES_STEPS, COMPLAINT_STEPS,
   SALES_DONE, COMPLAINT_DONE, FALLBACK_TEXT, PREFILL_MAP, type Step,
@@ -16,7 +14,8 @@ export interface Inbound {
   from: string;
   profileName?: string;
   text?: string;
-  replyId?: string;              // button_reply or list_reply id
+  replyId?: string;                          // button_reply or list_reply id
+  flowResponse?: Record<string, string>;     // parsed nfm_reply payload
   media?: { id: string; mime: string };
 }
 
@@ -29,13 +28,20 @@ const stepIndex = (flow: string | null, key: string | null) =>
 async function ask(to: string, step: Step) {
   if (step.input === 'buttons') return sendButtons(to, step.prompt, step.options!);
   if (step.input === 'list') return sendList(to, step.prompt, step.listButton!, step.options!);
+  if (step.input === 'flow') {
+    return sendFlow({
+      to,
+      body: step.prompt,
+      cta: step.flowCta!,
+      flowId: process.env[step.flowIdEnv!]!,
+      flowToken: `${step.key}_${to}_${Date.now()}`,
+      screen: step.flowScreen!,
+    });
+  }
   return sendText(to, step.prompt);
 }
 
-async function saveState(
-  to: string,
-  patch: Partial<typeof conversations.$inferInsert>,
-) {
+async function saveState(to: string, patch: Partial<typeof conversations.$inferInsert>) {
   await db.update(conversations)
     .set({ ...patch, updatedAt: new Date() })
     .where(eq(conversations.whatsappNumber, to));
@@ -62,7 +68,6 @@ async function nextTicketNumber() {
   return `ML-EVC-${String(r.rows[0].n).padStart(4, '0')}`;
 }
 
-/** Turns a reply id back into the human-readable option title. */
 function titleFor(step: Step, replyId: string) {
   return step.options?.find((o) => o.id === replyId)?.title ?? replyId;
 }
@@ -74,7 +79,6 @@ async function startGreeting(to: string) {
 
 async function beginFlow(to: string, flow: 'sales' | 'complaint', seed: Record<string, string> = {}) {
   const steps = stepsFor(flow);
-  // Skip any step the prefilled link already answered.
   let i = 0;
   while (i < steps.length && seed[steps[i].key] !== undefined) i++;
   if (i >= steps.length) return finish(to, flow, seed);
@@ -83,7 +87,7 @@ async function beginFlow(to: string, flow: 'sales' | 'complaint', seed: Record<s
 }
 
 async function finish(to: string, flow: string, data: Record<string, string>) {
-  const customer = await upsertCustomer(to, data.name, data.city);
+  const customer = await upsertCustomer(to, data.full_name, data.city);
 
   if (flow === 'sales') {
     const leadNumber = await nextLeadNumber();
@@ -91,19 +95,15 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
       leadNumber,
       customerId: customer.id,
       vehicle: data.vehicle ?? null,
-      vehicleMatched: data.vehicle ? matchVehicle(data.vehicle) : null,
-      sitePhase: data.site_phase ?? null,
-      installationType: data.installation_type ?? null,
-      chargerInterest: data.charger_interest ?? null,
-      notes: data.notes ?? null,
+      address: data.address ?? null,
       source: data.source ?? 'whatsapp',
     }).returning();
 
     await sendText(to, SALES_DONE(leadNumber));
     await saveState(to, { flow: null, currentStep: null, temporaryData: {} });
-    // Sheets is a mirror, not the source of truth — never fail the conversation on it.
-    void appendLead({ ...lead, whatsappNumber: to, name: customer.name, city: customer.city })
-      .catch(console.error);
+    void appendLead({
+      ...lead, whatsappNumber: to, name: customer.name, city: customer.city,
+    }).catch(console.error);
     return;
   }
 
@@ -111,17 +111,17 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
   const [ticket] = await db.insert(complaints).values({
     ticketNumber,
     customerId: customer.id,
+    address: data.address ?? null,
     chargerModel: data.charger_model ?? null,
     issueType: data.issue_type ?? null,
-    description: data.description ?? null,
-    attachmentUrl: data.attachment ?? null,
   }).returning();
 
   await sendText(to, COMPLAINT_DONE(ticketNumber));
-  // A human owns the conversation from here. The bot stays silent.
+  // A human owns the conversation from here.
   await saveState(to, { flow: null, currentStep: null, temporaryData: {}, humanHandoff: 'true' });
-  void appendComplaint({ ...ticket, whatsappNumber: to, name: customer.name, city: customer.city })
-    .catch(console.error);
+  void appendComplaint({
+    ...ticket, whatsappNumber: to, name: customer.name, city: customer.city,
+  }).catch(console.error);
 }
 
 export async function handleInbound(msg: Inbound) {
@@ -137,9 +137,11 @@ export async function handleInbound(msg: Inbound) {
     await saveState(to, { lastCustomerMessageAt: now });
   }
 
-  const convo = existing ?? { flow: null, currentStep: null, temporaryData: {}, humanHandoff: 'false', lastCustomerMessageAt: null };
+  const convo = existing ?? {
+    flow: null, currentStep: null, temporaryData: {},
+    humanHandoff: 'false', lastCustomerMessageAt: null,
+  };
 
-  // A staff member is handling this number. Say nothing.
   if (convo.humanHandoff === 'true') return;
 
   const typed = (msg.text ?? '').trim();
@@ -147,18 +149,13 @@ export async function handleInbound(msg: Inbound) {
 
   if (lower === 'menu') return startGreeting(to);
 
-  // Abandoned mid-flow and came back after the window lapsed — start clean.
   const lapsed = convo.lastCustomerMessageAt
     ? now.getTime() - convo.lastCustomerMessageAt.getTime() > WINDOW_MS
     : false;
 
   if (!convo.flow || lapsed) {
     const prefill = PREFILL_MAP[lower];
-    if (prefill) {
-      const seed: Record<string, string> = { source: prefill.source };
-      if (prefill.charger) seed.charger_interest = prefill.charger;
-      return beginFlow(to, prefill.flow, seed);
-    }
+    if (prefill) return beginFlow(to, prefill.flow, { source: prefill.source });
     if (msg.replyId === 'flow_sales') return beginFlow(to, 'sales');
     if (msg.replyId === 'flow_complaint') return beginFlow(to, 'complaint');
     return startGreeting(to);
@@ -173,23 +170,23 @@ export async function handleInbound(msg: Inbound) {
 
   // --- capture the answer for the current step
   if (step.input === 'buttons' || step.input === 'list') {
-    if (!msg.replyId) return ask(to, step);           // re-ask rather than fall through
+    if (!msg.replyId) return ask(to, step);
     data[step.key] = titleFor(step, msg.replyId);
-  } else if (step.input === 'media') {
-    if (msg.media) {
-      const { buffer, mimeType } = await downloadMedia(msg.media.id);
-      data[step.key] = await storeAttachment(to, buffer, mimeType);
-    } else if (step.optional && lower === 'skip') {
-      // leave unset
-    } else {
-      return sendText(to, step.prompt);
+  } else if (step.input === 'flow') {
+    if (!msg.flowResponse) {
+      return sendText(to, 'Please tap the button above and fill in the form.');
     }
+    // Merge every field the form returned. flow_token is metadata, not an answer.
+    for (const [k, v] of Object.entries(msg.flowResponse)) {
+      if (k === 'flow_token') continue;
+      data[k] = String(v);
+    }
+    data[step.key] = 'submitted';
   } else {
     if (!typed) return sendText(to, FALLBACK_TEXT);
-    if (!(step.optional && lower === 'skip')) data[step.key] = typed;
+    data[step.key] = typed;
   }
 
-  // --- advance
   const next = steps[idx + 1];
   if (!next) return finish(to, convo.flow, data);
 

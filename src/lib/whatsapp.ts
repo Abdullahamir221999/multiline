@@ -106,3 +106,38 @@ export async function downloadMedia(mediaId: string): Promise<{ buffer: Buffer; 
 
   return { buffer: Buffer.from(await binRes.arrayBuffer()), mimeType: meta.mime_type };
 }
+/**
+ * Static-mode Flow. No data_exchange endpoint and no RSA keypair — the whole
+ * form ships as JSON and the submitted payload arrives in the webhook.
+ *
+ * While the Flow is still Draft in WhatsApp Manager, set WA_FLOW_MODE=draft.
+ * Remove that once published.
+ */
+export function sendFlow(opts: {
+  to: string;
+  body: string;
+  cta: string;
+  flowId: string;
+  flowToken: string;
+  screen: string;
+}) {
+  const parameters: Record<string, unknown> = {
+    flow_message_version: '3',
+    flow_id: opts.flowId,
+    flow_token: opts.flowToken,
+    flow_cta: opts.cta.slice(0, 20),
+    flow_action: 'navigate',
+    flow_action_payload: { screen: opts.screen },
+  };
+  if (process.env.WA_FLOW_MODE === 'draft') parameters.mode = 'draft';
+
+  return send({
+    to: opts.to,
+    type: 'interactive',
+    interactive: {
+      type: 'flow',
+      body: { text: opts.body },
+      action: { name: 'flow', parameters },
+    },
+  });
+}
