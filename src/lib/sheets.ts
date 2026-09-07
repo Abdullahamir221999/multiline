@@ -1,7 +1,6 @@
 import { JWT } from 'google-auth-library';
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID!;
-// const SIMULATE = process.env.WA_SIMULATE === '1';
 
 /**
  * Module-level so the access token is cached across invocations rather than
@@ -26,10 +25,6 @@ function fmtDate(d: Date) {
 }
 
 async function append(tab: string, row: (string | null)[]) {
-//   if (SIMULATE) {
-//     console.log(`[sheets:${tab}]`, row);
-//     return;
-//   }
 
   const { token } = await auth().getAccessToken();
   const range = encodeURIComponent(`${tab}!A:Z`);
@@ -45,12 +40,16 @@ async function append(tab: string, row: (string | null)[]) {
 
   if (!res.ok) throw new Error(`Sheets append ${res.status}: ${await res.text()}`);
 }
-
-
-// ============================================================
-// REPLACE appendLead and appendComplaint in src/lib/sheets.ts.
-// The auth and append() helpers above them stay as they are.
-// ============================================================
+async function appendWithRetry(tab: string, row: (string | null)[], attempts = 3) {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await append(tab, row);
+    } catch (e) {
+      if (i === attempts - 1) throw e;
+      await new Promise((r) => setTimeout(r, 500 * 2 ** i));  // 0.5s, 1s
+    }
+  }
+}
 
 const mapLink = (lat: number | null, lng: number | null) =>
   lat != null && lng != null ? `https://maps.google.com/?q=${lat},${lng}` : '';
@@ -60,7 +59,7 @@ export function appendLead(l: {
   address: string | null; city: string | null; vehicle: string | null;
   latitude: number | null; longitude: number | null; status: string;
 }) {
-  return append('Sales Leads', [
+  return appendWithRetry('Sales Leads', [
     l.leadNumber, fmtDate(l.createdAt), l.name, `+${l.whatsappNumber}`,
     l.address, l.city, l.vehicle, mapLink(l.latitude, l.longitude), l.status,
   ]);
@@ -71,7 +70,7 @@ export function appendComplaint(c: {
   address: string | null; city: string | null; chargerModel: string | null;
   issueType: string | null; status: string;
 }) {
-  return append('Complaints', [
+  return appendWithRetry('Complaints', [
     c.ticketNumber, fmtDate(c.createdAt), c.name, `+${c.whatsappNumber}`,
     c.address, c.city, c.chargerModel, c.issueType, c.status,
   ]);
