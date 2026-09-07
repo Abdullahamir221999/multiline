@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 import { db } from '@/db';
 import { customers, leads, complaints, conversations } from '@/db/schema';
 import { sendText, sendButtons, sendList, sendFlow } from './whatsapp';
@@ -10,13 +10,16 @@ import {
 
 const WINDOW_MS = 24 * 60 * 60 * 1000;
 
+/** While a complaint sits in any of these, the bot stays quiet for that customer. */
+const OPEN_COMPLAINT_STATUSES = ['Open', 'Assigned', 'In Progress'];
+
 export interface Inbound {
   from: string;
   profileName?: string;
   text?: string;
-  replyId?: string;                          // button_reply or list_reply id
-  flowResponse?: Record<string, string>;     // parsed nfm_reply payload
-  media?: { id: string; mime: string };
+  replyId?: string;
+  flowResponse?: Record<string, string>;
+  location?: { latitude: number; longitude: number; name?: string; address?: string };
 }
 
 const stepsFor = (flow: string | null) =>
@@ -45,6 +48,24 @@ async function saveState(to: string, patch: Partial<typeof conversations.$inferI
   await db.update(conversations)
     .set({ ...patch, updatedAt: new Date() })
     .where(eq(conversations.whatsappNumber, to));
+}
+
+/**
+ * The bot goes quiet while a customer has a complaint a human is still working.
+ * Derived from ticket status rather than a permanent flag, so a customer who
+ * complained once is not locked out of sales enquiries forever.
+ */
+async function hasOpenComplaint(waNumber: string) {
+  const [row] = await db
+    .select({ id: complaints.id })
+    .from(complaints)
+    .innerJoin(customers, eq(customers.id, complaints.customerId))
+    .where(and(
+      eq(customers.whatsappNumber, waNumber),
+      inArray(complaints.status, OPEN_COMPLAINT_STATUSES),
+    ))
+    .limit(1);
+  return Boolean(row);
 }
 
 async function upsertCustomer(waNumber: string, name?: string, city?: string) {
@@ -96,6 +117,8 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
       customerId: customer.id,
       vehicle: data.vehicle ?? null,
       address: data.address ?? null,
+      latitude: data.latitude ? Number(data.latitude) : null,
+      longitude: data.longitude ? Number(data.longitude) : null,
       source: data.source ?? 'whatsapp',
     }).returning();
 
@@ -117,8 +140,9 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
   }).returning();
 
   await sendText(to, COMPLAINT_DONE(ticketNumber));
-  // A human owns the conversation from here.
-  await saveState(to, { flow: null, currentStep: null, temporaryData: {}, humanHandoff: 'true' });
+  // No permanent flag. The open ticket itself keeps the bot quiet from here,
+  // and it resumes once staff mark the ticket Resolved in the sheet.
+  await saveState(to, { flow: null, currentStep: null, temporaryData: {} });
   void appendComplaint({
     ...ticket, whatsappNumber: to, name: customer.name, city: customer.city,
   }).catch(console.error);
@@ -142,7 +166,13 @@ export async function handleInbound(msg: Inbound) {
     humanHandoff: 'false', lastCustomerMessageAt: null,
   };
 
+  // A staff member replied from the WhatsApp Business app during this
+  // conversation — Coexistence echo set this. Stay quiet.
   if (convo.humanHandoff === 'true') return;
+
+  // Mid-flow messages are the customer answering a question, so let those
+  // through even if an old ticket is open. Only a fresh conversation is gated.
+  if (!convo.flow && await hasOpenComplaint(to)) return;
 
   const typed = (msg.text ?? '').trim();
   const lower = typed.toLowerCase();
@@ -176,15 +206,24 @@ export async function handleInbound(msg: Inbound) {
     if (!msg.flowResponse) {
       return sendText(to, 'Please tap the button above and fill in the form.');
     }
-    // Merge every field the form returned. flow_token is metadata, not an answer.
     for (const [k, v] of Object.entries(msg.flowResponse)) {
       if (k === 'flow_token') continue;
       data[k] = String(v);
     }
     data[step.key] = 'submitted';
+  } else if (step.input === 'location') {
+    if (msg.location) {
+      data.latitude = String(msg.location.latitude);
+      data.longitude = String(msg.location.longitude);
+      data[step.key] = 'shared';
+    } else if (step.optional && lower === 'skip') {
+      // leave unset
+    } else {
+      return sendText(to, step.prompt);
+    }
   } else {
     if (!typed) return sendText(to, FALLBACK_TEXT);
-    data[step.key] = typed;
+    if (!(step.optional && lower === 'skip')) data[step.key] = typed;
   }
 
   const next = steps[idx + 1];

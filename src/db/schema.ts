@@ -1,5 +1,5 @@
 import {
-  pgTable, text, timestamp, jsonb, serial, integer, index, uniqueIndex,
+  pgTable, text, timestamp, jsonb, serial, integer, index, uniqueIndex,doublePrecision,
 } from 'drizzle-orm/pg-core';
 
 export const customers = pgTable('customers', {
@@ -18,6 +18,8 @@ export const leads = pgTable('leads', {
   customerId: integer('customer_id').notNull().references(() => customers.id),
   vehicle: text('vehicle'),
   address: text('address'),
+  latitude: doublePrecision('latitude'),
+  longitude: doublePrecision('longitude'),
   source: text('source').notNull().default('whatsapp'),
   status: text('status').notNull().default('New'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -31,6 +33,7 @@ export const complaints = pgTable('complaints', {
   ticketNumber: text('ticket_number').notNull(),
   customerId: integer('customer_id').notNull().references(() => customers.id),
   address: text('address'),
+  statusUpdatedAt: timestamp('status_updated_at', { withTimezone: true }),
   chargerModel: text('charger_model'),
   issueType: text('issue_type'),
   status: text('status').notNull().default('Open'),

@@ -156,7 +156,7 @@
  * versions are active. Swap the two exports back once verification clears.
  */
 
-export type InputKind = 'text' | 'buttons' | 'list' | 'media' | 'flow';
+export type InputKind = 'text' | 'buttons' | 'list' | 'media' | 'flow' | 'location';
 
 export interface Step {
   key: string;
@@ -223,6 +223,15 @@ export const SALES_STEPS: Step[] = [
   { key: 'full_name', prompt: 'What is your full name?', input: 'text' },
   { key: 'address', prompt: 'What is the installation address?', input: 'text' },
   { key: 'city', prompt: 'Which city?', input: 'text' },
+  {
+    key: 'pin',
+    prompt:
+      'Finally, please share your location pin so our engineer can find the site.\n\n' +
+      'Tap the attachment icon, choose Location, then Send your current location.\n\n' +
+      'Or reply: skip',
+    input: 'location',
+    optional: true,
+  },
 ];
 
 export const COMPLAINT_STEPS: Step[] = [

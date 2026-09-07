@@ -52,13 +52,17 @@ async function append(tab: string, row: (string | null)[]) {
 // The auth and append() helpers above them stay as they are.
 // ============================================================
 
+const mapLink = (lat: number | null, lng: number | null) =>
+  lat != null && lng != null ? `https://maps.google.com/?q=${lat},${lng}` : '';
+ 
 export function appendLead(l: {
   leadNumber: string; createdAt: Date; name: string | null; whatsappNumber: string;
-  address: string | null; city: string | null; vehicle: string | null; status: string;
+  address: string | null; city: string | null; vehicle: string | null;
+  latitude: number | null; longitude: number | null; status: string;
 }) {
   return append('Sales Leads', [
     l.leadNumber, fmtDate(l.createdAt), l.name, `+${l.whatsappNumber}`,
-    l.address, l.city, l.vehicle, l.status,
+    l.address, l.city, l.vehicle, mapLink(l.latitude, l.longitude), l.status,
   ]);
 }
 
