@@ -1,7 +1,12 @@
 import {
-  pgTable, text, timestamp, jsonb, serial, integer, index, uniqueIndex,doublePrecision,
+  pgTable, text, timestamp, jsonb, serial, integer, index, uniqueIndex, doublePrecision,
 } from 'drizzle-orm/pg-core';
 
+/**
+ * Most recent contact details seen for a phone number. Useful for recognising a
+ * returning customer, but NOT the source of truth for what any one submission
+ * said — one handset can be used by several people.
+ */
 export const customers = pgTable('customers', {
   id: serial('id').primaryKey(),
   whatsappNumber: text('whatsapp_number').notNull(),
@@ -16,6 +21,10 @@ export const leads = pgTable('leads', {
   id: serial('id').primaryKey(),
   leadNumber: text('lead_number').notNull(),
   customerId: integer('customer_id').notNull().references(() => customers.id),
+  // Captured on this submission. Kept here so a later complaint from the same
+  // handset cannot rewrite the name on an existing lead.
+  name: text('name'),
+  city: text('city'),
   vehicle: text('vehicle'),
   address: text('address'),
   latitude: doublePrecision('latitude'),
@@ -32,11 +41,13 @@ export const complaints = pgTable('complaints', {
   id: serial('id').primaryKey(),
   ticketNumber: text('ticket_number').notNull(),
   customerId: integer('customer_id').notNull().references(() => customers.id),
+  name: text('name'),
+  city: text('city'),
   address: text('address'),
-  statusUpdatedAt: timestamp('status_updated_at', { withTimezone: true }),
   chargerModel: text('charger_model'),
   issueType: text('issue_type'),
   status: text('status').notNull().default('Open'),
+  statusUpdatedAt: timestamp('status_updated_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 }, (t) => ({
   numUnique: uniqueIndex('complaints_ticket_number_key').on(t.ticketNumber),
@@ -44,14 +55,13 @@ export const complaints = pgTable('complaints', {
 }));
 
 export const conversations = pgTable('conversations', {
-
-  lastAckAt: timestamp('last_ack_at', { withTimezone: true }),
   whatsappNumber: text('whatsapp_number').primaryKey(),
   flow: text('flow'),                        // 'sales' | 'complaint' | null
   currentStep: text('current_step'),         // step key, null = at greeting
   temporaryData: jsonb('temporary_data').$type<Record<string, string>>().notNull().default({}),
   humanHandoff: text('human_handoff').notNull().default('false'),
   lastCustomerMessageAt: timestamp('last_customer_message_at', { withTimezone: true }),
+  lastAckAt: timestamp('last_ack_at', { withTimezone: true }),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 

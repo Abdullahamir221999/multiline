@@ -115,6 +115,8 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
     const [lead] = await db.insert(leads).values({
       leadNumber,
       customerId: customer.id,
+      name: data.full_name ?? null,
+      city: data.city ?? null,
       vehicle: data.vehicle ?? null,
       address: data.address ?? null,
       latitude: data.latitude ? Number(data.latitude) : null,
@@ -124,9 +126,7 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
 
     await sendText(to, SALES_DONE(leadNumber));
     await saveState(to, { flow: null, currentStep: null, temporaryData: {} });
-    void appendLead({
-      ...lead, whatsappNumber: to, name: customer.name, city: customer.city,
-    }).catch(console.error);
+    void appendLead({ ...lead, whatsappNumber: to }).catch(console.error);
     return;
   }
 
@@ -134,6 +134,8 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
   const [ticket] = await db.insert(complaints).values({
     ticketNumber,
     customerId: customer.id,
+    name: data.full_name ?? null,
+    city: data.city ?? null,
     address: data.address ?? null,
     chargerModel: data.charger_model ?? null,
     issueType: data.issue_type ?? null,
@@ -141,9 +143,7 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
 
   await sendText(to, COMPLAINT_DONE(ticketNumber));
   await saveState(to, { flow: null, currentStep: null, temporaryData: {} });
-  void appendComplaint({
-    ...ticket, whatsappNumber: to, name: customer.name, city: customer.city,
-  }).catch(console.error);
+  void appendComplaint({ ...ticket, whatsappNumber: to }).catch(console.error);
 }
 
 export async function handleInbound(msg: Inbound) {
