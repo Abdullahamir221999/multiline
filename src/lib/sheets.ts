@@ -75,3 +75,9 @@ export function appendComplaint(c: {
     c.address, c.city, c.chargerModel, c.issueType, c.status,
   ]);
 }
+function privateKey() {
+  const raw = process.env.GOOGLE_PRIVATE_KEY!;
+  // Vercel's UI may store real newlines; .env files store literal \n.
+  // Also strip wrapping quotes if they were pasted in.
+  return raw.replace(/^["']|["']$/g, '').replace(/\\n/g, '\n');
+}
