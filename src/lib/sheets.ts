@@ -7,11 +7,17 @@ const SHEET_ID = process.env.GOOGLE_SHEET_ID!;
  * re-minted on every lead. google-auth-library handles the refresh.
  */
 let jwt: JWT | null = null;
+function privateKey() {
+  const raw = process.env.GOOGLE_PRIVATE_KEY!;
+  // Vercel's UI may store real newlines; .env files store literal \n.
+  // Also strip wrapping quotes if they were pasted in.
+  return raw.replace(/^["']|["']$/g, '').replace(/\\n/g, '\n');
+}
 function auth() {
   if (!jwt) {
     jwt = new JWT({
       email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL!,
-      key: process.env.GOOGLE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
+      key: privateKey(),
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
   }
@@ -74,10 +80,4 @@ export function appendComplaint(c: {
     c.ticketNumber, fmtDate(c.createdAt), c.name, `+${c.whatsappNumber}`,
     c.address, c.city, c.chargerModel, c.issueType, c.status,
   ]);
-}
-function privateKey() {
-  const raw = process.env.GOOGLE_PRIVATE_KEY!;
-  // Vercel's UI may store real newlines; .env files store literal \n.
-  // Also strip wrapping quotes if they were pasted in.
-  return raw.replace(/^["']|["']$/g, '').replace(/\\n/g, '\n');
 }
