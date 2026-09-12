@@ -44,6 +44,8 @@ export const complaints = pgTable('complaints', {
 }));
 
 export const conversations = pgTable('conversations', {
+
+  lastAckAt: timestamp('last_ack_at', { withTimezone: true }),
   whatsappNumber: text('whatsapp_number').primaryKey(),
   flow: text('flow'),                        // 'sales' | 'complaint' | null
   currentStep: text('current_step'),         // step key, null = at greeting

@@ -1,16 +1,19 @@
-import { and, eq, inArray, sql } from 'drizzle-orm';
+import { and, eq, inArray, sql, desc } from 'drizzle-orm';
 import { db } from '@/db';
 import { customers, leads, complaints, conversations } from '@/db/schema';
 import { sendText, sendButtons, sendList, sendFlow } from './whatsapp';
 import { appendLead, appendComplaint } from './sheets';
 import {
   GREETING, GREETING_BUTTONS, SALES_STEPS, COMPLAINT_STEPS,
-  SALES_DONE, COMPLAINT_DONE, FALLBACK_TEXT, PREFILL_MAP, type Step,
+  SALES_DONE, COMPLAINT_DONE, PENDING_TICKET, FALLBACK_TEXT,
+  PREFILL_MAP, type Step,
 } from './flow';
 
 const WINDOW_MS = 24 * 60 * 60 * 1000;
 
-/** While a complaint sits in any of these, the bot stays quiet for that customer. */
+/** Don't re-acknowledge an open ticket more than once every six hours. */
+const ACK_COOLDOWN_MS = 6 * 60 * 60 * 1000;
+
 const OPEN_COMPLAINT_STATUSES = ['Open', 'Assigned', 'In Progress'];
 
 export interface Inbound {
@@ -50,22 +53,19 @@ async function saveState(to: string, patch: Partial<typeof conversations.$inferI
     .where(eq(conversations.whatsappNumber, to));
 }
 
-/**
- * The bot goes quiet while a customer has a complaint a human is still working.
- * Derived from ticket status rather than a permanent flag, so a customer who
- * complained once is not locked out of sales enquiries forever.
- */
-async function hasOpenComplaint(waNumber: string) {
+/** The customer's most recent unresolved ticket, if any. */
+async function openComplaintFor(waNumber: string) {
   const [row] = await db
-    .select({ id: complaints.id })
+    .select({ ticketNumber: complaints.ticketNumber })
     .from(complaints)
     .innerJoin(customers, eq(customers.id, complaints.customerId))
     .where(and(
       eq(customers.whatsappNumber, waNumber),
       inArray(complaints.status, OPEN_COMPLAINT_STATUSES),
     ))
+    .orderBy(desc(complaints.id))
     .limit(1);
-  return Boolean(row);
+  return row ?? null;
 }
 
 async function upsertCustomer(waNumber: string, name?: string, city?: string) {
@@ -140,8 +140,6 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
   }).returning();
 
   await sendText(to, COMPLAINT_DONE(ticketNumber));
-  // No permanent flag. The open ticket itself keeps the bot quiet from here,
-  // and it resumes once staff mark the ticket Resolved in the sheet.
   await saveState(to, { flow: null, currentStep: null, temporaryData: {} });
   void appendComplaint({
     ...ticket, whatsappNumber: to, name: customer.name, city: customer.city,
@@ -162,22 +160,35 @@ export async function handleInbound(msg: Inbound) {
   }
 
   const convo = existing ?? {
-    flow: null, currentStep: null, temporaryData: {},
-    humanHandoff: 'false', lastCustomerMessageAt: null,
+    flow: null, currentStep: null, temporaryData: {}, humanHandoff: 'false',
+    lastCustomerMessageAt: null, lastAckAt: null,
   };
 
-  // A staff member replied from the WhatsApp Business app during this
-  // conversation — Coexistence echo set this. Stay quiet.
+  // Reserved for a future Coexistence or BSP setup, where staff replying from
+  // an inbox should silence the bot. Never set in the current capture-only mode.
   if (convo.humanHandoff === 'true') return;
-
-  // Mid-flow messages are the customer answering a question, so let those
-  // through even if an old ticket is open. Only a fresh conversation is gated.
-  if (!convo.flow && await hasOpenComplaint(to)) return;
 
   const typed = (msg.text ?? '').trim();
   const lower = typed.toLowerCase();
 
+  // "menu" always works, including for someone with an open ticket who wants
+  // to raise a separate sales enquiry.
   if (lower === 'menu') return startGreeting(to);
+
+  // Not mid-flow, and they already have an unresolved ticket: acknowledge it
+  // rather than restarting the menu or saying nothing. Nobody watches this
+  // number, so silence would leave the customer waiting on a reply.
+  if (!convo.flow) {
+    const open = await openComplaintFor(to);
+    if (open) {
+      const sinceAck = convo.lastAckAt ? now.getTime() - convo.lastAckAt.getTime() : Infinity;
+      if (sinceAck > ACK_COOLDOWN_MS) {
+        await sendText(to, PENDING_TICKET(open.ticketNumber));
+        await saveState(to, { lastAckAt: now });
+      }
+      return;
+    }
+  }
 
   const lapsed = convo.lastCustomerMessageAt
     ? now.getTime() - convo.lastCustomerMessageAt.getTime() > WINDOW_MS
@@ -198,7 +209,6 @@ export async function handleInbound(msg: Inbound) {
   const step = steps[idx];
   const data = { ...(convo.temporaryData ?? {}) };
 
-  // --- capture the answer for the current step
   if (step.input === 'buttons' || step.input === 'list') {
     if (!msg.replyId) return ask(to, step);
     data[step.key] = titleFor(step, msg.replyId);
