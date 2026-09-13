@@ -8,6 +8,7 @@ import {
   SALES_DONE, COMPLAINT_DONE, PENDING_TICKET, FALLBACK_TEXT,
   PREFILL_MAP, type Step,
 } from './flow';
+import { waitUntil } from '@vercel/functions';
 
 const WINDOW_MS = 24 * 60 * 60 * 1000;
 
@@ -126,7 +127,7 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
 
     await sendText(to, SALES_DONE(leadNumber));
     await saveState(to, { flow: null, currentStep: null, temporaryData: {} });
-    void appendLead({ ...lead, whatsappNumber: to }).catch(console.error);
+    waitUntil(appendLead({ ...lead, whatsappNumber: to }).catch(console.error));
     return;
   }
 
@@ -143,7 +144,7 @@ async function finish(to: string, flow: string, data: Record<string, string>) {
 
   await sendText(to, COMPLAINT_DONE(ticketNumber));
   await saveState(to, { flow: null, currentStep: null, temporaryData: {} });
-  void appendComplaint({ ...ticket, whatsappNumber: to }).catch(console.error);
+  waitUntil(appendComplaint({ ...ticket, whatsappNumber: to }).catch(console.error));
 }
 
 export async function handleInbound(msg: Inbound) {
