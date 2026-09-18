@@ -4,7 +4,7 @@ import { customers, leads, complaints, conversations } from '@/db/schema';
 import { sendText, sendButtons, sendList, sendFlow } from './whatsapp';
 import { appendLead, appendComplaint } from './sheets';
 import {
-  GREETING, GREETING_BUTTONS, SALES_STEPS, COMPLAINT_STEPS,
+  GREETING, GREETING_BUTTONS, SALES_STEPS_FLOW, COMPLAINT_STEPS_FLOW,
   SALES_DONE, COMPLAINT_DONE, PENDING_TICKET, FALLBACK_TEXT,
   PREFILL_MAP, type Step,
 } from './flow';
@@ -17,6 +17,8 @@ const ACK_COOLDOWN_MS = 6 * 60 * 60 * 1000;
 
 const OPEN_COMPLAINT_STATUSES = ['Open', 'Assigned', 'In Progress'];
 
+
+
 export interface Inbound {
   from: string;
   profileName?: string;
@@ -27,7 +29,7 @@ export interface Inbound {
 }
 
 const stepsFor = (flow: string | null) =>
-  flow === 'sales' ? SALES_STEPS : flow === 'complaint' ? COMPLAINT_STEPS : [];
+  flow === 'sales' ? SALES_STEPS_FLOW : flow === 'complaint' ? COMPLAINT_STEPS_FLOW : [];
 
 const stepIndex = (flow: string | null, key: string | null) =>
   key === null ? -1 : stepsFor(flow).findIndex((s) => s.key === key);

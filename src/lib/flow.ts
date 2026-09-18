@@ -124,9 +124,18 @@ export const SALES_STEPS_FLOW: Step[] = [
     key: 'details',
     prompt: 'Kindly share the following details.',
     input: 'flow',
-    flowIdEnv: 'WA_SALES_FLOW_ID',
+    flowIdEnv: 'WA_FLOW_DETAILS_ID',
     flowCta: 'Enter details',
     flowScreen: 'DETAILS',
+  },
+  {
+    key: 'pin',
+    prompt:
+      'Finally, please share your location pin so our engineer can find the site.\n\n' +
+      'Tap the attachment icon, choose Location, then Send your current location.\n\n' +
+      'Or reply: skip',
+    input: 'location',
+    optional: true,
   },
 ];
 
@@ -135,10 +144,11 @@ export const COMPLAINT_STEPS_FLOW: Step[] = [
     key: 'details',
     prompt: 'Kindly share the following details.',
     input: 'flow',
-    flowIdEnv: 'WA_COMPLAINT_FLOW_ID',
+    flowIdEnv: 'WA_FLOW_DETAILS_ID',
     flowCta: 'Enter details',
     flowScreen: 'DETAILS',
   },
+  { key: 'charger_model', prompt: 'Which car charger do you have?', input: 'text' },
   {
     key: 'issue_type',
     prompt: 'What problem are you having with the charger?',

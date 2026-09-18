@@ -80,9 +80,17 @@ async function processPayload(body: any) {
             inbound.text = m.text?.body;
             break;
           case 'interactive':
-            inbound.replyId =
-              m.interactive?.button_reply?.id ?? m.interactive?.list_reply?.id;
-            break;
+  if (m.interactive?.type === 'nfm_reply') {
+    try {
+      inbound.flowResponse = JSON.parse(m.interactive.nfm_reply.response_json ?? '{}');
+    } catch {
+      inbound.text = '';
+    }
+  } else {
+    inbound.replyId =
+      m.interactive?.button_reply?.id ?? m.interactive?.list_reply?.id;
+  }
+  break;
           case 'location':
             inbound.location = {
               latitude: m.location.latitude,
