@@ -141,3 +141,24 @@ export function sendFlow(opts: {
     },
   });
 }
+/**
+ * Reject an inbound call. Nothing answers calls on this number, so the caller
+ * gets a quick decline instead of a ring-out, followed by a text telling them
+ * to message instead.
+ */
+export async function rejectCall(callId: string) {
+  if (SIMULATE) return;
+
+  const res = await fetch(`${GRAPH}/${PHONE_ID}/calls`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${TOKEN}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messaging_product: 'whatsapp',
+      call_id: callId,
+      action: 'reject',
+    }),
+  });
+  // A call that already ended rejects with an error. Log and carry on — the
+  // text still needs to go out.
+  if (!res.ok) console.error(`WA reject call ${res.status}: ${await res.text()}`);
+}

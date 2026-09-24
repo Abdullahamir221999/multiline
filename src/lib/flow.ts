@@ -180,7 +180,10 @@ export const PREFILL_MAP: Record<string, { source: string; flow: 'sales' | 'comp
   "hi, i'd like to enquire about an ev charger.": { source: 'website:enquiry', flow: 'sales' },
   'hi, i need support with my multiline ev charger.': { source: 'website:support', flow: 'complaint' },
 };
-
+export const CALLS_NOT_SUPPORTED =
+  'Calls are not answered on this number.\n\n' +
+  'Please send us a message here and we will respond right away.';
+  
 // --- limit checks: fail at import time, not in front of a customer
 const ALL_STEP_SETS = [
   ['sales', SALES_STEPS],

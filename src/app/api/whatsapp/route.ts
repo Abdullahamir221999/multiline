@@ -4,6 +4,8 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/db';
 import { conversations, messageLog } from '@/db/schema';
 import { handleInbound, type Inbound } from '@/lib/conversation';
+import { sendText, rejectCall } from '@/lib/whatsapp';
+import { CALLS_NOT_SUPPORTED } from '@/lib/flow';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -57,6 +59,24 @@ async function processPayload(body: any) {
           await db.update(conversations)
             .set({ humanHandoff: 'true', updatedAt: new Date() })
             .where(eq(conversations.whatsappNumber, echo.to));
+        }
+        continue;
+      }
+            // Calling isn't answered by anything. Reject the call and tell the
+      // caller to message instead. 'connect' fires once per call attempt;
+      // 'terminate' and other events are ignored so we don't reply twice.
+      if (change.field === 'calls') {
+        for (const call of value.calls ?? []) {
+          if (call.event !== 'connect' || call.direction !== 'USER_INITIATED') continue;
+
+          const [dupe] = await db.insert(messageLog)
+            .values({ whatsappNumber: call.from, direction: 'inbound', messageId: call.id, payload: call })
+            .onConflictDoNothing()
+            .returning({ id: messageLog.id });
+          if (!dupe) continue;
+
+          await rejectCall(call.id);
+          await sendText(call.from, CALLS_NOT_SUPPORTED);
         }
         continue;
       }
