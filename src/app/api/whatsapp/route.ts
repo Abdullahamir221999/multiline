@@ -45,6 +45,7 @@ async function processPayload(body: any) {
   for (const entry of body.entry ?? []) {
     for (const change of entry.changes ?? []) {
       const value = change.value ?? {};
+      console.log('FIELD', change.field, JSON.stringify(value));
 
       // Coexistence: replies your staff send from the WhatsApp Business app come
       // back as echoes. Log them, mark the handoff, never respond.
