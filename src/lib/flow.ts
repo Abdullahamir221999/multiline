@@ -128,15 +128,6 @@ export const SALES_STEPS_FLOW: Step[] = [
     flowCta: 'Enter details',
     flowScreen: 'DETAILS',
   },
-  {
-    key: 'pin',
-    prompt:
-      'Finally, please share your location pin so our engineer can find the site.\n\n' +
-      'Tap the attachment icon, choose Location, then Send your current location.\n\n' +
-      'Or reply: skip',
-    input: 'location',
-    optional: true,
-  },
 ];
 
 export const COMPLAINT_STEPS_FLOW: Step[] = [
@@ -161,12 +152,12 @@ export const COMPLAINT_STEPS_FLOW: Step[] = [
 export const SALES_DONE = (leadNumber: string) =>
   'Thank you. Your enquiry has been registered.\n\n' +
   `Lead ID: ${leadNumber}\n\n` +
-  'A Multiline representative will call you on this number shortly.';
- 
+  'A Multiline representative will call you soon.';
+
 export const COMPLAINT_DONE = (ticket: string) =>
   'Your complaint has been registered.\n\n' +
   `Ticket: ${ticket}\n\n` +
-  'Our support team will call you on this number shortly.';
+  'Our support team will call you soon.';
 
 export const PENDING_TICKET = (ticket: string) =>
   `Your complaint ${ticket} is with our support team and they will call you ` +
