@@ -139,7 +139,13 @@ export const COMPLAINT_STEPS_FLOW: Step[] = [
     flowCta: 'Enter details',
     flowScreen: 'DETAILS',
   },
-  { key: 'charger_model', prompt: 'Which car charger do you have?', input: 'text' },
+  {
+    key: 'charger_model',
+    prompt: 'Which car charger do you have?',
+    input: 'list',
+    listButton: 'Choose your car',
+    options: VEHICLE_OPTIONS,
+  },
   {
     key: 'issue_type',
     prompt: 'What problem are you having with the charger?',
