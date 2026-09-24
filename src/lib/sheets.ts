@@ -25,11 +25,14 @@ function auth() {
 }
 
 function fmtDate(d: Date) {
-  return d.toLocaleDateString('en-GB', {
-    day: '2-digit', month: 'short', timeZone: 'Asia/Karachi',
+  const date = d.toLocaleDateString('en-GB', {
+    day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Karachi',
   });
+  const time = d.toLocaleTimeString('en-GB', {
+    hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Karachi',
+  });
+  return `${date}, ${time}`;
 }
-
 async function append(tab: string, row: (string | null)[]) {
 
   const { token } = await auth().getAccessToken();
@@ -62,22 +65,22 @@ const mapLink = (lat: number | null, lng: number | null) =>
  
 export function appendLead(l: {
   leadNumber: string; createdAt: Date; name: string | null; whatsappNumber: string;
-  address: string | null; city: string | null; vehicle: string | null;
-  latitude: number | null; longitude: number | null; status: string;
+  altPhone: string | null; city: string | null; vehicle: string | null;
+  status: string;
 }) {
   return appendWithRetry('Sales Leads', [
     l.leadNumber, fmtDate(l.createdAt), l.name, `+${l.whatsappNumber}`,
-    l.address, l.city, l.vehicle, mapLink(l.latitude, l.longitude), l.status,
+    l.altPhone, l.city, l.vehicle, l.status,
   ]);
 }
 
 export function appendComplaint(c: {
   ticketNumber: string; createdAt: Date; name: string | null; whatsappNumber: string;
-  address: string | null; city: string | null; chargerModel: string | null;
+  altPhone: string | null; city: string | null; chargerModel: string | null;
   issueType: string | null; status: string;
 }) {
   return appendWithRetry('Complaints', [
     c.ticketNumber, fmtDate(c.createdAt), c.name, `+${c.whatsappNumber}`,
-    c.address, c.city, c.chargerModel, c.issueType, c.status,
+    c.altPhone, c.city, c.chargerModel, c.issueType, c.status,
   ]);
 }
