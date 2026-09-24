@@ -179,9 +179,10 @@ export async function handleInbound(msg: Inbound) {
   if (lower === 'menu') return startGreeting(to);
 
   // Not mid-flow, and they already have an unresolved ticket: acknowledge it
-  // rather than restarting the menu or saying nothing. Nobody watches this
-  // number, so silence would leave the customer waiting on a reply.
-  if (!convo.flow) {
+  // rather than saying nothing. Nobody watches this number, so silence would
+  // leave the customer waiting. Menu button taps are exempt — otherwise a
+  // customer with an open ticket can never start a new enquiry.
+  if (!convo.flow && msg.replyId !== 'flow_sales' && msg.replyId !== 'flow_complaint') {
     const open = await openComplaintFor(to);
     if (open) {
       const sinceAck = convo.lastAckAt ? now.getTime() - convo.lastAckAt.getTime() : Infinity;
