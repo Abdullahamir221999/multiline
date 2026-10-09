@@ -8,6 +8,7 @@ import {
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
+  useSpring,
   useTransform,
 } from "motion/react";
 
@@ -66,6 +67,11 @@ const LED_POSITION = {
   left: "50%",
 };
 
+/* Scroll distance per step, plus one viewport for the panel.
+   Was 410svh — about four screens to read four sentences. */
+const BAND = 55;
+const SECTION_HEIGHT = 100 + BAND * STEPS.length;
+
 export const EVInstallSteps = () => {
   const desktopRef = useRef<HTMLDivElement>(null);
 
@@ -79,8 +85,21 @@ export const EVInstallSteps = () => {
   });
 
   /*
-   * Turn the scroll progress into one of our four
-   * installation stages.
+   * Spring the raw progress before anything reads it — a mouse
+   * wheel delivers big discrete jumps, and tracking those
+   * directly is what makes the charger movement look steppy.
+   */
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 28,
+    mass: 0.4,
+    restDelta: 0.0005,
+  });
+
+  /*
+   * Stage comes off the raw value, not the spring: the copy
+   * should change the moment you cross into a band rather than
+   * waiting for the spring to settle.
    */
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     const index = Math.min(
@@ -88,32 +107,20 @@ export const EVInstallSteps = () => {
       Math.floor(latest * STEPS.length)
     );
 
-    setActiveIndex(index);
+    setActiveIndex((current) =>
+      current === index ? current : index
+    );
   });
 
   /*
    * Very subtle movement on the charger.
    * It should feel alive, not like a floating animation.
    */
-  const chargerScale = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [0.97, 1.015]
-  );
-
-  const chargerY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [10, -8]
-  );
-
-  const activeStep = STEPS[activeIndex];
+  const chargerScale = useTransform(progress, [0, 1], [0.97, 1.015]);
+  const chargerY = useTransform(progress, [0, 1], [10, -8]);
 
   return (
-    <section
-      id="how-it-works"
-      className="bg-canvas"
-    >
+    <section id="how-it-works" className="bg-canvas">
       {/* =====================================================
           MOBILE / TABLET
           Normal scrolling — sticky interaction is desktop only.
@@ -130,8 +137,8 @@ export const EVInstallSteps = () => {
           </h2>
 
           <p className="mt-4 max-w-[520px] text-[15px] leading-[1.65] text-ink-soft">
-            From your first enquiry to installation, everything
-            is handled by Multiline&apos;s own team.
+            From your first enquiry to installation, everything is
+            handled by Multiline&apos;s own team.
           </p>
         </div>
 
@@ -189,19 +196,15 @@ export const EVInstallSteps = () => {
 
       {/* =====================================================
           DESKTOP SCROLL STORY
-
-          4 stages.
-          Section is deliberately several viewports tall,
-          while the inner layout stays sticky.
       ===================================================== */}
 
       <div
         ref={desktopRef}
-        className="relative hidden h-[410svh] lg:block"
+        className="relative hidden lg:block"
+        style={{ height: `${SECTION_HEIGHT}svh` }}
       >
         <div className="sticky top-0 h-[100svh] overflow-hidden">
-            <div className="page-pad mx-auto grid h-full max-w-[1340px] grid-cols-[1fr_1fr] items-center gap-14 xl:gap-20">
-
+          <div className="page-pad mx-auto grid h-full max-w-[1340px] grid-cols-[1fr_1fr] items-center gap-14 xl:gap-20">
             {/* =================================================
                 LEFT — COPY
             ================================================= */}
@@ -218,27 +221,26 @@ export const EVInstallSteps = () => {
               </h2>
 
               <p className="mt-5 max-w-[540px] text-[16px] leading-[1.65] text-ink-soft">
-                From your first enquiry to installation,
-                everything is handled by Multiline&apos;s own
-                engineering team.
+                From your first enquiry to installation, everything
+                is handled by Multiline&apos;s own engineering team.
               </p>
 
               {/* =================================================
-    STACKED STEPS
-================================================= */}
+                  STACKED STEPS
+              ================================================= */}
 
-<div className="mt-10 max-w-[560px]">
-  {STEPS.map((step, index) => (
-    <DesktopStep
-      key={step.number}
-      step={step}
-      index={index}
-      activeIndex={activeIndex}
-      desktopRef={desktopRef}
-      reduceMotion={Boolean(reduceMotion)}
-    />
-  ))}
-</div>
+              <div className="mt-10 max-w-[560px]">
+                {STEPS.map((step, index) => (
+                  <DesktopStep
+                    key={step.number}
+                    step={step}
+                    index={index}
+                    activeIndex={activeIndex}
+                    desktopRef={desktopRef}
+                    reduceMotion={Boolean(reduceMotion)}
+                  />
+                ))}
+              </div>
             </div>
 
             {/* =================================================
@@ -246,7 +248,7 @@ export const EVInstallSteps = () => {
             ================================================= */}
 
             <div className="relative flex h-[72vh] max-h-[680px] min-h-[560px] items-center justify-center">
-              {/* very subtle ambient backdrop */}
+              {/* ambient backdrop */}
 
               <motion.div
                 animate={{
@@ -254,7 +256,7 @@ export const EVInstallSteps = () => {
                   opacity: 0.35 + activeIndex * 0.08,
                 }}
                 transition={{
-                  duration: 0.6,
+                  duration: 0.8,
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 className="absolute h-[470px] w-[470px] rounded-full bg-brand/[0.08] blur-[80px]"
@@ -266,6 +268,7 @@ export const EVInstallSteps = () => {
                 style={{
                   scale: reduceMotion ? 1 : chargerScale,
                   y: reduceMotion ? 0 : chargerY,
+                  willChange: "transform",
                 }}
                 className="relative h-full w-full max-w-[560px]"
               >
@@ -278,9 +281,7 @@ export const EVInstallSteps = () => {
                   className="object-contain"
                 />
 
-                {/* =================================================
-                    MAIN LED
-                ================================================= */}
+                {/* MAIN LED */}
 
                 <motion.span
                   aria-hidden="true"
@@ -294,35 +295,28 @@ export const EVInstallSteps = () => {
                             ? 0.7
                             : 1,
 
-                    scale:
-                      activeIndex === 3
-                        ? [1, 1.25, 1]
-                        : 1,
+                    scale: activeIndex === 3 ? [1, 1.22, 1] : 1,
                   }}
                   transition={
                     activeIndex === 3 && !reduceMotion
                       ? {
-                          opacity: {
-                            duration: 0.5,
-                          },
+                          opacity: { duration: 0.6 },
                           scale: {
-                            duration: 1.5,
+                            duration: 2,
                             repeat: Infinity,
                             ease: "easeInOut",
                           },
                         }
                       : {
-                          duration: 0.5,
-                          ease: "easeOut",
+                          duration: 0.6,
+                          ease: [0.22, 1, 0.36, 1],
                         }
                   }
                   style={LED_POSITION}
                   className="absolute h-[12px] w-[12px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_20px_7px_rgba(242,202,48,0.8)]"
                 />
 
-                {/* =================================================
-                    AMBIENT LED GLOW
-                ================================================= */}
+                {/* AMBIENT LED GLOW */}
 
                 <motion.span
                   aria-hidden="true"
@@ -336,14 +330,11 @@ export const EVInstallSteps = () => {
                             ? 0.25
                             : 0.5,
 
-                    scale:
-                      activeIndex === 3
-                        ? 1.15
-                        : 1,
+                    scale: activeIndex === 3 ? 1.15 : 1,
                   }}
                   transition={{
-                    duration: 0.7,
-                    ease: "easeOut",
+                    duration: 0.9,
+                    ease: [0.22, 1, 0.36, 1],
                   }}
                   style={LED_POSITION}
                   className="absolute h-[110px] w-[110px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/35 blur-[30px]"
@@ -356,6 +347,7 @@ export const EVInstallSteps = () => {
     </section>
   );
 };
+
 /* =========================================================
    DESKTOP STACKED STEP
 ========================================================= */
@@ -378,15 +370,10 @@ function DesktopStep({
   const isActive = index === activeIndex;
   const isPast = index < activeIndex;
 
-  const opacity = isActive
-    ? 1
-    : isPast
-      ? 0.42
-      : 0.24;
+  const opacity = isActive ? 1 : isPast ? 0.42 : 0.24;
 
   const handleClick = () => {
     const el = desktopRef.current;
-
     if (!el) return;
 
     const band = el.offsetHeight / STEPS.length;
@@ -401,72 +388,34 @@ function DesktopStep({
     <motion.button
       type="button"
       onClick={handleClick}
-      animate={{
-        opacity,
-        y: isActive ? 0 : 2,
-        scale: isActive ? 1 : 0.985,
-      }}
-      transition={{
-        duration: 0.5,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      className="
-        block
-        w-full
-        origin-left
-        py-3
-        text-left
-        outline-none
-        first:pt-0
-      "
+      animate={{ opacity }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="block w-full origin-left py-3 text-left outline-none first:pt-0"
     >
       {/* STEP LABEL */}
 
       <div className="flex items-center gap-3">
-        <motion.div
-          animate={{
-            scale: isActive ? 1 : 0.92,
-          }}
-          transition={{
-            duration: 0.4,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          <Icon
-            className="h-[19px] w-[19px] text-brand"
-            strokeWidth={1.9}
-          />
-        </motion.div>
+        <Icon
+          className="h-[19px] w-[19px] text-brand"
+          strokeWidth={1.9}
+        />
 
         <span className="text-[13px] font-medium text-ink-soft">
           Step {step.number}
         </span>
       </div>
 
-      {/* TITLE */}
+      {/* TITLE
+
+          Scaled, not resized: animating font-size relayouts the
+          whole column every frame, which is most of what made
+          this feel heavy. transform is compositor-only. */}
 
       <motion.h3
-        animate={{
-          x: isActive ? 0 : 2,
-        }}
-        transition={{
-          duration: 0.45,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-        className={`
-          mt-2
-          font-semibold
-          leading-[1.15]
-          tracking-[-0.025em]
-          text-ink
-          transition-[font-size]
-          duration-500
-          ${
-            isActive
-              ? "text-[27px]"
-              : "text-[21px]"
-          }
-        `}
+        animate={{ scale: isActive ? 1 : 0.78 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        style={{ willChange: "transform" }}
+        className="mt-2 origin-left text-[27px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink"
       >
         {step.title}
       </motion.h3>
@@ -479,28 +428,16 @@ function DesktopStep({
             initial={
               reduceMotion
                 ? false
-                : {
-                    opacity: 0,
-                    height: 0,
-                    y: 8,
-                  }
+                : { opacity: 0, height: 0, y: 6 }
             }
-            animate={{
-              opacity: 1,
-              height: "auto",
-              y: 0,
-            }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
             exit={
               reduceMotion
                 ? undefined
-                : {
-                    opacity: 0,
-                    height: 0,
-                    y: -5,
-                  }
+                : { opacity: 0, height: 0, y: -4 }
             }
             transition={{
-              duration: 0.45,
+              duration: 0.5,
               ease: [0.22, 1, 0.36, 1],
             }}
             className="overflow-hidden"
@@ -514,6 +451,7 @@ function DesktopStep({
     </motion.button>
   );
 }
+
 /* =========================================================
    MOBILE STEP
 ========================================================= */

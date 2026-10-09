@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { Check } from "lucide-react";
-
+import { scrollToSection } from "@/lib/scrollToSection";
 /* =========================================================
     SECTION 07 — QUOTE
 
@@ -48,15 +48,16 @@ export const EVQuoteBanner = () => {
           Fill in your details and we&apos;ll take care of the rest.
         </p>
 
-        <Link
-          href="#quote"
+        <button
+          type="button"
+          onClick={() => scrollToSection("quote")}
           className="mt-9 inline-flex h-[54px] items-center justify-center rounded-full bg-ink px-8 text-[14px] font-semibold text-white transition-colors hover:bg-ink/85"
         >
           Get your quote
           <span aria-hidden="true" className="ml-2.5">
             ›
           </span>
-        </Link>
+        </button>
       </motion.div>
     </section>
   );
@@ -201,7 +202,7 @@ export const EVQuoteForm = () => {
                   lastName: "",
                   email: "",
                   phone: "",
-                  city: "",
+                  city: "", 
                   interest: "",
                   issue: "",
                   reference: "",

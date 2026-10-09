@@ -20,7 +20,7 @@ export const EV_VEHICLE_GROUPS = [
     models: "Atto 3 · Seal",
   },
   {
-    brand: "HAVAL · MG · OMODA · JAECOO",
+    brand: "HAVAL · MG",
     models: "Selected EV & PHEV models",
   },
   {
