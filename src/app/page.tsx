@@ -1,5 +1,5 @@
-import HomePageTwo from "@/components/HomePageTwo";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <HomePageTwo />;
+  redirect("/ev-chargers");
 }
