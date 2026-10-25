@@ -38,12 +38,17 @@ import { EV_PRODUCTS, type EVProduct } from "@/lib/evProducts";
       - whether a "from" price including PIB is possible
 --------------------------------------------------------- */
 
+/* ---------------------------------------------------------
+    PRICING — Multiline retail list, 7 Apr 2026
+    Jensonn Type 2 units. Ex-PIB, installation and sales tax.
+--------------------------------------------------------- */
+
 const PRICES: Record<string, string> = {
   "7kw-ac": "From PKR 80,000",
   "11kw-ac": "From PKR 150,000",
-  "22kw-ac": "From PKR 80,000",
-  "30kw-dc": "From PKR 850,000",
-  "60kw-dc": "From PKR 3,000,000",
+  "22kw-ac": "From PKR 225,000",
+  "30kw-dc": "Call to enquire",
+  "60kw-dc": "Call to enquire",
 };
 
 const PRICE_NOTE = "Excluding PIB, installation and sales tax";

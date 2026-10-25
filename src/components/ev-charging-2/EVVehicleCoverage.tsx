@@ -43,7 +43,7 @@ const STATS: Stat[] = [
     label: "Chargers installed nationwide",
   },
   {
-    value: 2017,
+    value: 2014,
     label: "Charging since",
     plain: true,
   },
