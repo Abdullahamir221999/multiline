@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
-import { Check } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
+
 import { scrollToSection } from "@/lib/scrollToSection";
+
+
+
 /* =========================================================
     SECTION 07 — QUOTE
 
@@ -12,9 +16,10 @@ import { scrollToSection } from "@/lib/scrollToSection";
       <EVQuoteBanner />  — the CTA band, place it anywhere
       <EVQuoteForm />    — the form it scrolls to
 
-    NO BACKEND YET. handleSubmit is stubbed for the demo: it
-    validates, logs, and shows the success state. Wire it to
-    an API route before this goes live — see the TODO below.
+    Submissions go to /api/ev-enquiry, which writes to the
+    same leads/complaints tables as the WhatsApp bot and then
+    appends to the spreadsheet. The customer gets back the
+    same style of reference the bot gives out.
 ========================================================= */
 
 /* =========================================================
@@ -84,23 +89,31 @@ const ISSUE_OPTIONS = [
   "Something else",
 ];
 
+const EMPTY_VALUES = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  city: "",
+  interest: "",
+  issue: "",
+  reference: "",
+  message: "",
+  company: "", // honeypot — real people never fill this
+};
+
 export const EVQuoteForm = () => {
   const [mode, setMode] = useState<Mode>("quote");
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const [values, setValues] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    city: "",
-    interest: "",
-    issue: "",
-    reference: "",
-    message: "",
-    company: "", // honeypot — real people never fill this
-  });
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState("");
+
+  /** The ML-EV-#### / ML-EVC-#### the API returns. */
+  const [reference, setReference] = useState("");
+
+  const [values, setValues] = useState(EMPTY_VALUES);
 
   const ref = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
@@ -146,25 +159,48 @@ export const EVQuoteForm = () => {
     return Object.keys(next).length === 0;
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const reset = () => {
+    setSubmitted(false);
+    setReference("");
+    setSendError("");
+    setErrors({});
+    setValues(EMPTY_VALUES);
+  };
+
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     if (values.company) return; // bot
     if (!validate()) return;
+    if (sending) return;
 
-    /* TODO — BACKEND
-       Replace with:
-         await fetch("/api/ev-enquiry", {
-           method: "POST",
-           headers: { "Content-Type": "application/json" },
-           body: JSON.stringify({ mode, ...values }),
-         });
-       The API route should send to Multiline's inbox (Resend or
-       similar) and rate-limit by IP. Support requests need a
-       separate destination from sales enquiries. */
-    console.log("EV enquiry (demo — not sent):", { mode, ...values });
+    setSending(true);
+    setSendError("");
 
-    setSubmitted(true);
+    try {
+      const response = await fetch("/api/ev-enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode, ...values }),
+      });
+
+      const result = await response
+        .json()
+        .catch(() => ({ ok: false }));
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error ?? "Failed");
+      }
+
+      setReference(result.reference ?? "");
+      setSubmitted(true);
+    } catch {
+      setSendError(
+        "Something went wrong sending that. Try again, or message us on WhatsApp."
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   /* =====================================================
@@ -180,7 +216,10 @@ export const EVQuoteForm = () => {
         <div className="page-pad page-shell">
           <div className="mx-auto max-w-[520px] rounded-3xl bg-white px-8 py-14 text-center sm:px-12">
             <span className="mx-auto flex h-[56px] w-[56px] items-center justify-center rounded-full bg-brand-tint">
-              <Check className="h-[26px] w-[26px] text-brand" strokeWidth={2.4} />
+              <Check
+                className="h-[26px] w-[26px] text-brand"
+                strokeWidth={2.4}
+              />
             </span>
 
             <h2 className="mt-7 text-[27px] font-semibold leading-[1.15] tracking-[-0.03em] text-ink">
@@ -193,23 +232,20 @@ export const EVQuoteForm = () => {
                 : "One of our engineers will contact you to arrange a site visit and quote."}
             </p>
 
+            {/* Quote this when you follow up — the same reference
+                the WhatsApp bot hands out. */}
+            {reference && (
+              <p className="mt-5 text-[14px] text-ink-soft">
+                {isSupport ? "Ticket" : "Reference"}:{" "}
+                <span className="font-semibold text-ink">
+                  {reference}
+                </span>
+              </p>
+            )}
+
             <button
               type="button"
-              onClick={() => {
-                setSubmitted(false);
-                setValues({
-                  firstName: "",
-                  lastName: "",
-                  email: "",
-                  phone: "",
-                  city: "", 
-                  interest: "",
-                  issue: "",
-                  reference: "",
-                  message: "",
-                  company: "",
-                });
-              }}
+              onClick={reset}
               className="mt-8 text-[14px] font-semibold text-brand underline underline-offset-4"
             >
               Send another
@@ -263,24 +299,36 @@ export const EVQuoteForm = () => {
             {/* MODE */}
 
             <Field label="How can we help?">
-              <select
-                value={mode}
-                onChange={(event) =>
-                  setMode(event.target.value as Mode)
-                }
-                className={selectClass}
-              >
-                <option value="quote">
-                  I want a charger installed
-                </option>
-                <option value="support">
-                  I&apos;m an existing customer with an issue
-                </option>
-              </select>
+              <div className="relative">
+                <select
+                  value={mode}
+                  onChange={(event) =>
+                    setMode(event.target.value as Mode)
+                  }
+                  className={`${selectClass} cursor-pointer`}
+                >
+                  <option value="quote">
+                    I want a charger installed
+                  </option>
+                  <option value="support">
+                    I&apos;m an existing customer with an issue
+                  </option>
+                </select>
+
+                <ChevronDown
+                  aria-hidden="true"
+                  strokeWidth={1.8}
+                  className="pointer-events-none absolute right-5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-ink-faint"
+                />
+              </div>
             </Field>
 
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
-              <Field label="First name" error={errors.firstName} required>
+              <Field
+                label="First name"
+                error={errors.firstName}
+                required
+              >
                 <input
                   type="text"
                   value={values.firstName}
@@ -289,7 +337,11 @@ export const EVQuoteForm = () => {
                 />
               </Field>
 
-              <Field label="Last name" error={errors.lastName} required>
+              <Field
+                label="Last name"
+                error={errors.lastName}
+                required
+              >
                 <input
                   type="text"
                   value={values.lastName}
@@ -308,7 +360,11 @@ export const EVQuoteForm = () => {
                 />
               </Field>
 
-              <Field label="Phone number" error={errors.phone} required>
+              <Field
+                label="Phone number"
+                error={errors.phone}
+                required
+              >
                 <input
                   type="tel"
                   inputMode="tel"
@@ -376,7 +432,9 @@ export const EVQuoteForm = () => {
                       type="text"
                       placeholder="Optional — speeds things up"
                       value={values.reference}
-                      onChange={(e) => set("reference")(e.target.value)}
+                      onChange={(e) =>
+                        set("reference")(e.target.value)
+                      }
                       className={inputClass()}
                     />
                   </Field>
@@ -405,29 +463,31 @@ export const EVQuoteForm = () => {
             </div>
 
             {/* HONEYPOT — hidden from people, catches most bots
-                without loading reCAPTCHA */}
+                without loading reCAPTCHA. Named off anything
+                autofill recognises, or Chrome fills it and the
+                form silently refuses to submit. */}
             <div
               aria-hidden="true"
-              className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
+              className="pointer-events-none absolute left-[-9999px] h-0 w-0 overflow-hidden"
             >
               <label>
-                Company
+                Leave this blank
                 <input
                   type="text"
+                  name="confirm-url"
                   tabIndex={-1}
-                  autoComplete="off"
+                  autoComplete="new-password"
                   value={values.company}
                   onChange={(e) => set("company")(e.target.value)}
                 />
               </label>
             </div>
-
             <p className="mt-8 max-w-[560px] text-[13px] leading-[1.6] text-ink-faint">
               By sending this, you agree that Multiline may contact
               you about your enquiry. Read how we handle your details
               in our{" "}
               <Link
-                href="/privacy"
+                href="/privacy-policy"
                 className="text-ink-soft underline underline-offset-4"
               >
                 privacy policy
@@ -435,15 +495,34 @@ export const EVQuoteForm = () => {
               .
             </p>
 
-            <button
-              type="submit"
-              className="mt-7 inline-flex h-[54px] items-center justify-center rounded-full bg-ink px-8 text-[14px] font-semibold text-white transition-colors hover:bg-ink/85"
-            >
-              {isSupport ? "Send to support" : "Get my quote"}
-              <span aria-hidden="true" className="ml-2.5">
-                ›
-              </span>
-            </button>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <button
+                type="submit"
+                disabled={sending}
+                className="inline-flex h-[54px] shrink-0 items-center justify-center rounded-full bg-ink px-8 text-[14px] font-semibold text-white transition-colors hover:bg-ink/85 disabled:cursor-not-allowed disabled:bg-ink/40"
+              >
+                {sending
+                  ? "Sending…"
+                  : isSupport
+                    ? "Send to support"
+                    : "Get my quote"}
+
+                {!sending && (
+                  <span aria-hidden="true" className="ml-2.5">
+                    ›
+                  </span>
+                )}
+              </button>
+
+              {sendError && (
+                <p
+                  role="alert"
+                  className="text-[13px] leading-[1.5] text-[#C0392B]"
+                >
+                  {sendError}
+                </p>
+              )}
+            </div>
           </form>
         </motion.div>
       </div>

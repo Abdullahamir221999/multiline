@@ -3,14 +3,13 @@ import type { CatalogProduct } from "@/lib/products";
 /* =========================================================
     PRODUCT PAGE CONTENT
 
-    Four pages: 7kW, 11kW, 22kW, and one page covering the
-    whole DC range.
+    Specs below are taken from the Jensonn datasheets
+    (7kW / 11kW / 22kW, V1.0). Where a figure appears on a
+    page it should match the PDF a visitor can download two
+    sections later.
 
-    ALL COPY BELOW IS A DRAFT written from the spec sheets.
-    Multiline should read it before launch — particularly the
-    "built for Pakistan" claims, which assert things about
-    the hardware I can't verify (surge tolerance, IP rating,
-    warranty length).
+    Copy still needs Multiline's approval, but the technical
+    claims are now sourced rather than assumed.
 ========================================================= */
 
 export type Feature = {
@@ -29,6 +28,11 @@ export type Capability = {
   body: string;
 };
 
+export type SpecRow = {
+  label: string;
+  value: string;
+};
+
 export type ProductDocument = {
   label: string;
   file: string;
@@ -37,57 +41,66 @@ export type ProductDocument = {
 
 export type ProductPage = {
   slug: string;
-  /** Slugs from CATALOG_PRODUCTS shown on this page. */
   productSlugs: string[];
   category: "AC" | "DC";
 
-  /** Hero */
   eyebrow: string;
   title: string;
   lede: string;
 
-  /** Section 2 */
   introHeading: string;
   introBody: string;
 
-  /** Section 3 */
   features: Feature[];
-
-  /** Section 4 */
   highlights: Highlight[];
 
-  /** Section 5 */
   capabilitiesHeading: string;
   capabilities: Capability[];
 
-  /** Section 7 */
+  /** Full table, straight off the datasheet. */
+  specs: SpecRow[];
+
   documents: ProductDocument[];
 };
 
 /* ---------------------------------------------------------
-    DOCUMENTS
+    PROTECTION
 
-    Drop the PDFs in /public/docs/. Sizes are shown so nobody
-    opens a 12MB file on mobile data by accident — update them
-    to the real figures.
+    Identical across the three Jensonn units, so it's written
+    once. Every figure here is on the datasheets.
 --------------------------------------------------------- */
 
-const JENSONN_AC_DOCS: ProductDocument[] = [
+const JENSONN_PROTECTION: Capability[] = [
   {
-    label: "Product datasheet",
-    file: "/docs/jensonn-ac-datasheet.pdf",
-    size: "PDF",
+    title: "Protected against unstable supply",
+    body: "Cuts out above 265V and below 175V, with over-current protection at 110% of rated output. Built for a grid that doesn't always behave.",
   },
   {
-    label: "Installation guide",
-    file: "/docs/jensonn-ac-installation.pdf",
-    size: "PDF",
+    title: "Lightning and earth protection",
+    body: "Surge protection, ground fault protection and relay bonding detection are built into the unit rather than left to the distribution board.",
   },
   {
-    label: "User manual",
-    file: "/docs/jensonn-ac-manual.pdf",
-    size: "PDF",
+    title: "IP65 enclosure",
+    body: "Sealed against dust and water jets — a step above the IP54 rating most imported wallboxes carry, and it matters on an outdoor wall in monsoon season.",
   },
+  {
+    title: "Thermal cut-off",
+    body: "Monitors its own temperature and stops at 80°C, resuming at 60°C. Rated for ambient temperatures from -25°C to +50°C.",
+  },
+];
+
+const JENSONN_SPECS_COMMON: SpecRow[] = [
+  { label: "Operating frequency", value: "50 Hz" },
+  { label: "Enclosure rating", value: "IP65" },
+  { label: "Operating temperature", value: "-25°C to +50°C" },
+  { label: "Storage temperature", value: "-40°C to +60°C" },
+  { label: "Cooling", value: "Natural" },
+  { label: "Over-voltage protection", value: "≥ 265V" },
+  { label: "Under-voltage protection", value: "≤ 175V" },
+  { label: "Over-current protection", value: "≥ 110% rated output" },
+  { label: "Over-temperature", value: "80°C cut-off, 60°C recovery" },
+  { label: "Installation", value: "Wall-mounted or pedestal" },
+  { label: "Standards", value: "IEC 61851-1, IEC 62196-2" },
 ];
 
 export const PRODUCT_PAGES: ProductPage[] = [
@@ -101,58 +114,59 @@ export const PRODUCT_PAGES: ProductPage[] = [
 
     eyebrow: "AC Home Charger",
     title: "7kW Home Charger",
-    lede: "Single-phase charging that fits the supply almost every Pakistani home already has. Plug in overnight, drive on a full battery.",
+    lede: "Single-phase charging that runs on the supply almost every Pakistani home already has. Plug in overnight, drive on a full battery.",
 
     introHeading: "The one that fits your house as it is.",
     introBody:
-      "Most homes in Pakistan run on a single-phase 230V connection. The 7kW charger is built for exactly that — no supply upgrade, no new connection from the utility, no waiting. It delivers around four times the speed of a standard wall socket, which is enough to refill a typical EV between the time you park and the time you leave.",
+      "Most homes in Pakistan run on a single-phase 230V connection, and this charger is built for exactly that — no supply upgrade, no new connection from the utility, no waiting. At 32A it delivers around four times the speed of a standard wall socket, which is enough to refill a typical EV between the time you park and the time you leave.",
 
     features: [
       {
         title: "No supply upgrade needed",
-        body: "Runs on the single-phase connection already at your property. Our team confirms your load before installation.",
+        body: "Runs on the single-phase 230V connection already at your property. Our engineers confirm your load can carry it before installation.",
         image: "/images/products/features/7kw-supply.jpg",
       },
       {
-        title: "Full charge overnight",
-        body: "A typical EV goes from low to full in the hours it sits parked. You never plan around charging.",
-        image: "/images/products/features/7kw-overnight.jpg",
+        title: "Card or app, your choice",
+        body: "Start a session with the RFID card or over Bluetooth and Wi-Fi. The indicator light shows status at a glance from across the driveway.",
+        image: "/images/products/features/7kw-rfid.jpg",
       },
       {
-        title: "Wall-mounted and compact",
-        body: "Sits flat against a garage or boundary wall, with a tethered Type 2 cable that stores on the unit.",
+        title: "Wall or pedestal",
+        body: "At 360 × 195 × 95 mm it sits flat against a garage or boundary wall, or on a floor pedestal where there's no wall to use.",
         image: "/images/products/features/7kw-mount.jpg",
       },
     ],
 
     highlights: [
-      { label: "Output", value: "7 kW" },
+      { label: "Output", value: "7.4 kW" },
       { label: "Supply", value: "Single-phase 230V" },
-      { label: "Connector", value: "Type 2" },
-      { label: "Mounting", value: "Wall" },
+      { label: "Current", value: "32 A" },
+      { label: "Protection", value: "IP65" },
     ],
 
     capabilitiesHeading: "Built for the way power works here.",
-    capabilities: [
-      {
-        title: "Protected against supply faults",
-        body: "Built-in protection against over-voltage, under-voltage and leakage current — the conditions a Pakistani grid connection actually sees.",
-      },
-      {
-        title: "Weather-rated enclosure",
-        body: "Sealed against dust and rain, so it can be mounted outdoors on a boundary wall rather than only inside a garage.",
-      },
-      {
-        title: "Plug and charge",
-        body: "No app, no account, no subscription. Connect the cable and the charger starts; disconnect and it stops.",
-      },
-      {
-        title: "Installed and supported by us",
-        body: "Fitted by Multiline's own engineers, not a subcontractor — and the same team answers the phone afterwards.",
-      },
+    capabilities: JENSONN_PROTECTION,
+
+    specs: [
+      { label: "Rated output", value: "7.4 kW" },
+      { label: "Operating voltage", value: "230 Vac ± 15%" },
+      { label: "Rated current", value: "32 A" },
+      { label: "Connector", value: "Type 2" },
+      { label: "Leakage protection", value: "Type A" },
+      { label: "Communication", value: "Bluetooth / Wi-Fi" },
+      { label: "Interface", value: "Indicator light + RFID reader" },
+      { label: "Dimensions", value: "360 × 195 × 95 mm" },
+      ...JENSONN_SPECS_COMMON,
     ],
 
-    documents: JENSONN_AC_DOCS,
+    documents: [
+      {
+        label: "7kW product specification",
+        file: "/docs/jensonn-7kw-specification.pdf",
+        size: "PDF",
+      },
+    ],
   },
 
   /* =====================================================
@@ -165,58 +179,59 @@ export const PRODUCT_PAGES: ProductPage[] = [
 
     eyebrow: "AC Home Charger",
     title: "11kW Home Charger",
-    lede: "Three-phase charging for homes and offices with a 400V connection. Roughly half the charging time of a single-phase unit.",
+    lede: "Three-phase charging for homes and offices with a 400V connection. Roughly half the charging time of a single-phase unit, with a screen and 4G on board.",
 
     introHeading: "When the supply allows, this is the one.",
     introBody:
-      "If your property has a three-phase 400V connection — common in larger homes, offices and commercial buildings — the 11kW charger delivers the full AC charging speed most electric vehicles are designed to accept. Anything faster is wasted on the car; anything slower leaves capability on the table.",
+      "If your property has a three-phase 400V connection — common in larger homes, offices and commercial buildings — the 11kW charger delivers the full AC charging speed most electric vehicles are designed to accept. Anything faster is wasted on the car; anything slower leaves capability on the table. It draws 16A per phase, so the supply requirement is modest for the output.",
 
     features: [
       {
         title: "Matches most EVs exactly",
-        body: "The majority of electric cars cap their onboard AC charging at 11kW. This charger meets that ceiling without overspending on headroom.",
+        body: "The majority of electric cars cap their onboard AC charging at 11kW. This meets that ceiling without paying for headroom the vehicle can't use.",
         image: "/images/products/features/11kw-match.jpg",
       },
       {
-        title: "Half the charging time",
-        body: "Where a single-phase unit takes a full night, this refills the same battery in a few hours.",
-        image: "/images/products/features/11kw-speed.jpg",
+        title: "4.3-inch display",
+        body: "Live voltage, current, power and session energy on the unit itself — not buried in an app you have to open to check whether it's charging.",
+        image: "/images/products/features/11kw-display.jpg",
       },
       {
-        title: "Home or workplace",
-        body: "Suited to residences, offices and small commercial sites where vehicles park for several hours at a time.",
-        image: "/images/products/features/11kw-site.jpg",
+        title: "Connected three ways",
+        body: "Bluetooth, Wi-Fi and 4G, so the charger stays reachable even where home internet doesn't reach the garage.",
+        image: "/images/products/features/11kw-connectivity.jpg",
       },
     ],
 
     highlights: [
       { label: "Output", value: "11 kW" },
       { label: "Supply", value: "Three-phase 400V" },
-      { label: "Connector", value: "Type 2" },
-      { label: "Protection", value: "IP65" },
+      { label: "Current", value: "16 A" },
+      { label: "Display", value: "4.3 inch" },
     ],
 
     capabilitiesHeading: "Built for the way power works here.",
-    capabilities: [
-      {
-        title: "Protected against supply faults",
-        body: "Over-voltage, under-voltage and leakage protection built into the unit, rather than left to the distribution board.",
-      },
-      {
-        title: "IP65 enclosure",
-        body: "Rated against dust ingress and water jets, so outdoor mounting is a design choice rather than a compromise.",
-      },
-      {
-        title: "Plug and charge",
-        body: "No app, no account, no subscription. Connect the cable and charging begins.",
-      },
-      {
-        title: "Supply assessment included",
-        body: "We confirm your three-phase connection can carry the load before installation — and quote the upgrade if it can't.",
-      },
+    capabilities: JENSONN_PROTECTION,
+
+    specs: [
+      { label: "Rated output", value: "11 kW" },
+      { label: "Operating voltage", value: "400 Vac ± 15%" },
+      { label: "Rated current", value: "16 A" },
+      { label: "Connector", value: "Type 2" },
+      { label: "Leakage protection", value: "Type A / A+DC 6mA" },
+      { label: "Communication", value: "Bluetooth / Wi-Fi / 4G" },
+      { label: "Interface", value: "4.3\" display + RFID reader" },
+      { label: "Dimensions", value: "186 × 354 × 111 mm" },
+      ...JENSONN_SPECS_COMMON,
     ],
 
-    documents: JENSONN_AC_DOCS,
+    documents: [
+      {
+        label: "11kW product specification",
+        file: "/docs/jensonn-11kw-specification.pdf",
+        size: "PDF",
+      },
+    ],
   },
 
   /* =====================================================
@@ -233,22 +248,22 @@ export const PRODUCT_PAGES: ProductPage[] = [
 
     introHeading: "For places where cars don't stay long.",
     introBody:
-      "At 22kW this is the highest-output AC charger in the range. Worth noting honestly: most passenger EVs cap their onboard AC charging well below this, so the extra capacity pays off at shared sites — offices, showrooms, hotels — where one unit serves several vehicles across a day rather than one car overnight.",
+      "At 22kW on a three-phase 400V supply drawing 32A per phase, this is the highest-output AC charger in the range. Worth saying plainly: most passenger EVs cap their onboard AC charging well below this, so the extra capacity pays off at shared sites — offices, showrooms, hotels — where one unit serves several vehicles across a day rather than one car overnight.",
 
     features: [
       {
         title: "Built for shared use",
-        body: "One unit serving several vehicles through a working day, rather than a single car overnight.",
+        body: "One unit serving several vehicles through a working day, with RFID cards controlling who can start a session.",
         image: "/images/products/features/22kw-shared.jpg",
       },
       {
-        title: "Full AC headroom",
-        body: "Delivers everything an EV's onboard charger can accept, with capacity left for vehicles that arrive later.",
-        image: "/images/products/features/22kw-headroom.jpg",
+        title: "Readable at a glance",
+        body: "A 4.3-inch display and a status light visible across a car park, so staff and visitors can see what's happening without asking.",
+        image: "/images/products/features/22kw-display.jpg",
       },
       {
         title: "Offices, hotels, showrooms",
-        body: "Destination charging that gives visitors a useful top-up in the time they're already on site.",
+        body: "Destination charging that gives visitors a useful top-up in the time they're already on site — wall-mounted or on a pedestal.",
         image: "/images/products/features/22kw-destination.jpg",
       },
     ],
@@ -256,31 +271,31 @@ export const PRODUCT_PAGES: ProductPage[] = [
     highlights: [
       { label: "Output", value: "22 kW" },
       { label: "Supply", value: "Three-phase 400V" },
-      { label: "Connector", value: "Type 2" },
-      { label: "Best for", value: "Shared sites" },
+      { label: "Current", value: "32 A" },
+      { label: "Display", value: "4.3 inch" },
     ],
 
     capabilitiesHeading: "Built for the way power works here.",
-    capabilities: [
-      {
-        title: "Protected against supply faults",
-        body: "Over-voltage, under-voltage and leakage protection built into the unit.",
-      },
-      {
-        title: "Weather-rated enclosure",
-        body: "Sealed for outdoor mounting in car parks and forecourts, not only sheltered positions.",
-      },
-      {
-        title: "Plug and charge",
-        body: "No app or account required — visitors connect and charge without setup.",
-      },
-      {
-        title: "Load assessment included",
-        body: "At 22kW the site's capacity matters. We assess the building's load before quoting, not after.",
-      },
+    capabilities: JENSONN_PROTECTION,
+
+    specs: [
+      { label: "Rated output", value: "22 kW" },
+      { label: "Operating voltage", value: "400 Vac ± 15%" },
+      { label: "Rated current", value: "32 A" },
+      { label: "Connector", value: "Type 2" },
+      { label: "Communication", value: "Bluetooth / Wi-Fi" },
+      { label: "Interface", value: "4.3\" display + RFID reader" },
+      { label: "Dimensions", value: "360 × 195 × 90 mm" },
+      ...JENSONN_SPECS_COMMON,
     ],
 
-    documents: JENSONN_AC_DOCS,
+    documents: [
+      {
+        label: "22kW product specification",
+        file: "/docs/jensonn-22kw-specification.pdf",
+        size: "PDF",
+      },
+    ],
   },
 
   /* =====================================================
@@ -348,25 +363,23 @@ export const PRODUCT_PAGES: ProductPage[] = [
       },
     ],
 
-    documents: [
-      {
-        label: "DC range overview",
-        file: "/docs/jensonn-dc-overview.pdf",
-        size: "PDF",
-      },
-      {
-        label: "Site requirements guide",
-        file: "/docs/jensonn-dc-site-requirements.pdf",
-        size: "PDF",
-      },
+    /* TODO: no DC datasheet supplied yet — these are the
+       figures from the catalogue, not a spec sheet. */
+    specs: [
+      { label: "Output range", value: "20 / 60 / 120 kW" },
+      { label: "Supply", value: "Three-phase 400V" },
+      { label: "Connector", value: "CCS2" },
+      { label: "Installation", value: "Floor-mounted" },
+      { label: "Application", value: "Commercial, fleet, public" },
     ],
+
+    documents: [],
   },
 ];
 
 export const getProductPage = (slug: string): ProductPage | undefined =>
   PRODUCT_PAGES.find((page) => page.slug === slug);
 
-/* Everything except the current page, for "Other solutions". */
 export const getOtherPages = (slug: string): ProductPage[] =>
   PRODUCT_PAGES.filter((page) => page.slug !== slug);
 

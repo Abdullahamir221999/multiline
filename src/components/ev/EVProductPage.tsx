@@ -181,6 +181,53 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
           </dl>
         </Reveal>
       </Section>
+      
+            {/* =====================================================
+          04b — SPECIFICATIONS
+      ===================================================== */}
+
+      {page.specs.length > 0 && (
+        <Section>
+          <Reveal>
+            <h2 className="text-[34px] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[42px]">
+              Specifications.
+            </h2>
+          </Reveal>
+
+          <Reveal delay={0.08}>
+            <div className="mt-10 overflow-hidden rounded-[24px] bg-white">
+              <dl className="grid sm:grid-cols-2">
+                {page.specs.map((spec, index) => (
+                  <div
+                    key={spec.label}
+                    className={`flex items-baseline justify-between gap-6 px-6 py-4 sm:px-8 ${
+                      index % 2 === 0 ? "sm:border-r sm:border-line" : ""
+                    } border-b border-line`}
+                  >
+                    <dt className="text-[14px] text-ink-soft">
+                      {spec.label}
+                    </dt>
+
+                    <dd className="text-right text-[14px] font-semibold text-ink">
+                      {spec.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.12}>
+            <p className="mt-5 text-[13px] leading-[1.6] text-ink-faint">
+              Figures from the manufacturer&apos;s datasheet. Download
+              the full specification below.
+            </p>
+          </Reveal>
+        </Section>
+      )}
+
+
+
 
       {/* =====================================================
           05 — CAPABILITIES

@@ -66,21 +66,25 @@ const mapLink = (lat: number | null, lng: number | null) =>
 export function appendLead(l: {
   leadNumber: string; createdAt: Date; name: string | null; whatsappNumber: string;
   altPhone: string | null; city: string | null; vehicle: string | null;
-  status: string;
+  status: string; email?: string | null; interest?: string | null;
+  message?: string | null; source?: string | null;
 }) {
   return appendWithRetry('Sales Leads', [
     l.leadNumber, fmtDate(l.createdAt), l.name, `+${l.whatsappNumber}`,
     l.altPhone, l.city, l.vehicle, l.status,
+    l.email ?? null, l.interest ?? null, l.message ?? null, l.source ?? null,
   ]);
 }
 
 export function appendComplaint(c: {
   ticketNumber: string; createdAt: Date; name: string | null; whatsappNumber: string;
   altPhone: string | null; city: string | null; chargerModel: string | null;
-  issueType: string | null; status: string;
+  issueType: string | null; status: string; email?: string | null;
+  message?: string | null; source?: string | null;
 }) {
   return appendWithRetry('Complaints', [
     c.ticketNumber, fmtDate(c.createdAt), c.name, `+${c.whatsappNumber}`,
     c.altPhone, c.city, c.chargerModel, c.issueType, c.status,
+    c.email ?? null, c.message ?? null, c.source ?? null,
   ]);
 }

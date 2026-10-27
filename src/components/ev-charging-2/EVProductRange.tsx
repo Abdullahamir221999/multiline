@@ -24,14 +24,24 @@ const ORDER: EVProduct["category"][] = [
   "Stands",
 ];
 
-const products = [...EV_PRODUCTS].sort((a, b) => {
-  const byCategory =
-    ORDER.indexOf(a.category) - ORDER.indexOf(b.category);
+const PRODUCT_PAGE_BY_ID: Record<string, string> = {
+  "7kw-ac": "7kw-home-charger",
+  "11kw-ac": "11kw-home-charger",
+  "22kw-ac": "22kw-smart-charger",
+  "20kw-dc": "dc-fast-charging",
+  "60kw-dc": "dc-fast-charging",
+};
 
-  if (byCategory !== 0) return byCategory;
+const products = [...EV_PRODUCTS]
+  .filter((product) => product.category !== "Stands")
+  .sort((a, b) => {
+    const byCategory =
+      ORDER.indexOf(a.category) - ORDER.indexOf(b.category);
 
-  return (a.outputKw ?? 0) - (b.outputKw ?? 0);
-});
+    if (byCategory !== 0) return byCategory;
+
+    return (a.outputKw ?? 0) - (b.outputKw ?? 0);
+  });
 
 export const EVProductRange = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -108,13 +118,14 @@ function ProductCard({
   inView: boolean;
   reduceMotion: boolean;
 }) {
-  const hasPage = Boolean(product.href);
+  const page = PRODUCT_PAGE_BY_ID[product.id];
+  const hasPage = Boolean(page);
 
-  const href =
-    product.href ??
-    createWhatsAppLink(
-      `Hi Multiline, I'm interested in the ${product.title}. Please send me details and pricing.`
-    );
+  const href = hasPage
+    ? `/products/${page}`
+    : createWhatsAppLink(
+        `Hi Multiline, I'm interested in the ${product.title}. Please send me details and pricing.`
+      );
 
   const external = !hasPage;
 
