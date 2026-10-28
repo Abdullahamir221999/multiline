@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
-import { ArrowUpRight, Download } from "lucide-react";
+
+import { ArrowUpRight, ChevronRight, Download } from "lucide-react";
 
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 
@@ -39,74 +40,110 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
 
   return (
     <main className="bg-canvas">
-      {/* =====================================================
+            {/* =====================================================
           01 — HERO
+
+          Full height, header overlaid. The scrim is light —
+          the photo's own gradient does most of the work, and
+          anything heavier flattens the product shot.
       ===================================================== */}
 
-      <Section className="pt-12 lg:pt-20">
-        <div className="grid items-center gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
-          <Reveal>
-            <p className="text-[13px] font-semibold text-brand">
-              {page.eyebrow}
-            </p>
+      <section className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-ink">
+        {hero && (
+          <Image
+            src={hero.heroImage ?? hero.image}
+            alt={hero.name}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        )}
 
-            <h1 className="mt-4 text-[42px] font-semibold leading-[1.02] tracking-[-0.035em] text-ink sm:text-[52px] lg:text-[58px]">
-              {page.title}
-            </h1>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
 
-            <p className="mt-6 max-w-[500px] text-[16px] leading-[1.65] text-ink-soft sm:text-[17px]">
-              {page.lede}
-            </p>
+        {/* Darkens just the top band so the inverted logo and
+            nav hold against a light photo. */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[140px] bg-gradient-to-b from-black/30 to-transparent" />
 
-            {isAC && hero?.price && (
-              <p className="mt-7 text-[20px] font-semibold text-ink">
-                {hero.price}
-                <span className="ml-2 text-[13px] font-normal text-ink-faint">
-                  excl. PIB, installation and tax
-                </span>
-              </p>
-            )}
+        {/* BREADCRUMB — sits under the fixed header */}
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <button
-                type="button"
-                onClick={() => scrollToSection("product-quote")}
-                className="inline-flex h-[54px] items-center justify-center rounded-full bg-brand px-7 text-[14px] font-semibold text-white transition-colors hover:bg-brand-dark"
+        <div className="absolute inset-x-0 top-[78px] z-10">
+          <div className="page-pad page-shell pt-6">
+            <nav
+              aria-label="Breadcrumb"
+              className="flex items-center gap-2 text-[13px] text-white/60"
+            >
+              <Link
+                href="/ev-chargers"
+                className="transition-colors hover:text-white"
               >
-                {ctaLabel}
-                <span aria-hidden="true" className="ml-2.5 text-accent">
-                  →
-                </span>
-              </button>
+                EV Charging
+              </Link>
 
-              {page.documents.length > 0 && (
+              <ChevronRight
+                aria-hidden="true"
+                className="h-[14px] w-[14px]"
+                strokeWidth={1.8}
+              />
+
+              <span className="text-white/85">{page.title}</span>
+            </nav>
+          </div>
+        </div>
+
+        {/* CONTENT */}
+
+        <div className="absolute inset-0 flex items-center">
+          <div className="page-pad page-shell w-full">
+            <div className="max-w-[560px]">
+              <p className="text-[13px] font-semibold text-white/75">
+                {page.eyebrow}
+              </p>
+
+              <h1 className="mt-4 text-[42px] font-semibold leading-[1.02] tracking-[-0.035em] text-white sm:text-[52px] lg:text-[62px]">
+                {page.title}
+              </h1>
+
+              <p className="mt-6 text-[16px] leading-[1.65] text-white/80 sm:text-[17px]">
+                {page.lede}
+              </p>
+
+              {isAC && hero?.price && (
+                <p className="mt-7 text-[20px] font-semibold text-white">
+                  {hero.price}
+                  <span className="ml-2 text-[13px] font-normal text-white/60">
+                    excl. PIB, installation and tax
+                  </span>
+                </p>
+              )}
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button
                   type="button"
-                  onClick={() => scrollToSection("documents")}
-                  className="inline-flex h-[54px] items-center justify-center rounded-full border border-line px-7 text-[14px] font-semibold text-ink transition-colors hover:bg-white"
+                  onClick={() => scrollToSection("product-quote")}
+                  className="inline-flex h-[54px] items-center justify-center rounded-full bg-brand px-7 text-[14px] font-semibold text-white transition-colors hover:bg-brand-dark"
                 >
-                  Technical documents
+                  {ctaLabel}
+                  <span aria-hidden="true" className="ml-2.5 text-accent">
+                    →
+                  </span>
                 </button>
-              )}
-            </div>
-          </Reveal>
 
-          <Reveal delay={0.1}>
-            <div className="relative mx-auto aspect-square w-full max-w-[520px]">
-              {hero && (
-                <Image
-                  src={hero.image}
-                  alt={hero.name}
-                  fill
-                  priority
-                  sizes="(min-width: 1024px) 520px, 100vw"
-                  className="object-contain"
-                />
-              )}
+                {page.documents.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection("documents")}
+                    className="inline-flex h-[54px] items-center justify-center rounded-full border border-white/35 px-7 text-[14px] font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10"
+                  >
+                    Technical documents
+                  </button>
+                )}
+              </div>
             </div>
-          </Reveal>
+          </div>
         </div>
-      </Section>
+      </section>
 
       {/* =====================================================
           02 — INTRO
@@ -376,12 +413,12 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
 
       <Section>
         <Reveal>
-          <h2 className="text-[34px] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[42px]">
+          <h2 className="mx-auto max-w-[720px] text-center text-[34px] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[42px]">
             Our other charging solutions.
           </h2>
         </Reveal>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
           {others.map((other, index) => {
             const otherHero = CATALOG_PRODUCTS.find(
               (product) => product.slug === other.productSlugs[0]
@@ -390,33 +427,33 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
             return (
               <Reveal key={other.slug} delay={index * 0.08}>
                 <Link
-                  href={`/ev-charging/products/${other.slug}`}
-                  className="group flex h-full flex-col rounded-[24px] bg-white p-6 transition-colors hover:bg-canvas-deep/60"
+                  href={`/products/${other.slug}`}
+                  className="group flex h-full flex-col items-center text-center"
                 >
-                  <div className="relative h-[150px] w-full">
+                  <h3 className="text-[26px] font-semibold leading-[1.15] tracking-[-0.03em] text-ink">
+                    {other.title}
+                  </h3>
+
+                  <p className="mt-2 max-w-[280px] text-[14px] leading-[1.5] text-ink-soft">
+                    {other.eyebrow}
+                  </p>
+
+                  <div className="relative mt-10 h-[280px] w-full">
                     {otherHero && (
                       <Image
                         src={otherHero.image}
                         alt=""
                         fill
                         sizes="(min-width: 1024px) 33vw, 50vw"
-                        className="object-contain transition-transform duration-500 group-hover:scale-[1.05]"
+                        className="object-contain transition-transform duration-700 ease-out group-hover:scale-[1.05]"
                       />
                     )}
                   </div>
 
-                  <h3 className="mt-6 text-[19px] font-semibold leading-[1.2] tracking-[-0.025em] text-ink">
-                    {other.title}
-                  </h3>
-
-                  <p className="mt-2 flex-1 text-[14px] leading-[1.55] text-ink-soft">
-                    {other.eyebrow}
-                  </p>
-
-                  <span className="mt-5 inline-flex items-center text-[13px] font-semibold text-brand">
+                  <span className="mt-8 inline-flex items-center text-[13px] font-semibold text-brand opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     View details
                     <ArrowUpRight
-                      className="ml-1.5 h-[15px] w-[15px] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      className="ml-1.5 h-[15px] w-[15px]"
                       strokeWidth={2}
                     />
                   </span>

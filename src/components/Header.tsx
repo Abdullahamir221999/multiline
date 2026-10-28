@@ -18,11 +18,18 @@ import {
 /* =========================================================
    HEADER
 
-   Full-width mega menu rather than a floating card: the panel
-   spans the viewport, sits flush under the header, and dims
-   the page behind it. Hover opens it on desktop; focus does
-   too, so it works from the keyboard.
+   Fixed, and transparent while sitting over a page's hero.
+   Goes solid once scrolled, once a mega menu opens, or once
+   the mobile menu opens — anywhere white text would land on
+   a white surface.
+
+   Because it's fixed rather than sticky it no longer takes
+   up space in the flow. Every page here opens with a
+   full-height hero, so that's correct — but a page without
+   one needs its own top padding. See HEADER_HEIGHT below.
 ========================================================= */
+
+const HEADER_HEIGHT = 78;
 
 export default function Header() {
   const pathname = usePathname();
@@ -32,12 +39,14 @@ export default function Header() {
   const [mobileSection, setMobileSection] = useState<string | null>(
     null
   );
+  const [scrolled, setScrolled] = useState(false);
 
-  /* A short delay stops the panel flickering shut when the
-     pointer crosses the gap between trigger and panel. */
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
+
+  /** White background and dark text. */
+  const solid = scrolled || Boolean(openItem) || menuOpen;
 
   const openDropdown = (label: string) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -55,11 +64,20 @@ export default function Header() {
     setMobileSection(null);
   };
 
-  /* Close everything on route change — otherwise the panel
-     stays open behind the new page. */
   useEffect(() => {
     closeAll();
   }, [pathname]);
+
+  /* 40px is far enough that a stray trackpad nudge doesn't
+     flip it, close enough that it feels immediate. */
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -67,7 +85,6 @@ export default function Header() {
     };
 
     document.addEventListener("keydown", onKeyDown);
-
     document.body.style.overflow = menuOpen ? "hidden" : "";
 
     return () => {
@@ -79,16 +96,22 @@ export default function Header() {
   return (
     <>
       <header
+        style={{ height: HEADER_HEIGHT }}
         className={cn(
-          "sticky top-0 z-50 w-full border-b bg-white transition-colors duration-200",
-          openItem
-            ? "border-transparent"
-            : "border-black/[0.07] bg-white/95 backdrop-blur-xl"
+          "fixed left-0 right-0 top-0 z-50 w-full transition-colors duration-300",
+          solid
+            ? "border-b border-black/[0.07] bg-white/95 backdrop-blur-xl"
+            : "border-b border-transparent bg-transparent"
         )}
         onMouseLeave={closeDropdown}
       >
-        <div className="page-pad page-shell flex h-[78px] items-center">
-          {/* LOGO */}
+        <div className="page-pad page-shell flex h-full items-center">
+          {/* LOGO
+
+              The brand mark is dark blue, invisible on a dark
+              hero. brightness-0 invert flattens it to white
+              while transparent. A proper white asset would be
+              cleaner — worth asking Multiline for one. */}
 
           <Link
             href="/ev-chargers"
@@ -102,7 +125,10 @@ export default function Header() {
               width={180}
               height={48}
               priority
-              className="h-[37px] w-auto object-contain sm:h-[39px]"
+              className={cn(
+                "h-[37px] w-auto object-contain transition-all duration-300 sm:h-[39px]",
+                !solid && "brightness-0 invert"
+              )}
             />
           </Link>
 
@@ -125,9 +151,11 @@ export default function Header() {
 
               const className = cn(
                 "flex h-[46px] items-center gap-1.5 px-4 text-[14px] font-medium transition-colors duration-200",
-                isActive || openItem === item.label
-                  ? "text-brand"
-                  : "text-[#222] hover:text-brand"
+                solid
+                  ? isActive || openItem === item.label
+                    ? "text-brand"
+                    : "text-[#222] hover:text-brand"
+                  : "text-white/90 hover:text-white"
               );
 
               const content = (
@@ -200,7 +228,12 @@ export default function Header() {
               }
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((current) => !current)}
-              className="flex h-[44px] w-[44px] items-center justify-center rounded-full text-ink transition-colors hover:bg-black/[0.05] lg:hidden"
+              className={cn(
+                "flex h-[44px] w-[44px] items-center justify-center rounded-full transition-colors lg:hidden",
+                solid
+                  ? "text-ink hover:bg-black/[0.05]"
+                  : "text-white hover:bg-white/10"
+              )}
             >
               {menuOpen ? (
                 <X className="h-[22px] w-[22px]" strokeWidth={1.8} />
@@ -214,9 +247,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* =================================================
-            MEGA MENU — full width, flush under the header
-        ================================================= */}
+        {/* MEGA MENU */}
 
         {PRIMARY_NAV.map((item) => {
           const dropdown = getDropdown(item.label);
@@ -260,9 +291,12 @@ export default function Header() {
             : "pointer-events-none opacity-0"
         )}
       >
-        <div className="h-[78px]" />
+        <div style={{ height: HEADER_HEIGHT }} />
 
-        <div className="flex h-[calc(100svh-78px)] flex-col overflow-y-auto">
+        <div
+          className="flex flex-col overflow-y-auto"
+          style={{ height: `calc(100svh - ${HEADER_HEIGHT}px)` }}
+        >
           <nav
             aria-label="Mobile navigation"
             className="page-pad page-shell flex flex-col py-7"
@@ -327,7 +361,10 @@ export default function Header() {
                           </Link>
 
                           {dropdown.map((column) => (
-                            <div key={column.heading} className="mt-4">
+                            <div
+                              key={column.heading}
+                              className="mt-4"
+                            >
                               <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-faint">
                                 {column.heading}
                               </p>

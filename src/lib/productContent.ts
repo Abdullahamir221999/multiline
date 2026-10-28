@@ -124,7 +124,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
       {
         title: "No supply upgrade needed",
         body: "Runs on the single-phase 230V connection already at your property. Our engineers confirm your load can carry it before installation.",
-        image: "/images/products/features/7kw-supply.jpg",
+        image: "/images/products/features/7kw-supply.png",
       },
       {
         title: "Card or app, your choice",
