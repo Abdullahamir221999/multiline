@@ -5,7 +5,19 @@ import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 
-import { ArrowUpRight, ChevronRight, Download } from "lucide-react";
+import {
+  ArrowUpRight,
+  Building2,
+  Cable,
+  ChevronRight,
+  Download,
+  Gauge,
+  Monitor,
+  PlugZap,
+  ShieldCheck,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 
@@ -18,6 +30,20 @@ import {
   type ProductPage,
 } from "@/lib/productContent";
 
+
+/* Highlight labels vary per product — Display appears on the
+   11kW and 22kW, Connector and Application on the DC page.
+   Anything unmapped falls back to Zap rather than breaking. */
+const HIGHLIGHT_ICONS: Record<string, LucideIcon> = {
+  Output: Zap,
+  Supply: PlugZap,
+  Current: Gauge,
+  Protection: ShieldCheck,
+  Display: Monitor,
+  Connector: Cable,
+  Application: Building2,
+  "Best for": Building2,
+};
 /* =========================================================
     PRODUCT PAGE
 
@@ -151,12 +177,12 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
 
       <Section>
         <Reveal>
-          <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-16">
-            <h2 className="text-[34px] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[42px]">
+          <div className="grid gap-x-16 gap-y-6 lg:grid-cols-[1fr_1fr] lg:items-start">
+            <h2 className="max-w-[520px] text-[34px] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[42px]">
               {page.introHeading}
             </h2>
 
-            <p className="max-w-[540px] text-[16px] leading-[1.7] text-ink-soft lg:pt-2">
+            <p className="max-w-[520px] text-[17px] leading-[1.7] text-ink-soft">
               {page.introBody}
             </p>
           </div>
@@ -167,7 +193,7 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
           03 — FEATURES
       ===================================================== */}
 
-      <Section>
+      <Section className="pt-16 pb-10 lg:pt-20 lg:pb-12">
         <div className="grid gap-6 md:grid-cols-3">
           {page.features.map((feature, index) => (
             <Reveal key={feature.title} delay={index * 0.08}>
@@ -197,34 +223,46 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
         </div>
       </Section>
 
+      
+
       {/* =====================================================
           04 — HIGHLIGHTS
       ===================================================== */}
 
-      <Section>
+      <Section className="pt-0 pb-10 lg:pb-14">
         <Reveal>
           <dl className="grid grid-cols-2 gap-x-8 gap-y-10 border-t border-line pt-10 lg:grid-cols-4">
-            {page.highlights.map((item) => (
-              <div key={item.label}>
-                <dt className="text-[12px] font-semibold uppercase tracking-[0.1em] text-ink-faint">
-                  {item.label}
-                </dt>
+            {page.highlights.map((item) => {
+              const Icon = HIGHLIGHT_ICONS[item.label] ?? Zap;
 
-                <dd className="mt-3 text-[24px] font-semibold leading-[1.15] tracking-[-0.03em] text-ink sm:text-[28px]">
-                  {item.value}
-                </dd>
-              </div>
-            ))}
+              return (
+                <div key={item.label}>
+                  <Icon
+                    aria-hidden="true"
+                    strokeWidth={1.6}
+                    className="h-[22px] w-[22px] text-brand"
+                  />
+
+                  <dt className="mt-4 text-[12px] font-semibold uppercase tracking-[0.1em] text-ink-faint">
+                    {item.label}
+                  </dt>
+
+                  <dd className="mt-2 text-[24px] font-semibold leading-[1.15] tracking-[-0.03em] text-ink sm:text-[28px]">
+                    {item.value}
+                  </dd>
+                </div>
+              );
+            })}
           </dl>
         </Reveal>
       </Section>
       
-            {/* =====================================================
+      {/* =====================================================
           04b — SPECIFICATIONS
       ===================================================== */}
 
       {page.specs.length > 0 && (
-        <Section>
+        <Section className="pt-6 pb-16 lg:pt-8 lg:pb-20">
           <Reveal>
             <h2 className="text-[34px] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[42px]">
               Specifications.
@@ -234,22 +272,35 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
           <Reveal delay={0.08}>
             <div className="mt-10 overflow-hidden rounded-[24px] bg-white">
               <dl className="grid sm:grid-cols-2">
-                {page.specs.map((spec, index) => (
-                  <div
-                    key={spec.label}
-                    className={`flex items-baseline justify-between gap-6 px-6 py-4 sm:px-8 ${
-                      index % 2 === 0 ? "sm:border-r sm:border-line" : ""
-                    } border-b border-line`}
-                  >
-                    <dt className="text-[14px] text-ink-soft">
-                      {spec.label}
-                    </dt>
+                {page.specs.map((spec, index) => {
+                  const isLast = index === page.specs.length - 1;
 
-                    <dd className="text-right text-[14px] font-semibold text-ink">
-                      {spec.value}
-                    </dd>
-                  </div>
-                ))}
+                  /* An odd number of specs leaves the last row
+                     with an empty cell beside it. Span it
+                     instead of drawing a half-finished row. */
+                  const orphan = isLast && page.specs.length % 2 === 1;
+
+                  return (
+                    <div
+                      key={spec.label}
+                      className={`flex items-baseline justify-between gap-6 border-b border-line px-6 py-4 last:border-b-0 sm:px-8 ${
+                        orphan
+                          ? "sm:col-span-2"
+                          : index % 2 === 0
+                            ? "sm:border-r sm:border-line"
+                            : ""
+                      }`}
+                    >
+                      <dt className="text-[14px] text-ink-soft">
+                        {spec.label}
+                      </dt>
+
+                      <dd className="text-right text-[14px] font-semibold text-ink">
+                        {spec.value}
+                      </dd>
+                    </div>
+                  );
+                })}
               </dl>
             </div>
           </Reveal>
@@ -270,7 +321,7 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
           05 — CAPABILITIES
       ===================================================== */}
 
-      <Section>
+      <Section className="pt-6 pb-16 lg:pt-8 lg:pb-20">
         <Reveal>
           <h2 className="max-w-[620px] text-[34px] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[42px]">
             {page.capabilitiesHeading}
@@ -309,7 +360,7 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
           units with different outputs is the useful comparison,
           not a vehicle list. */}
       {!isAC && (
-        <Section>
+        <Section className="pt-6 pb-16 lg:pt-8 lg:pb-20">
           <Reveal>
             <h2 className="text-[34px] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[42px]">
               The range.
@@ -368,14 +419,20 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
       ===================================================== */}
 
       {page.documents.length > 0 && (
-        <Section id="documents">
+        <Section id="documents" className="pt-6 pb-16 lg:pt-8 lg:pb-20">
           <Reveal>
             <h2 className="text-[34px] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[42px]">
               Technical documents.
             </h2>
           </Reveal>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            className={`mt-10 grid gap-4 ${
+              page.documents.length === 1
+                ? "max-w-[420px]"
+                : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}
+          >
             {page.documents.map((doc, index) => (
               <Reveal key={doc.file} delay={index * 0.06}>
                 <a
@@ -411,7 +468,7 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
           11 — OTHER SOLUTIONS
       ===================================================== */}
 
-      <Section>
+      <Section className="pt-6 pb-16 lg:pt-8 lg:pb-20">
         <Reveal>
           <h2 className="mx-auto max-w-[720px] text-center text-[34px] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[42px]">
             Our other charging solutions.
@@ -550,9 +607,10 @@ function SupportedVehicles({
         </h2>
 
         <p className="mt-4 max-w-[560px] text-[15px] leading-[1.65] text-ink-soft">
-          Every vehicle below works with the {chargerName}. A car
-          only ever draws what its onboard charger can accept —{" "}
-          {full} of these take the full {chargerKw} kW.
+          Every vehicle below works with the {chargerName}.{" "}
+          {full === rows.length
+            ? `All of them take the full ${chargerKw} kW.`
+            : `A car only draws what its onboard charger accepts — ${full} of these take the full ${chargerKw} kW.`}
         </p>
       </Reveal>
 
@@ -627,7 +685,7 @@ function SupportedVehicles({
 
 function Section({
   children,
-  className = "",
+  className,
   id,
 }: {
   children: React.ReactNode;
@@ -637,7 +695,7 @@ function Section({
   return (
     <section
       id={id}
-      className={`scroll-mt-24 py-16 sm:py-20 lg:py-24 ${className}`}
+      className={`scroll-mt-24 ${className ?? "py-16 sm:py-20 lg:py-24"}`}
     >
       <div className="page-pad page-shell">{children}</div>
     </section>

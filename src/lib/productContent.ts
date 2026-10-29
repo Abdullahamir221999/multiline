@@ -81,7 +81,7 @@ const JENSONN_PROTECTION: Capability[] = [
   },
   {
     title: "IP65 enclosure",
-    body: "Sealed against dust and water jets — a step above the IP54 rating most imported wallboxes carry, and it matters on an outdoor wall in monsoon season.",
+    body: "Sealed against dust and water jets — a grade above the IP54 most imported wallboxes carry, which matters on an outdoor wall.",
   },
   {
     title: "Thermal cut-off",
@@ -129,12 +129,12 @@ export const PRODUCT_PAGES: ProductPage[] = [
       {
         title: "Card or app, your choice",
         body: "Start a session with the RFID card or over Bluetooth and Wi-Fi. The indicator light shows status at a glance from across the driveway.",
-        image: "/images/products/features/7kw-rfid.jpg",
+        image: "/images/products/features/7kw-rfid.png",
       },
       {
         title: "Wall or pedestal",
         body: "At 360 × 195 × 95 mm it sits flat against a garage or boundary wall, or on a floor pedestal where there's no wall to use.",
-        image: "/images/products/features/7kw-mount.jpg",
+        image: "/images/products/features/7kw-mount.png",
       },
     ],
 

@@ -75,7 +75,7 @@ export const CATALOG_PRODUCTS: CatalogProduct[] = [
     price: "From PKR 80,000",
 
     image: "/images/products/7kw-jenson-ac6.png",
-    heroImage: "/images/products/7kw-hero.png",
+    heroImage: "/images/products/11kw-hero.png",
 
     imagePosition: "center",
     available: false,
@@ -96,7 +96,7 @@ export const CATALOG_PRODUCTS: CatalogProduct[] = [
        at 280,000 — in which case the spec table on this page
        is for the wrong unit. */
     image: "/images/products/22kw-jensonn-ac4.png",
-    heroImage: "/images/products/22kw-jensonn-ac.png",
+    heroImage: "/images/products/22kw-jensonn-ac.jpg",
 
     imagePosition: "center",
     available: false,
@@ -113,7 +113,7 @@ export const CATALOG_PRODUCTS: CatalogProduct[] = [
     price: "Call to enquire",
 
     image: "/images/products/20kw-dc2.png",
-    heroImage: "/images/products/20kw-dc.png",
+    heroImage: "/images/products/20kw-dc.jpg",
 
     imagePosition: "center",
     available: false,
