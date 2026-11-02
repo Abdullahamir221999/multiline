@@ -21,17 +21,17 @@ export type DropdownColumn = {
     This app is a subdomain beside the existing PHP site.
     Anything that isn't EV lives over there.
 
-    TODO: confirm these filenames in cPanel — public_html has
-    about.php and clients.php, the rest are assumed.
+    The Solar filenames below are taken from the main site's
+    own navigation, so they're real. Generators, Projects and
+    Company are still assumed — confirm in cPanel.
 ========================================================= */
 
 const MAIN_SITE = "https://multiline.com.pk";
 
 export const PRIMARY_NAV: NavItem[] = [
   { label: "EV Charging", href: "/ev-chargers" },
-  { label: "Solar", href: `${MAIN_SITE}/solar.php` },
+  { label: "Solar", href: `${MAIN_SITE}/renewables.php` },
   { label: "Generators", href: `${MAIN_SITE}/generators.php` },
-  { label: "Projects", href: `${MAIN_SITE}/projects.php` },
   { label: "Company", href: `${MAIN_SITE}/about.php` },
 ];
 
@@ -44,8 +44,9 @@ export const isExternal = (href: string) =>
 /* =========================================================
     DROPDOWN CONTENT
 
-    Only EV Charging has one — everything else is a single
-    page on the main site.
+    EV Charging points at pages in this app. Solar mirrors the
+    main site's own Solar dropdown, so a visitor who crosses
+    over sees the same options either way.
 ========================================================= */
 
 export const EV_DROPDOWN: DropdownColumn[] = [
@@ -101,5 +102,51 @@ export const EV_DROPDOWN: DropdownColumn[] = [
   },
 ];
 
-export const getDropdown = (label: string): DropdownColumn[] =>
-  label === "EV Charging" ? EV_DROPDOWN : [];
+export const SOLAR_DROPDOWN: DropdownColumn[] = [
+  {
+    heading: "Solar",
+    links: [
+      { label: "About", href: `${MAIN_SITE}/about.php` },
+      { label: "Solar panels", href: `${MAIN_SITE}/solarpanel.php` },
+      { label: "Inverters", href: `${MAIN_SITE}/inverters.php` },
+      { label: "Monitoring app", href: `${MAIN_SITE}/monitoring.php` },
+    ],
+  },
+  {
+    heading: "Projects",
+    links: [
+      {
+        label: "Residential projects",
+        href: `${MAIN_SITE}/residential_project.php`,
+      },
+      {
+        label: "Industrial projects",
+        href: `${MAIN_SITE}/industrial_project.php`,
+      },
+      {
+        label: "Structure & civil works",
+        href: `${MAIN_SITE}/structure_and_civil.php`,
+      },
+      { label: "Design", href: `${MAIN_SITE}/design.php` },
+    ],
+  },
+  {
+    heading: "Company",
+    links: [
+      {
+        label: "Our engineering team",
+        href: `${MAIN_SITE}/our_engineering_and_team.php`,
+      },
+      {
+        label: "Certificates and licenses",
+        href: `${MAIN_SITE}/certification_and_lisence.php`,
+      },
+    ],
+  },
+];
+
+export const getDropdown = (label: string): DropdownColumn[] => {
+  if (label === "EV Charging") return EV_DROPDOWN;
+  if (label === "Solar") return SOLAR_DROPDOWN;
+  return [];
+};

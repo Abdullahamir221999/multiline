@@ -481,31 +481,38 @@ function MegaMenu({
             </p>
 
             <div className="mt-5 flex flex-col gap-1">
-              {column.links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={onNavigate}
-                  className="group -mx-3 rounded-[14px] px-3 py-2.5 transition-colors hover:bg-canvas"
-                >
-                  <span className="flex items-center text-[15px] font-semibold text-ink transition-colors group-hover:text-brand">
-                    {link.label}
+              {column.links.map((link) => {
+                /* Solar's links all point at the PHP site, and
+                   next/link would try to route them client-side. */
+                const external = isExternal(link.href);
+                const Tag = external ? "a" : Link;
 
-                    <span
-                      aria-hidden="true"
-                      className="ml-1.5 text-[14px] text-ink-faint opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100"
-                    >
-                      →
-                    </span>
-                  </span>
+                return (
+                  <Tag
+                    key={link.href}
+                    href={link.href}
+                    onClick={onNavigate}
+                    className="group -mx-3 rounded-[14px] px-3 py-2.5 transition-colors hover:bg-canvas"
+                  >
+                    <span className="flex items-center text-[15px] font-semibold text-ink transition-colors group-hover:text-brand">
+                      {link.label}
 
-                  {link.description && (
-                    <span className="mt-0.5 block text-[13px] leading-[1.5] text-ink-soft">
-                      {link.description}
+                      <span
+                        aria-hidden="true"
+                        className="ml-1.5 text-[14px] text-ink-faint opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100"
+                      >
+                        →
+                      </span>
                     </span>
-                  )}
-                </Link>
-              ))}
+
+                    {link.description && (
+                      <span className="mt-0.5 block text-[13px] leading-[1.5] text-ink-soft">
+                        {link.description}
+                      </span>
+                    )}
+                  </Tag>
+                );
+              })}
             </div>
           </div>
         ))}
