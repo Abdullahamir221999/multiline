@@ -113,8 +113,8 @@ export default function Header() {
               while transparent. A proper white asset would be
               cleaner — worth asking Multiline for one. */}
 
-          <Link
-            href="/ev-chargers"
+          <a
+            href="https://multiline.com.pk"
             aria-label="Multiline home"
             onClick={closeAll}
             className="relative z-10 flex shrink-0 items-center"
@@ -130,7 +130,7 @@ export default function Header() {
                 !solid && "brightness-0 invert"
               )}
             />
-          </Link>
+          </a>
 
           {/* DESKTOP NAV */}
 

@@ -50,15 +50,16 @@ export const EVQuoteBanner = () => {
         </h2>
 
         <p className="mx-auto mt-5 max-w-[440px] text-[16px] leading-[1.6] text-ink-soft">
-          Fill in your details and we&apos;ll take care of the rest.
+          Tell us your car and your supply — we&apos;ll show you
+          what fits.
         </p>
 
         <button
           type="button"
-          onClick={() => scrollToSection("quote")}
+          onClick={() => scrollToSection("compatibility")}
           className="mt-9 inline-flex h-[54px] items-center justify-center rounded-full bg-ink px-8 text-[14px] font-semibold text-white transition-colors hover:bg-ink/85"
         >
-          Get your quote
+          Find your charger
           <span aria-hidden="true" className="ml-2.5">
             ›
           </span>

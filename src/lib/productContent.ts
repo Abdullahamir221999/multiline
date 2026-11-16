@@ -305,14 +305,17 @@ export const PRODUCT_PAGES: ProductPage[] = [
     slug: "dc-fast-charging",
     productSlugs: [
       "20kw-dc-fast-charger",
+      "40kw-dc-fast-charger",
       "60kw-dc-fast-charger",
+      "80kw-dc-fast-charger",
       "120kw-dc-fast-charger",
+      "180kw-dc-fast-charger",
     ],
     category: "DC",
 
     eyebrow: "DC Fast Charging",
     title: "DC fast charging",
-    lede: "Commercial charging infrastructure from 20kW to 120kW — for fleets, forecourts and public charging points where a useful charge has to happen inside a short stop.",
+    lede: "Commercial charging infrastructure from 20kW to 180kW — for fleets, forecourts and public charging points where a useful charge has to happen inside a short stop.",
 
     introHeading: "Charging measured in minutes, not hours.",
     introBody:
@@ -320,7 +323,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
 
     features: [
       {
-        title: "20kW to 120kW",
+        title: "20kW to 180kW",
         body: "Output matched to how long vehicles actually stop — a restaurant and a highway forecourt need very different units.",
         image: "/images/products/features/dc-range.jpg",
       },
@@ -366,7 +369,7 @@ export const PRODUCT_PAGES: ProductPage[] = [
     /* TODO: no DC datasheet supplied yet — these are the
        figures from the catalogue, not a spec sheet. */
     specs: [
-      { label: "Output range", value: "20 / 60 / 120 kW" },
+      { label: "Output range", value: "20 / 40 / 60 / 80 / 120 / 180 kW" },
       { label: "Supply", value: "Three-phase 400V" },
       { label: "Connector", value: "CCS2" },
       { label: "Installation", value: "Floor-mounted" },

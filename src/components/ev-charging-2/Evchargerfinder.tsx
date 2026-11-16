@@ -12,8 +12,10 @@ import {
 import { EVSelect, type Option } from "@/components/ev/EVSelect";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 
+import { chargeHours, formatChargeTime } from "@/lib/chargeTime";
+import { EV_VEHICLES, type EVVehicle } from "@/lib/evCompatibility";
 import { createWhatsAppLink } from "@/lib/contact";
-import { EV_VEHICLES } from "@/lib/evCompatibility";
+
 import { EV_PRODUCTS, type EVProduct } from "@/lib/evProducts";
 
 /* =========================================================
@@ -51,7 +53,8 @@ const PRICES: Record<string, string> = {
   "60kw-dc": "Call to enquire",
 };
 
-const PRICE_NOTE = "Excluding PIB, installation and sales tax";
+const PRICE_NOTE =
+  "Excluding installation. The PIB is quoted separately, and both are confirmed after a site inspection";
 
 const SUPPLY_OPTIONS: Option[] = [
   { value: "3", label: "Yes — I have 3-phase (400V)" },
@@ -366,6 +369,7 @@ export const EVChargerFinder = () => {
                     <ChargerCard
                       key={result.product.id}
                       product={result.product}
+                      vehicle={selectedVehicle!}
                       needsUpgrade={result.needsUpgrade}
                       recommended={index === 0}
                       vehicleLabel={vehicleLabel}
@@ -457,11 +461,13 @@ function ChargerCard({
   supplyLabel,
   index,
   reduceMotion,
+  vehicle,
 }: {
   product: EVProduct;
   needsUpgrade: boolean;
   recommended: boolean;
   vehicleLabel: string;
+  vehicle: EVVehicle;
   supplyLabel: string;
   index: number;
   reduceMotion: boolean;
@@ -520,6 +526,30 @@ function ChargerCard({
             {price}
           </p>
         )}
+
+        {/* CHARGE TIME — the whole point of the comparison.
+            On a car that caps below this unit's output the
+            number stops improving, which is the honest
+            argument against overbuying. */}
+
+        <div className="mt-4 border-t border-line pt-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-faint">
+            20% → 80%
+          </p>
+
+          <p className="mt-1.5 text-[20px] font-semibold leading-none tracking-[-0.02em] text-ink">
+            {formatChargeTime(
+              chargeHours(vehicle, product.outputKw ?? 0)
+            )}
+          </p>
+
+          {(product.outputKw ?? 0) > vehicle.maxAC && (
+            <p className="mt-2 text-[12px] leading-[1.45] text-ink-soft">
+              Your car caps at {vehicle.maxAC} kW, so this
+              charges no faster than the {vehicle.maxAC} kW unit.
+            </p>
+          )}
+        </div>
 
         {needsUpgrade && (
           <p className="mt-3 text-[12px] font-medium leading-[1.45] text-ink-soft">

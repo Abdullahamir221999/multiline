@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
+import { ProductQuoteModal } from "@/components/ev/ProductQuoteModal";
+
 
 import {
   ArrowUpRight,
@@ -31,6 +33,7 @@ import {
 } from "@/lib/productContent";
 
 
+
 /* Highlight labels vary per product — Display appears on the
    11kW and 22kW, Connector and Application on the DC page.
    Anything unmapped falls back to Zap rather than breaking. */
@@ -54,7 +57,13 @@ const HIGHLIGHT_ICONS: Record<string, LucideIcon> = {
 
 export const EVProductPage = ({ page }: { page: ProductPage }) => {
   const isAC = page.category === "AC";
+  const [quoteOpen, setQuoteOpen] = useState(false);
+    const [quoteProduct, setQuoteProduct] = useState(page.title);
 
+  const openQuote = (productName = page.title) => {
+    setQuoteProduct(productName);
+    setQuoteOpen(true);
+  };
   const products = CATALOG_PRODUCTS.filter((product) =>
     page.productSlugs.includes(product.slug)
   );
@@ -147,7 +156,7 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button
                   type="button"
-                  onClick={() => scrollToSection("product-quote")}
+                  onClick={() => openQuote()}
                   className="inline-flex h-[54px] items-center justify-center rounded-full bg-brand px-7 text-[14px] font-semibold text-white transition-colors hover:bg-brand-dark"
                 >
                   {ctaLabel}
@@ -396,17 +405,13 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
                     </p>
                   </div>
 
-                  <a
-                    href={createWhatsAppLink(
-                      `Hi Multiline, I'd like to enquire about the ${product.name}.`
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    type="button"
+                    onClick={() => openQuote(product.name)}
                     className="mt-7 inline-flex h-[46px] w-full items-center justify-center rounded-full border border-line text-[13px] font-semibold text-ink transition-colors hover:border-brand hover:bg-brand-tint hover:text-brand"
                   >
-                    <WhatsAppIcon className="mr-2 h-[15px] w-[15px]" />
                     Enquire
-                  </a>
+                  </button>
                 </div>
               </Reveal>
             ))}
@@ -545,15 +550,16 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
               </p>
 
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link
-                  href="/ev-charging#quote"
+                <button
+                  type="button"
+                  onClick={() => openQuote()}
                   className="inline-flex h-[54px] items-center justify-center rounded-full bg-ink px-8 text-[14px] font-semibold text-white transition-colors hover:bg-ink/85"
                 >
                   {ctaLabel}
                   <span aria-hidden="true" className="ml-2.5">
                     ›
                   </span>
-                </Link>
+                </button>
 
                 <a
                   href={createWhatsAppLink(
@@ -573,9 +579,15 @@ export const EVProductPage = ({ page }: { page: ProductPage }) => {
           </Reveal>
         </div>
       </section>
+            <ProductQuoteModal
+        open={quoteOpen}
+        onClose={() => setQuoteOpen(false)}
+        productName={quoteProduct}
+      />
     </main>
   );
 };
+
 
 /* =========================================================
     SUPPORTED VEHICLES
@@ -591,13 +603,70 @@ function SupportedVehicles({
   chargerKw: number;
   chargerName: string;
 }) {
-  const rows = EV_VEHICLES.map((vehicle) => ({
-    label: `${vehicle.brand} ${vehicle.model}`,
-    maxAC: vehicle.maxAC,
-    actual: Math.min(chargerKw, vehicle.maxAC),
-  })).sort((a, b) => b.actual - a.actual || a.label.localeCompare(b.label));
+  const [expanded, setExpanded] = useState(false);
+
+  /* Variants only earn their own row when they charge
+     differently — both Q6 e-trons take 11 kW, so one row is
+     enough; the two Taycans take 22 and 7, so they need
+     naming separately. */
+  const rows = Array.from(
+    EV_VEHICLES.reduce(
+      (map, vehicle) => {
+        const key = `${vehicle.brand} ${vehicle.model}|${vehicle.maxAC}`;
+
+        if (!map.has(key)) {
+          map.set(key, {
+            brand: vehicle.brand,
+            model: vehicle.model,
+            variant: vehicle.variant,
+            maxAC: vehicle.maxAC,
+          });
+        }
+
+        return map;
+      },
+      new Map<
+        string,
+        {
+          brand: string;
+          model: string;
+          variant?: string;
+          maxAC: number;
+        }
+      >()
+    )
+  )
+    .map(([, entry]) => {
+      const base = `${entry.brand} ${entry.model}`;
+
+      const ambiguous = EV_VEHICLES.filter(
+        (v) => v.brand === entry.brand && v.model === entry.model
+      ).some((v) => v.maxAC !== entry.maxAC);
+
+      return {
+        label:
+          ambiguous && entry.variant
+            ? `${base} (${entry.variant})`
+            : base,
+        maxAC: entry.maxAC,
+        actual: Math.min(chargerKw, entry.maxAC),
+      };
+    })
+    .sort(
+      (a, b) => b.actual - a.actual || a.label.localeCompare(b.label)
+    );
 
   const full = rows.filter((row) => row.actual >= chargerKw).length;
+
+  /* On the 7kW page every car charges at 7kW, so the third
+     column is a wall of identical values. It only says
+     something where the rates differ. */
+  const showActual = full < rows.length;
+
+  /* Forty rows is a scroll, not a reference. Show enough to
+     prove coverage, keep the rest a click away. */
+  const LIMIT = 12;
+  const visible = expanded ? rows : rows.slice(0, LIMIT);
 
   return (
     <Section>
@@ -608,9 +677,9 @@ function SupportedVehicles({
 
         <p className="mt-4 max-w-[560px] text-[15px] leading-[1.65] text-ink-soft">
           Every vehicle below works with the {chargerName}.{" "}
-          {full === rows.length
-            ? `All of them take the full ${chargerKw} kW.`
-            : `A car only draws what its onboard charger accepts — ${full} of these take the full ${chargerKw} kW.`}
+          {showActual
+            ? `A car only draws what its onboard charger accepts — ${full} of these take the full ${chargerKw} kW.`
+            : `All of them take the full ${chargerKw} kW.`}
         </p>
       </Reveal>
 
@@ -622,17 +691,21 @@ function SupportedVehicles({
                 <th className="px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.1em] text-ink-faint">
                   Vehicle
                 </th>
+
                 <th className="px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.1em] text-ink-faint">
                   Accepts
                 </th>
-                <th className="px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.1em] text-ink-faint">
-                  Charges at
-                </th>
+
+                {showActual && (
+                  <th className="px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.1em] text-ink-faint">
+                    Charges at
+                  </th>
+                )}
               </tr>
             </thead>
 
             <tbody>
-              {rows.map((row) => (
+              {visible.map((row) => (
                 <tr
                   key={row.label}
                   className="border-b border-line last:border-b-0"
@@ -645,14 +718,16 @@ function SupportedVehicles({
                     {row.maxAC} kW
                   </td>
 
-                  <td className="px-6 py-4 text-[14px] font-semibold text-ink">
-                    {row.actual} kW
-                    {row.actual < chargerKw && (
-                      <span className="ml-2 font-normal text-ink-faint">
-                        (vehicle limit)
-                      </span>
-                    )}
-                  </td>
+                  {showActual && (
+                    <td className="px-6 py-4 text-[14px] font-semibold text-ink">
+                      {row.actual} kW
+                      {row.actual < chargerKw && (
+                        <span className="ml-2 font-normal text-ink-faint">
+                          (vehicle limit)
+                        </span>
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -661,24 +736,37 @@ function SupportedVehicles({
       </Reveal>
 
       <Reveal delay={0.12}>
-        <p className="mt-5 text-[13px] leading-[1.6] text-ink-faint">
-          Car not listed?{" "}
-          <a
-            href={createWhatsAppLink(
-              "Hi Multiline, my EV isn't listed on your charger page. Can you confirm compatibility?"
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-brand underline underline-offset-4"
-          >
-            Ask us
-          </a>
-        </p>
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+          <p className="text-[13px] leading-[1.6] text-ink-faint">
+            Car not listed?{" "}
+            <a
+              href={createWhatsAppLink(
+                "Hi Multiline, my EV isn't listed on your charger page. Can you confirm compatibility?"
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-brand underline underline-offset-4"
+            >
+              Ask us
+            </a>
+          </p>
+
+          {rows.length > LIMIT && (
+            <button
+              type="button"
+              onClick={() => setExpanded((current) => !current)}
+              className="text-[13px] font-semibold text-brand underline underline-offset-4 hover:text-brand-dark"
+            >
+              {expanded
+                ? "Show fewer"
+                : `Show all ${rows.length} vehicles`}
+            </button>
+          )}
+        </div>
       </Reveal>
     </Section>
   );
 }
-
 /* =========================================================
     LAYOUT HELPERS
 ========================================================= */
