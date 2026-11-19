@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
   useEffect,
   useRef,
@@ -20,7 +19,6 @@ import {
   EV_VEHICLE_GROUPS,
 } from "@/lib/evChargingContent";
 
-import { scrollToSection } from "@/lib/scrollToSection";
 /* =========================================================
     SECTION 04 — VEHICLE COVERAGE
 ========================================================= */
@@ -122,7 +120,8 @@ export const EVVehicleCoverage = ({
               <p className="mt-4 max-w-[520px] text-[15px] leading-[1.65] text-ink-soft sm:text-[16px]">
                 Charging experience across major electric vehicles
                 on Pakistani roads, with installation and support
-                nationwide.
+                nationwide. For all charging standards, including
+                CCS and CHAdeMO.
               </p>
             </motion.div>
 
@@ -162,7 +161,7 @@ export const EVVehicleCoverage = ({
 
             <motion.div {...reveal(0.14)} className="mt-10">
               <p className="text-[14px] font-semibold text-ink">
-                Vehicles we support
+                We support all vehicles, including but not limited to:
               </p>
 
               <div className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
@@ -179,22 +178,6 @@ export const EVVehicleCoverage = ({
                 ))}
               </div>
 
-              {/* CTA */}
-
-              <button
-                type="button"
-                onClick={() => scrollToSection("compatibility")}
-                className="group mt-8 inline-flex h-[50px] items-center justify-center rounded-full bg-brand px-6 text-[14px] font-semibold text-white transition-all duration-300 hover:bg-brand-dark"
-              >
-                Find your charger
-
-                <span
-                  aria-hidden="true"
-                  className="ml-2.5 text-accent transition-transform duration-300 group-hover:translate-x-1"
-                >
-                  →
-                </span>
-              </button>
             </motion.div>
           </div>
 

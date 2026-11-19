@@ -211,9 +211,18 @@ export default function Header() {
           {/* RIGHT */}
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
+            {/* Hidden at the top — the hero carries its own quote
+                button there. Fades in once the page scrolls. */}
             <Link
               href={CONTACT_HREF}
-              className="hidden h-[46px] items-center justify-center rounded-full bg-brand px-6 text-[14px] font-semibold text-white transition-all duration-200 hover:bg-brand-dark md:inline-flex"
+              aria-hidden={!scrolled}
+              tabIndex={scrolled ? undefined : -1}
+              className={cn(
+                "hidden h-[46px] items-center justify-center rounded-full bg-brand px-6 text-[14px] font-semibold text-white transition-all duration-300 hover:bg-brand-dark md:inline-flex",
+                scrolled
+                  ? "translate-y-0 opacity-100"
+                  : "pointer-events-none -translate-y-1 opacity-0"
+              )}
             >
               Get a quote
               <span aria-hidden="true" className="ml-2 text-[16px]">

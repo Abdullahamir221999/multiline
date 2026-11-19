@@ -29,18 +29,28 @@ const PRODUCT_PAGE_BY_ID: Record<string, string> = {
   "11kw-ac": "11kw-home-charger",
   "22kw-ac": "22kw-smart-charger",
   "20kw-dc": "dc-fast-charging",
+  "40kw-dc": "dc-fast-charging",
   "60kw-dc": "dc-fast-charging",
+  "80kw-dc": "dc-fast-charging",
+  "120kw-dc": "dc-fast-charging",
+  "180kw-dc": "dc-fast-charging",
 };
 
 const products = [...EV_PRODUCTS]
-  .filter((product) => product.category !== "Stands")
+  .filter(
+    (product) =>
+      product.category !== "Stands" &&
+      product.category !== "PIB Boxes"
+  )
   .sort((a, b) => {
     const byCategory =
       ORDER.indexOf(a.category) - ORDER.indexOf(b.category);
 
     if (byCategory !== 0) return byCategory;
 
-    return (a.outputKw ?? 0) - (b.outputKw ?? 0);
+    // AC runs 22 → 11 → 7 (client's order); DC runs smallest up.
+    const diff = (a.outputKw ?? 0) - (b.outputKw ?? 0);
+    return a.category === "AC Chargers" ? -diff : diff;
   });
 
 export const EVProductRange = () => {

@@ -111,6 +111,23 @@ export const EV_PRODUCTS: EVProduct[] = [
   },
 
   {
+    id: "40kw-dc",
+    title: "40kW DC Fast Charger",
+    category: "DC Chargers",
+    image: "/images/products/20kw-dc2.png",
+    description:
+      "Mid-range DC charging for sites with steady turnover.",
+    summary:
+      "Mid-range DC charging for sites with steady turnover.",
+    bestFor:
+      "Workplaces, retail sites and small fleets.",
+    output: "40 kW",
+    outputKw: 40,
+    connector: "CCS2",
+    supply: "3 Phase",
+    phase: 3,
+  },
+  {
     id: "60kw-dc",
     title: "60kW DC Fast Charger",
     category: "DC Chargers",
@@ -129,6 +146,59 @@ export const EV_PRODUCTS: EVProduct[] = [
     phase: 3,
   },
 
+  {
+    id: "80kw-dc",
+    title: "80kW DC Fast Charger",
+    category: "DC Chargers",
+    image: "/images/products/60kw-dc2.png",
+    description:
+      "High-output charging for fleet depots and busy public sites.",
+    summary:
+      "High-output charging for fleet depots and busy public sites.",
+    bestFor:
+      "Fleet depots and busy public charging points.",
+    output: "80 kW",
+    outputKw: 80,
+    connector: "CCS2",
+    supply: "3 Phase",
+    phase: 3,
+  },
+
+  {
+    id: "120kw-dc",
+    title: "120kW DC Fast Charger",
+    category: "DC Chargers",
+    image: "/images/products/60kw-dc2.png",
+    description:
+      "High-output charging infrastructure for fleets and public networks.",
+    summary:
+      "High-output charging infrastructure for fleets and public networks.",
+    bestFor:
+      "Fleets and public charging networks.",
+    output: "120 kW",
+    outputKw: 120,
+    connector: "CCS2",
+    supply: "3 Phase",
+    phase: 3,
+  },
+
+  {
+    id: "180kw-dc",
+    title: "180kW DC Fast Charger",
+    category: "DC Chargers",
+    image: "/images/products/60kw-dc2.png",
+    description:
+      "The highest output in the range, for highway and high-traffic charging points.",
+    summary:
+      "The highest output in the range, for highway and high-traffic charging points.",
+    bestFor:
+      "Highways and high-traffic charging points.",
+    output: "180 kW",
+    outputKw: 180,
+    connector: "CCS2",
+    supply: "3 Phase",
+    phase: 3,
+  },
   {
     id: "pib-box",
     title: "EV Charger PIB Box",

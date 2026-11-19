@@ -32,7 +32,7 @@ export const EVQuoteBanner = () => {
   const inView = useInView(ref, { once: true, margin: "-20% 0px" });
 
   return (
-    <section ref={ref} className="bg-canvas py-20 lg:py-24">
+    <section ref={ref} className="bg-canvas">
       <motion.div
         initial={reduceMotion ? false : { opacity: 0, y: 22 }}
         animate={
